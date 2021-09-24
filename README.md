@@ -14,12 +14,21 @@ Główne repozytorium projektu New Network.
 ### Przygotowanie i uruchomienie projektu
 0. W VS Code sklonuj to repo: https://github.com/jakub-sieradzki/NewNetworkWeb.git
 1. W strukturze projektu odnajdź plik **.env.example**, utwórz jego kopię, a następnie zmień nazwę skopiowanego pliku na **.env**
-2. Wykonaj następujące komendy w terminalu VS Code:
+    * Zamień ustawienia połączenia do bazy danych:
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=serwer2114676.home.pl
+    DB_PORT=3306
+    DB_DATABASE=35101402_nntest
+    DB_USERNAME=35101402_nntest
+    DB_PASSWORD=yBENm8W9z8kb
+    ```
+3. Wykonaj następujące komendy w terminalu VS Code:
     1. **composer install**
     2. **npm install**
     3. **php artisan key:generate**
-3. W celu kompilacji plików projektu użyj komendy: **npm run dev** (kompilacja jednorazowa) lub **npm run watch** (obserwuje na bieżąco zmiany w plikach i automatycznie je kompiluje) - opcja rekomendowana.
-4. Otwórz nowy terminal w VS Code i wykonaj komendę **php artisan serve** - uruchamia ona serwer www na którym bedziesz mógł zobaczyć skompilowaną stronę New Network.
+4. W celu kompilacji plików projektu użyj komendy: **npm run dev** (kompilacja jednorazowa) lub **npm run watch** (obserwuje na bieżąco zmiany w plikach i automatycznie je kompiluje) - opcja rekomendowana.
+5. Otwórz nowy terminal w VS Code i wykonaj komendę **php artisan serve** - uruchamia ona serwer www na którym bedziesz mógł zobaczyć skompilowaną stronę New Network.
 
 ## Pomocne linki
 - [The Net Ninja](https://www.youtube.com/c/TheNetNinja) - tutoriale technologii webowych
