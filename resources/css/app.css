@@ -23,6 +23,11 @@
     @apply scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-500 scrollbar-track-rounded-md scrollbar-thumb-rounded-md
 }
 
+.custom-scrollbar-register-rules {
+    @apply scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-600 scrollbar-track-rounded-md scrollbar-thumb-rounded-md
+
+}
+
 .categories__single-item {
     @apply mb-2 p-2 cursor-pointer border rounded-sm flex items-center transition
 }
@@ -32,7 +37,7 @@
 }
 
 .post__header {
-    @apply mb-4 h-auto w-full flex justify-between relative 
+    @apply mb-4 h-auto w-full flex justify-between relative
 }
 
 .post__header__user-info {
