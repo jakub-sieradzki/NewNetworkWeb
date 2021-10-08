@@ -7,10 +7,6 @@
     src: url("fonts/SourceSansPro-Regular.ttf");
 } */
 
-.header__button-svg {
-    @apply p-2 w-10 h-10 mr-2 stroke-current rounded-full cursor-pointer border bg-gray-200 border-gray-300 dark:bg-gray-700 dark:border-gray-900
-}
-
 .main-menu__element {
     @apply h-12 p-2 flex w-auto cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-md transition-all
 }
@@ -100,20 +96,12 @@
     @apply ml-2 self-center text-sm
 }
 
-.popular {
-    @apply w-96 ml-32 rounded-md shadow-lg border dark:border-gray-700 overflow-y-hidden flex flex-col
-}
-
 .popular__header {
     @apply p-4 text-2xl text-center
 }
 
 .popular__list {
     @apply h-full mr-1 relative overflow-y-scroll custom-scrollbar
-}
-
-.popular__list-item {
-    @apply pr-5 mb-1 mr-1 h-16 flex rounded-r-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition
 }
 
 .popular__list-item__number {

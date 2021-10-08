@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <nav
-                class="w-48 pr-2 pt-3 h-full flex overflow-y-auto custom-scrollbar shadow-2xl sticky top-0 left-0 flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
+        <nav class="hidden xl:flex w-48 pr-2 pt-3 h-full overflow-y-auto custom-scrollbar shadow-2xl sticky top-0 left-0 flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
                 <div class="w-1 h-auto">
                     <div class="h-12 bg-blue-600 rounded-r-xl"></div>
                 </div>
@@ -117,7 +115,6 @@
                     <p class="text-gray-400 text-xs text-center pt-3 pb-3">&copy; New Network 2021</p>
                 </div>
             </nav>
-    </div>
 </template>
 <script>
 export default {

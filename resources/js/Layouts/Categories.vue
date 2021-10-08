@@ -1,11 +1,10 @@
 <template>
-    <div>
-        <div class="sticky top-0 w-64" style="height: 600px;">
-                        <div class="w-64 float-right" style="height: 600px;">
+        <div class="hidden lg:flex sticky top-0 flex-shrink ml-5 mt-12 w-64" style="height: 600px;">
+                        <div class="flex-shrink w-full" style="height: 600px;">
                             <div
-                                class="w-64 h-3/4 rounded-md border border-gray-300 dark:border-gray-800 shadow-xl flex flex-col flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
+                                class="h-3/4 rounded-md border border-gray-300 dark:border-gray-800 shadow-xl flex flex-col flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
                                 <div
-                                    class="flex h-12 items-center pl-4 pr-4 hover:bg-gray-100 dark:hover:bg-gray-700 overflow-y rounded-t-md cursor-pointer transition flex-shrink-0">
+                                    class="flex h-12 items-center pl-4 pr-4 hover:bg-gray-100 dark:hover:bg-gray-700 overflow-y rounded-t-md cursor-pointer transition flex-shrink">
                                     <p class="text-center">Kategorie</p>
                                     <div class="flex-grow"></div>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44"
@@ -69,13 +68,12 @@
                                 </div>
                             </div>
                             <div
-                                class="w-64 flex items-center p-8 mt-12 justify-center rounded-md transition cursor-pointer transform hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
+                                class="w-full flex items-center p-8 mt-12 justify-center rounded-md transition cursor-pointer transform hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                                 <img src="images/add.svg" alt="add" class="w-8 h-8 mr-1">
                                 <p class="text-xl text-white">Nowy post</p>
                             </div>
                         </div>
                     </div>
-    </div>
 </template>
 <script>
 export default {
