@@ -7,26 +7,74 @@
     <title>Register site</title>
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/register.css" rel="stylesheet">
-    <style>
-        .custom-scrollbar::-webkit-scrollbar{
-            display: none;
-        }
-    </style>
 </head>
-<body class="bg-gray-800 h-auto w-screen">
-    <div id="wave-div" class="z-0 invisible">
+<body class="h-auto md:h-screen w-screen bg-gray-800">
+    <div id="wave-div" class="z-0 invisible md:visible">
     </div>
-    <div class=" w-screen z-10 flex flex-col flex-shrink ">
-        <header class="relative w-full h-12 flex justify-between flex-shrink-0">
-            <p class="ml-7 text-2xl self-end text-white">New Network</p>
-            <p class="mr-5 text-2xl self-end text-white">Rejestracja</p>
+    <div class="z-10">
+        <header class="relative flex justify-between w-full h-12 md:h-16  ">
+            <p class="self-end ml-7 md:ml-20 text-2xl text-white">New Network</p>
+            <p class="self-end mr-5 md:mr-14 text-xl text-white">Rejestracja</p>
         </header>
-        <main class="relative flex flex-col">
-            <div class="bg-gray-100 dark:bg-gray-900 bg-opacity-95 relative flex-shrink h-auto m-auto my-5 shadow-lg rounded-xl border dark:border-gray-800 custom-scrollbar w-11/12">
-                <div class="ml-5 mr-5">
+        <main class="relative flex md:flex-schrink">
+            {{-- <div class="flex flex-col w-4/12 ml-20 my-5 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900" >
+                <div>
+                    <p class="text-5xl text-center">ZASADY MODERACJI</p>
+                    <p class="text-2xl text-center mt-2">New Network</p>
+                </div>
+                <div class="mt-6 overflow-y-scroll custom-scrollbar-register-rules">
+                    <div class="bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-lg">
+                        <div class="flex">
+                            <p class="text-6xl self-center ml-6 mr-1 mb-2">1</p>
+                            <div class="p-5">
+                                <p class="text-xl mb-2">Lorem ipsum dolor sit amet consectetur.</p>
+                                <p class="leading-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, aut totam ducimus possimus fugit nostrum.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-lg">
+                        <div class="flex">
+                            <p class="text-6xl self-center ml-6 mr-1 mb-2">2</p>
+                            <div class="p-5 ">
+                                <p class="text-xl mb-2">Lorem ipsum dolor sit amet consectetur.</p>
+                                <p class="leading-5">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit, quasi.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-lg">
+                        <div class="flex">
+                            <p class="text-6xl self-center ml-6 mr-1 mb-2">3</p>
+                            <div class="p-5 ">
+                                <p class="text-xl mb-2">Lorem ipsum dolor sit amet consectetur.</p>
+                                <p class="leading-5">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi ad voluptates velit aliquid.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-lg">
+                        <div class="flex">
+                            <p class="text-6xl self-center ml-6 mr-1 mb-2">4</p>
+                            <div class="p-5 ">
+                                <p class="text-xl mb-2">Lorem ipsum dolor sit amet consectetur.</p>
+                                <p class="leading-5">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe cumque distinctio accusantium.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-lg">
+                        <div class="flex">
+                            <p class="text-6xl self-center ml-6 mr-1 mb-2">5</p>
+                            <div class="p-5 ">
+                                <p class="text-xl mb-2">Lorem ipsum dolor sit amet consectetur.</p>
+                                <p class="leading-5">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum aspernatur iusto aperiam.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+            <div class="relative h-auto m-auto my-5 w-11/12 bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800">
+                <div class="mx-5">
                     <p class="text-2xl p-5 pl-0 border-b-2 dark:border-gray-800">Dane logowania</p>
                     <div class="flex justify-between">
-                        <div>
+                        <div class=" w-full">
                             <label class="label">
                                 <span class="label-text">Email
                                     <div class="dropdown dropdown-right">
@@ -65,17 +113,11 @@
                                 <span class="label-text">Powtórz hasło</span>
                             </label>
                             <input type="password" placeholder="Hasło" class="input input-bordered dark:bg-gray-800 w-full">
-                            <div class="px-3 w-full invisible">
-                                    <label class="cursor-pointer label">
-                                        <span class="label-text pr-3">Zapoznałem/am się i akceptuję <a href="" class="link">Warunki użytkowania</a></span>
-                                        <input type="checkbox" class="checkbox">
-                                    </label>
-                            </div>
                         </div>
                     </div>
-                    <p class="text-2xl px-5 pb-5 pl-0 border-b-2 dark:border-gray-800">Dane osobowe</p>
+                    <p class="text-2xl p-5 pl-0 border-b-2 dark:border-gray-800">Dane osobowe</p>
                     <div class="flex justify-between">
-                        <div>
+                        <div class=" w-full">
                             <label class="label">
                                 <span class="label-text">Imię
                                     <div class="dropdown dropdown-right">
@@ -170,16 +212,14 @@
                         </div>
                         {{-- <div class="flex flex-col">
                                 <p>Zachęcamy do zapoznania się ze szczegółowymi zasadami moderacji (wraz z przykładami), które są dostępne <a href="" class="link">tutaj</a>.</p>
-                            </div>
-                        </div> --}}
+                            </div> --}}
+                        </div>
                     </div>
                     <div class="h-10"></div>
                 </div>
-            </div>
-
         </main>
         
-        <footer class="px-3 py-8 bg-white dark:bg-gray-800 text-2 text-gray-500 dark:text-gray-200 transition-colors duration-200">
+        {{-- <footer class="px-3 py-8 bg-white dark:bg-gray-800 text-2 text-gray-500 dark:text-gray-200 transition-colors duration-200">
             <div class="flex flex-col">
                 <div class="md:hidden mt-7 mx-auto w-11 h-px rounded-full">
                 </div>
@@ -196,7 +236,7 @@
                         </a>
                     </nav>
                     <div class="md:hidden mt-4 mx-auto w-11 h-px rounded-full">
-                    </div>
+                    </div> --}}
                     {{-- <div class="mt-4 md:mt-0 flex-1 flex items-center justify-center md:border-r border-gray-100">
                         <a class="hover:text-primary-gray-20" href="https://github.com/Charlie85270/tail-kit">
                             <span class="sr-only">
@@ -217,7 +257,7 @@
                             </svg>
                         </a>
                     </div> --}}
-                    <div class="md:hidden mt-4 mx-auto w-11 h-px rounded-full ">
+                    {{-- <div class="md:hidden mt-4 mx-auto w-11 h-px rounded-full ">
                     </div>
                     <div class="mt-7 md:mt-0 flex-1 flex flex-col items-center justify-center md:items-start md:pl-5">
                         <span class="">
@@ -226,8 +266,8 @@
                     </div>
                 </div>
             </div>
-        </footer>
-        {{-- <footer class="dark:bg-gray-800 text-center p-1">
+        </footer> --}}
+        <footer class="dark:bg-gray-800 text-center p-1">
             <div class="space-x-4">
                 <a href="index.html" class="text-s">
                     O nas
@@ -240,7 +280,7 @@
                 </a>
             </div>
             <p class="">&copy; New Network 2021</p>
-        </footer> --}}
+        </footer>
     </div>
 </body>
 </html>
