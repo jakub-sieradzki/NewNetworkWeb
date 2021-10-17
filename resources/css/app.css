@@ -68,12 +68,8 @@
     @apply mt-4 cursor-pointer rounded-sm
 }
 
-.post__info {
-    @apply h-auto flex justify-between
-}
-
 .post__info__category {
-    @apply pt-1 pr-4 pb-1 pl-4 mr-1 rounded-sm cursor-pointer
+    @apply pt-1 pr-4 pb-1 pl-4 rounded-sm
 }
 
 .post__info__time {
@@ -102,6 +98,10 @@
 
 .popular__list {
     @apply h-full mr-1 relative overflow-y-scroll custom-scrollbar
+}
+
+.popular__list-item {
+    @apply pr-5 mb-1 mr-1 h-16 flex rounded-r-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition
 }
 
 .popular__list-item__number {

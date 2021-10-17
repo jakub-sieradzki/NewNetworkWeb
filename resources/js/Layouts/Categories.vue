@@ -1,5 +1,5 @@
 <template>
-        <div class="hidden lg:flex sticky top-0 flex-shrink ml-5 mt-12 w-64" style="height: 600px;">
+        <div class="hidden lg:flex sticky top-0 flex-shrink-0 ml-5 mt-12 w-64" style="height: 600px;">
                         <div class="flex-shrink w-full" style="height: 600px;">
                             <div
                                 class="h-3/4 rounded-md border border-gray-300 dark:border-gray-800 shadow-xl flex flex-col flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
@@ -68,9 +68,9 @@
                                 </div>
                             </div>
                             <div
-                                class="w-full flex items-center p-8 mt-12 justify-center rounded-md transition cursor-pointer transform hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
+                                class="w-full flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-md transition cursor-pointer transform hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                                 <img src="images/add.svg" alt="add" class="w-8 h-8 mr-1">
-                                <p class="text-xl text-white">Nowy post</p>
+                                <p class="text-xl text-white text-center">Nowy post</p>
                             </div>
                         </div>
                     </div>

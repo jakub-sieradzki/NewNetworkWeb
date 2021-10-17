@@ -4,7 +4,7 @@
         <Navbar />
         <div class="overflow-y-hidden flex h-full">
             <Navpanel />
-            <div class="justify-center w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex">
+            <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32">
                     <!--Categories-->
                         <Categories />
                     <!--End Categories-->

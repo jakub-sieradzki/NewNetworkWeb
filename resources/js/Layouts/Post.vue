@@ -28,20 +28,57 @@
                                     </div>
                                     <!-- End Content -->
                                     <!-- Info -->
-                                    <div class="post__info">
+                                    <div class="h-auto w-full flex justify-between">
                                         <!--Categories list-->
-                                        <div class="flex h-7 text-center overflow-x-scroll">
-                                            <div class="bg-green-800 post__info__category">
-                                                <p class="text-sm text-white whitespace-nowrap">Natura</p>
+                                            <div class="pt-1 pr-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center" @click="toggleShowCategories">
+                                                <p>Kategorie</p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <polyline points="6 9 12 15 18 9" />
+                                                </svg>
                                             </div>
-                                            <div class="bg-gray-500 post__info__category">
-                                                <p class="text-sm text-white whitespace-nowrap">Inna kategoria</p>
-                                            </div>
-                                            <div class="bg-blue-800 post__info__category">
-                                                <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
-                                            </div>
+                                        <p class="post__info__time flex-shrink truncate justify-center">17.10.2021, 15:10</p>
+                                    </div>
+                                    <div v-if="showCategories" class="flex flex-wrap gap-1 mt-4">
+                                        <div class="bg-green-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Natura</p>
                                         </div>
-                                        <p class="post__info__time flex-shrink truncate w-1/4">{{ date_created }}</p>
+                                        <div class="bg-gray-500 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Inna kategoria</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
+                                        <div class="bg-blue-800 post__info__category">
+                                            <p class="text-sm text-white whitespace-nowrap">Coś tam</p>
+                                        </div>
                                     </div>
                                     <!-- End Info -->
                                     <!--Actions-->
@@ -94,7 +131,15 @@
                                 <!-- End Post -->
 </template>
 <script>
+import {ref} from 'vue'
 export default {
 props: ['name', 'surname', 'uid', 'content', 'date_created', 'views', 'com_count'],
+setup() {
+    const showCategories = ref(false)
+    const toggleShowCategories = () => {
+        showCategories.value = !showCategories.value
+    }
+    return {showCategories, toggleShowCategories}
+}
 }
 </script>
