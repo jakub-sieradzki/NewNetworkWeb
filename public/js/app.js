@@ -17653,6 +17653,31 @@ function createInstance(defaultConfig) {
 
   return instance;
 }
+// SSR vnode transforms, only used when user includes client-oriented render
+// function in SSR
+function initVModelForSSR() {
+    vModelText.getSSRProps = ({ value }) => ({ value });
+    vModelRadio.getSSRProps = ({ value }, vnode) => {
+        if (vnode.props && (0,_vue_shared__WEBPACK_IMPORTED_MODULE_1__.looseEqual)(vnode.props.value, value)) {
+            return { checked: true };
+        }
+    };
+    vModelCheckbox.getSSRProps = ({ value }, vnode) => {
+        if ((0,_vue_shared__WEBPACK_IMPORTED_MODULE_1__.isArray)(value)) {
+            if (vnode.props && (0,_vue_shared__WEBPACK_IMPORTED_MODULE_1__.looseIndexOf)(value, vnode.props.value) > -1) {
+                return { checked: true };
+            }
+        }
+        else if ((0,_vue_shared__WEBPACK_IMPORTED_MODULE_1__.isSet)(value)) {
+            if (vnode.props && value.has(vnode.props.value)) {
+                return { checked: true };
+            }
+        }
+        else if (value) {
+            return { checked: true };
+        }
+    };
+}
 
 // Create the default instance to be exported
 var axios = createInstance(defaults);
@@ -17755,6 +17780,18 @@ function CancelToken(executor) {
     resolvePromise(token.reason);
   });
 }
+let ssrDirectiveInitialized = false;
+/**
+ * @internal
+ */
+const initDirectivesForSSR = () => {
+        if (!ssrDirectiveInitialized) {
+            ssrDirectiveInitialized = true;
+            initVModelForSSR();
+            initVShowForSSR();
+        }
+    }
+    ;
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
