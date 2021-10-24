@@ -1,6 +1,7 @@
 <template>
   <div class="dark:bg-gray-900 dark:text-white h-screen w-screen">
-    <div class="w-full h-full flex flex-col overflow-y-hidden">
+    <CreatePost v-if="createPost"/>
+    <div class="w-full h-full flex flex-col overflow-y-hidden z-0">
         <Navbar />
         <div class="overflow-y-hidden flex h-full">
             <Navpanel />
@@ -24,6 +25,7 @@
             </div> -->
         </div>
     </div>
+    <!-- NavBar bottom for mobile -->
   <div class="lg:hidden lg:left-60 absolute w-full bottom-0 h-14 bg-gray-100 bg-opacity-95 dark:bg-gray-900 flex justify-between">
           <div class="w-full  flex justify-center items-center">
             <div class="flex items-center">
@@ -38,7 +40,7 @@
             </div>
           </div>
           <div class="w-1/6 flex justify-center">
-            <div class="absolute shadow-md bottom-6 w-14 h-14 flex items-center justify-center rounded-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-900">
+            <div @click="showCreatePost" class="absolute shadow-md bottom-6 w-14 h-14 flex items-center justify-center rounded-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-900">
                 <img src="images/add.svg" alt="add" class="p-3">
             </div>
           </div>
@@ -54,6 +56,7 @@
           </div>
         </div>
 </div>
+
 </template>
 <script>
 import Categories from './Categories.vue';
@@ -61,6 +64,9 @@ import Main from './Main.vue';
 import Navbar from './Navbar.vue';
 import Navpanel from './Navpanel.vue';
 import Popular from './Popular.vue';
+import CreatePost from './CreatePost.vue'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 
 
 export default {
@@ -70,8 +76,23 @@ export default {
     Navpanel,
     Categories,
     Main,
+    CreatePost,
     },
 
   name: "App",
-};
+
+  setup() {
+    const store = useStore()
+
+    const showCreatePost = () => {
+        store.commit('switchCreatePost')
+    }
+
+    return {
+      // access a state in computed function
+      createPost: computed(() => store.state.createPost),
+      showCreatePost
+    }
+  },
+}
 </script>

@@ -67,7 +67,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
+                            <div @click="showCreatePost"
                                 class="w-full flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-md transition cursor-pointer transform hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                                 <img src="images/add.svg" alt="add" class="w-8 h-8 mr-1">
                                 <p class="text-xl text-white text-center">Nowy post</p>
@@ -76,7 +76,16 @@
                     </div>
 </template>
 <script>
+import { useStore } from 'vuex'
+
 export default {
-    
+    setup() {
+        const store = useStore()
+
+        const showCreatePost = () => {
+            store.commit('switchCreatePost')
+        }
+        return {showCreatePost}
+    }
 }
 </script>
