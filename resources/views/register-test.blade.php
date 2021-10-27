@@ -11,12 +11,12 @@
 <body class="h-auto lg:h-screen w-screen bg-gray-800 overflow-x-hidden custom-scrollbar">
     <div id="wave-div" class="z-0 hidden lg:inline">
     </div>
-    <div class="z-10">
+    <div class="lg:absolute lg:flex lg:flex-col lg:h-screen lg:w-screen z-10">
         <header class="relative flex justify-between w-full h-12 lg:h-16  ">
             <p class="self-end ml-7 lg:ml-20 text-2xl text-white">New Network</p>
             <p class="self-end mr-5 lg:mr-14 text-xl text-white">Rejestracja</p>
         </header>
-        <main class="relative flex lg:flex-schrink">
+        <main class="relative flex lg:flex-schrink lg:overflow-hidden">
             {{-- <div class="flex flex-col w-4/12 ml-20 my-5 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900" >
                 <div>
                     <p class="text-5xl text-center">ZASADY MODERACJI</p>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </div> --}}
-            <div class="relative h-auto m-auto my-5 w-11/12 max-w-lg md:max-w-3xl bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800">
+            <div class="relative h-auto m-auto my-5 w-11/12 max-w-lg md:max-w-3xl bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800 lg:overflow-y-scroll custom-scrollbar">
                 <div class="mx-5">
                     <p class="text-2xl p-5 pl-0 border-b-2 dark:border-gray-800">Dane logowania</p>
                     <div class="flex justify-between">
@@ -115,7 +115,7 @@
                             <input type="password" placeholder="Hasło" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
                         </div>
                         <div class="flex flex-col hidden md:inline ml-5">
-                            <div class="w-80 bg-gray-200 dark:bg-gray-800 mt-9 rounded-lg text-xs p-5">
+                            <div class="w-80 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg text-xs p-5">
                                 <p>Zalecamy rejestrację konta na email założony u <a href="" class="link">zaufanego dostawcy email</a>. Jeżeli podasz adres od innego dostawcy, poprosimy Cię o numer telefonu.</p>
                                 <br>
                                 <p>Po wpisaniu hasła sprawdzimy, czy nie zostało ono upublicznione w wyciekach danych. Zalecamy korzystanie z menedżerów haseł, takich jak <a href="https://bitwarden.com" target="_blank" class="link">Bitwarden</a> i wbudowanych w nich generatorów haseł.</p>
@@ -218,7 +218,7 @@
                             <button class="btn w-full md:max-w-sm">Zarejestruj się</button>
                         </div>
                         <div class="flex flex-col hidden md:inline ml-5">
-                            <div class="w-80 bg-gray-200 dark:bg-gray-800 mt-9 rounded-lg text-xs p-5">
+                            <div class="w-80 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg text-xs p-5">
                                 <p>Możesz zmienić swoje imię i nazwisko w każdej chwili w ustawieniach profilu.</p>
                                 <br>
                                 <p>Nazwa użytkownika jest unikatowa dla każdego użytkownika i nie może być zmieniona.</p>
@@ -238,19 +238,19 @@
                     <div class="h-10"></div>
                 </div>
         </main>
-        <footer class="dark:bg-gray-800 text-center p-1">
-            <div class="space-x-4">
+        <footer class=" lg:bg-transparent text-center p-1 xl:p-0 text-white xl:flex xl:h-12 xl:flex-row-reverse xl:items-start xl:text-sm xl:flex-shrink-0">
+            <div class="space-x-4 xl:space-x-8 xl:mr-14">
                 <a href="index.html" class="text-s link">
-                    O nas
+                    Warunki użytkowania
                 </a>
                 <a href="index.html" class="text-s link">
                     Polityka prywatności
                 </a>
                 <a href="index.html" class="text-s link">
-                    Warunki użytkowania
+                    O nas
                 </a>
             </div>
-            <p class="">&copy; New Network 2021</p>
+            <p class="xl:mr-8">&copy; New Network 2021</p>
         </footer>
     </div>
 </body>
