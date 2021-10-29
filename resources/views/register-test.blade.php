@@ -8,16 +8,16 @@
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/register.css" rel="stylesheet">
 </head>
-<body class="h-auto lg:h-screen w-screen bg-gray-800 overflow-x-hidden custom-scrollbar">
-    <div id="wave-div" class="z-0 hidden lg:inline">
+<body class="h-auto lg:h-screen w-screen m-auto bg-gray-800 overflow-x-hidden custom-scrollbar">
+    <div id="wave-div" class="z-0 hidden lg:inline m-auto">
     </div>
-    <div class="lg:absolute lg:flex lg:flex-col lg:h-screen lg:w-screen z-10">
-        <header class="relative flex justify-between w-full h-12 lg:h-16  ">
+    <div class="lg:absolute lg:flex lg:flex-col lg:h-screen lg:w-screen z-10 m-auto">
+        <header class="relative flex justify-between w-full h-12 lg:h-16">
             <p class="self-end ml-7 lg:ml-20 text-2xl text-white">New Network</p>
             <p class="self-end mr-5 lg:mr-14 text-xl text-white">Rejestracja</p>
         </header>
         <main class="relative flex lg:flex-schrink lg:overflow-hidden">
-            {{-- <div class="flex flex-col w-4/12 ml-20 my-5 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900" >
+            <div class="hidden xl:flex flex-col xl:ml-10 2xl:ml-20  ml-20 my-5 w-4/12 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900" >
                 <div>
                     <p class="text-5xl text-center">ZASADY MODERACJI</p>
                     <p class="text-2xl text-center mt-2">New Network</p>
@@ -69,8 +69,8 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
-            <div class="relative h-auto m-auto my-5 w-11/12 max-w-lg md:max-w-3xl bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800 lg:overflow-y-scroll custom-scrollbar">
+            </div>
+            <div class="relative h-auto m-auto xl:mr-10 2xl:mr-20 my-5 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800 lg:overflow-y-scroll custom-scrollbar">
                 <div class="mx-5">
                     <p class="text-2xl p-5 pl-0 border-b-2 dark:border-gray-800">Dane logowania</p>
                     <div class="flex justify-between">
@@ -91,7 +91,7 @@
                                       </div>
                                 </span>
                             </label>
-                            <input type="email" placeholder="jan.kowalski@example.com" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <input type="email" placeholder="jan.kowalski@example.com" class="w-full input input-bordered dark:bg-gray-800 md:max-w-sm">
                             <label class="label">
                                 <span class="label-text">Hasło
                                     <div class="dropdown dropdown-right md:hidden">
@@ -108,14 +108,14 @@
                                       </div>
                                 </span>
                             </label>
-                            <input type="password" placeholder="Hasło" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <input type="password" placeholder="Hasło" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800">
                             <label class="label">
                                 <span class="label-text">Powtórz hasło</span>
                             </label>
-                            <input type="password" placeholder="Hasło" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <input type="password" placeholder="Hasło" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800">
                         </div>
                         <div class="flex flex-col hidden md:inline ml-5">
-                            <div class="w-80 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg text-xs p-5">
+                            <div class="w-80 text-xs p-5 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg">
                                 <p>Zalecamy rejestrację konta na email założony u <a href="" class="link">zaufanego dostawcy email</a>. Jeżeli podasz adres od innego dostawcy, poprosimy Cię o numer telefonu.</p>
                                 <br>
                                 <p>Po wpisaniu hasła sprawdzimy, czy nie zostało ono upublicznione w wyciekach danych. Zalecamy korzystanie z menedżerów haseł, takich jak <a href="https://bitwarden.com" target="_blank" class="link">Bitwarden</a> i wbudowanych w nich generatorów haseł.</p>
@@ -141,11 +141,11 @@
                                       </div>
                                 </span>
                             </label>
-                            <input type="text" placeholder="Jan" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <input type="text" placeholder="Jan" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800">
                             <label class="label">
                                 <span class="label-text">Nazwisko</span>
                             </label>
-                            <input type="text" placeholder="Kowalski" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <input type="text" placeholder="Kowalski" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800">
                             <label class="label">
                                 <span class="label-text">Nazwa użytkownika
                                     <div class="dropdown dropdown-right md:hidden">
@@ -163,11 +163,11 @@
                                       </div>
                                 </span>
                             </label>
-                            <input type="text" placeholder="@jankowalski" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <input type="text" placeholder="@jankowalski" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800">
                             <label class="label">
                                 <span class="label-text">Płeć</span>
                             </label>
-                            <select class="select select-bordered dark:bg-gray-800 w-full md:max-w-sm">
+                            <select class="select select-bordered w-full md:max-w-sm dark:bg-gray-800">
                                 <option disabled="disabled" selected="selected">Nie wybrano</option>
                                 <option>Kobieta</option>
                                 <option>Mężczyzna</option>
@@ -189,8 +189,8 @@
                                       </div>
                                 </span>
                             </label>
-                            <input type="number" type="number" min="1900" max="2099" placeholder="np. 2002" class="input input-bordered dark:bg-gray-800 w-full md:max-w-sm">
-                            <div class="p-3 card w-full border border-gray-300 dark:border-gray-700 rounded-lg mt-7 md:max-w-sm">
+                            <input type="number" type="number" min="1900" max="2099" placeholder="np. 2002" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800">
+                            <div class="p-3 card w-full rounded-lg mt-7 md:max-w-sm border border-gray-300 dark:border-gray-700">
                                 <div class="form-control">
                                     <label class="cursor-pointer label">
                                         <span class="label-text pr-3">Oświadczam, że mam ukończone 13 lat</span>
@@ -198,7 +198,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="p-3 card w-full border border-gray-300 dark:border-gray-700 rounded-lg mt-3 md:max-w-sm">
+                            <div class="p-3 card w-full rounded-lg mt-3 md:max-w-sm border border-gray-300 dark:border-gray-700">
                                 <div class="form-control">
                                     <label class="cursor-pointer label">
                                         <span class="label-text pr-3">Zapoznałem/am się i akceptuję <a href="" class="link">Warunki użytkowania</a></span>
@@ -206,7 +206,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="p-3 card w-full border border-gray-300 dark:border-gray-700 rounded-lg mt-3 md:max-w-sm">
+                            <div class="p-3 card w-full rounded-lg mt-3 md:max-w-sm border border-gray-300 dark:border-gray-700">
                                 <div class="form-control">
                                     <label class="cursor-pointer label">
                                         <span class="label-text pr-3">Zapoznałem/am się i akceptuję <a href="" class="link">Politykę prywatności</a></span>
@@ -215,10 +215,10 @@
                                 </div>
                             </div>
                             <div class="h-5"></div>
-                            <button class="btn w-full md:max-w-sm">Zarejestruj się</button>
+                            < w-full md:max-w-smbutton class="btn">Zarejestruj się</>
                         </div>
                         <div class="flex flex-col hidden md:inline ml-5">
-                            <div class="w-80 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg text-xs p-5">
+                            <div class="w-80 text-xs p-5 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg">
                                 <p>Możesz zmienić swoje imię i nazwisko w każdej chwili w ustawieniach profilu.</p>
                                 <br>
                                 <p>Nazwa użytkownika jest unikatowa dla każdego użytkownika i nie może być zmieniona.</p>
