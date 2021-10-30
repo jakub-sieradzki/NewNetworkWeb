@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Network | Zarejestruj się</title>
     <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/register.css" rel="stylesheet">
+    <link href="/css/gradient.css" rel="stylesheet">
 </head>
 
 <body class="dark:bg-gray-800 h-screen w-screen">
     <div id="wave-div" class="z-0">
     </div>
-    <div class="absolute min-h-screen max-h-screen h-screen w-screen z-10 flex flex-col flex-shrink ">
+    <div class="absolute min-h-screen max-h-screen h-screen w-screen z-10 flex flex-col flex-shrink">
         <header class="relative w-full h-16 flex justify-between flex-shrink-0">
             <p class="ml-20 text-2xl self-end text-white">New Network</p>
             <p class="mr-14 text-2xl self-end">Rejestracja</p>

@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::view('/register', 'register');
 Route::view('/register-test', 'register-test');
+Route::view('/login', 'login');
 
 Route::view('/', 'home');
