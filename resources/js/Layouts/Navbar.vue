@@ -43,12 +43,12 @@
                                 </svg>
                                 <p>Edytuj profil</p>
                             </div>
-                            <div class="flex items-center mt-1 pt-2 pb-2 hover:bg-gray-200 dark:hover:bg-gray-700 dark:hover:bg-opacity-40 rounded-lg transition select-none cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="text-red-600 stroke-current w-6 h-6 ml-4 mr-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-                                <path d="M7 12h14l-3 -3m0 6l3 -3" />
-                            </svg>
+                            <div @click="logout" class="flex items-center mt-1 pt-2 pb-2 hover:bg-gray-200 dark:hover:bg-gray-700 dark:hover:bg-opacity-40 rounded-lg transition select-none cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="text-red-600 stroke-current w-6 h-6 ml-4 mr-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                                    <path d="M7 12h14l-3 -3m0 6l3 -3" />
+                                </svg>
                                 <p>Wyloguj się</p>
                             </div>
                     </div>
@@ -60,13 +60,32 @@
 </template>
 <script>
 import {ref} from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+
 export default {
     setup() {
+    const router = useRouter()
     const showPanel = ref(false)
+    const store = useStore()
+
     const toggleShowPanel = () => {
         showPanel.value = !showPanel.value
     }
-    return {showPanel, toggleShowPanel}
+
+    const logout = () => {
+        axios.post('/logout').then(response => {
+            store.commit('setUserAuthenticated', false)
+            console.log(response)
+            router.push('/login')
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+        router.push('/login');
+    }
+    return { showPanel, toggleShowPanel, logout }
 }
 }
 </script>

@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::view('/register', 'register');
 Route::view('/register-test', 'register-test');
-Route::view('/login', 'login');
+Route::view('{any?}', "home");
 
-Route::view('/', 'home');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('/', 'home');
+    Route::view('home', 'home')->name('home');
+});
