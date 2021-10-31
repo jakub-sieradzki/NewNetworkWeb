@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>New Network | Log in</title>
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/gradient.css" rel="stylesheet">
 </head>
@@ -37,7 +37,7 @@
                         <button class="h-10 bg-green-500 hover:bg-green-600 transition-all rounded-lg text-white shadow-lg" type="submit">Zaloguj się</button>
                         <div class="w-full h-px mt-6 mb-4 bg-gray-300 dark:bg-gray-700"></div>
                         <p class="text-sm mb-4">Pierwszy raz na naszej platformie?</p>
-                        <button class="h-10 bg-blue-500 hover:bg-blue-600 transition-all rounded-lg text-white shadow-lg" type="submit">Załóż konto</button>
+                        <a class="w-full" href="/register"><button class="w-full h-10 bg-blue-500 hover:bg-blue-600 transition-all rounded-lg text-white shadow-lg">Załóż konto</button></a>
                     </div>
                 </div>
             </main>
