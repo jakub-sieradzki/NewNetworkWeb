@@ -4,7 +4,10 @@ const store = createStore({
     state() {
       return {
         createPost: false,
-        userAuthenticated: false
+        userAuthenticated: false,
+        showMenu: false,
+        showCategories: false,
+        showPopular: false,
       }
     },
     mutations: {
@@ -14,6 +17,15 @@ const store = createStore({
         switchUserAuthenticated (state) {
             state.userAuthenticated = !state.userAuthenticated
         },
+        switchShowMenu (state) {
+            state.showMenu = !state.showMenu
+        },
+        switchShowCategories (state) {
+            state.showCategories = !state.showCategories
+        },
+        switchShowPopular (state) {
+            state.showPopular = !state.showPopular
+        },
         setUserAuthenticated (state, value) {
             state.userAuthenticated = value
         }
@@ -22,6 +34,9 @@ const store = createStore({
     getters: {
       getUserAuthenticated (state) {
         return state.userAuthenticated
+      },
+      getShowMenu (state) {
+        return state.showMenu
       }
     },
 })

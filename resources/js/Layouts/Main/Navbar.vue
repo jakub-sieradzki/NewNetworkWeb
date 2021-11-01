@@ -1,7 +1,7 @@
 <template>
     <header class="flex w-full h-14 shadow-md dark:bg-gray-800 flex-shrink-0 bg-gray-100">
         <div class="w-full h-10 self-center relative ml-3 mr-3 lg:ml-4 lg:mr-4">
-            <div @click="toggleShowCategories" class="xl:hidden cursor-pointer absolute top-1/2 transform -translate-y-1/2">
+            <div @click="toggleShowMenu" class="xl:hidden cursor-pointer absolute top-1/2 transform -translate-y-1/2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current justify-center self-center w-8 h-8" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <line x1="4" y1="6" x2="20" y2="6" />
@@ -59,18 +59,17 @@
     </header>
 </template>
 <script>
-import {ref} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
     setup() {
     const router = useRouter()
-    const showPanel = ref(false)
     const store = useStore()
 
-    const toggleShowPanel = () => {
-        showPanel.value = !showPanel.value
+    const toggleShowMenu = () => {
+        store.commit('switchShowMenu')
+        console.log("working")
     }
 
     const logout = () => {
@@ -90,7 +89,7 @@ export default {
         router.push('/profile')
     }
 
-    return { showPanel, toggleShowPanel, logout, editProfile }
+    return { toggleShowMenu, logout, editProfile }
 }
 }
 </script>

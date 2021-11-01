@@ -1,9 +1,13 @@
 <template>
-        <nav class="hidden xl:flex w-48 pr-2 pt-3 h-full overflow-y-auto custom-scrollbar shadow-2xl sticky top-0 left-0 flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
-                <div class="w-1 h-auto">
+<div v-bind:class="[showMenu ? 'absolute w-full top-14 bottom-0 z-10' : 'hidden xl:flex']">
+        <nav v-bind:class="[showMenu ? 'flex h-full w-full bg-white bg-opacity-100 dark:bg-gray-900 dark:bg-opacity-100 ' : 'hidden bg-gray-200 dark:bg-gray-800']" class="xl:flex w-48 pr-2 pt-3 h-full overflow-y-auto custom-scrollbar shadow-2xl sticky top-0 left-0 flex-shrink-0 bg-opacity-10 dark:bg-opacity-25">
+            <div class="flex flex-col w-full h-full flex-grow-0 flex-shrink-0">
+                <input placeholder="Szukaj" class="md:hidden h-10 mb-6 ml-2 focus:outline-none p-4 rounded-full border border-gray-300 bg-transparent dark:border-gray-700 focus:border-blue-500">
+                <div class="flex w-full h-full">
+                    <div class="w-1 h-auto">
                     <div class="h-12 bg-blue-600 rounded-r-xl"></div>
                 </div>
-                <div class="w-full flex flex-col">
+                <div class="w-full h-full flex flex-col">
                     <div @click="navToHome" class="main-menu__element bg-gray-100 dark:bg-gray-800">
                         <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round"
@@ -114,20 +118,31 @@
                     </div>
                     <p class="text-gray-400 text-xs text-center pt-3 pb-3">&copy; New Network 2021</p>
                 </div>
-            </nav>
+            </div>
+                </div>
+        </nav>
+</div>
 </template>
 <script>
 import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
 export default {
     setup() {
         const router = useRouter()
+        const store = useStore()
+        const showMen = true
 
         const navToHome = () => {
+            store.commit('switchShowMenu')
             router.push('/home')
         }
 
         return {
-            navToHome
+            navToHome,
+            showMenu: computed(() => store.getters.getShowMenu),
+            showMen
         }
     }
 }

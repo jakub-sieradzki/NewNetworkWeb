@@ -19637,6 +19637,7 @@ __webpack_require__.r(__webpack_exports__);
           store.commit('setUserAuthenticated', true);
           router.push('/');
         })["catch"](function (error) {
+          alert("Nieprawidłowy login lub hasło");
           console.log(error);
         });
       });
@@ -19924,20 +19925,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
-
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   setup: function setup() {
-    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_1__.useRouter)();
-    var showPanel = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_2__.useStore)();
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_0__.useRouter)();
+    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.useStore)();
 
-    var toggleShowPanel = function toggleShowPanel() {
-      showPanel.value = !showPanel.value;
+    var toggleShowMenu = function toggleShowMenu() {
+      store.commit('switchShowMenu');
+      console.log("working");
     };
 
     var logout = function logout() {
@@ -19956,8 +19955,7 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     return {
-      showPanel: showPanel,
-      toggleShowPanel: toggleShowPanel,
+      toggleShowMenu: toggleShowMenu,
       logout: logout,
       editProfile: editProfile
     };
@@ -19977,18 +19975,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   setup: function setup() {
-    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_0__.useRouter)();
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_1__.useRouter)();
+    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_2__.useStore)();
+    var showMen = true;
 
     var navToHome = function navToHome() {
+      store.commit('switchShowMenu');
       router.push('/home');
     };
 
     return {
-      navToHome: navToHome
+      navToHome: navToHome,
+      showMenu: (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
+        return store.getters.getShowMenu;
+      }),
+      showMen: showMen
     };
   }
 });
@@ -20931,7 +20940,7 @@ var _hoisted_19 = [_hoisted_17, _hoisted_18];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("header", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     onClick: _cache[0] || (_cache[0] = function () {
-      return _ctx.toggleShowCategories && _ctx.toggleShowCategories.apply(_ctx, arguments);
+      return $setup.toggleShowMenu && $setup.toggleShowMenu.apply($setup, arguments);
     }),
     "class": "xl:hidden cursor-pointer absolute top-1/2 transform -translate-y-1/2"
   }, _hoisted_4), _hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -20963,10 +20972,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "hidden xl:flex w-48 pr-2 pt-3 h-full overflow-y-auto custom-scrollbar shadow-2xl sticky top-0 left-0 flex-shrink-0 bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25"
+  "class": "flex flex-col w-full h-full flex-grow-0 flex-shrink-0"
 };
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  placeholder: "Szukaj",
+  "class": "md:hidden h-10 mb-6 ml-2 focus:outline-none p-4 rounded-full border border-gray-300 bg-transparent dark:border-gray-700 focus:border-blue-500"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_3 = {
+  "class": "flex w-full h-full"
+};
+
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "w-1 h-auto"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "h-12 bg-blue-600 rounded-r-xl"
@@ -20974,23 +20994,31 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_3 = {
-  "class": "w-full flex flex-col"
+var _hoisted_5 = {
+  "class": "w-full h-full flex flex-col"
 };
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><polyline points=\"5 12 3 12 12 3 21 12 19 12\"></polyline><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\"></path><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\"></path></svg><p class=\"self-center ml-2\">Główna</p>", 2);
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><polyline points=\"5 12 3 12 12 3 21 12 19 12\"></polyline><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\"></path><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\"></path></svg><p class=\"self-center ml-2\">Główna</p>", 2);
 
-var _hoisted_6 = [_hoisted_4];
+var _hoisted_8 = [_hoisted_6];
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4\"></path><line x1=\"13.5\" y1=\"6.5\" x2=\"17.5\" y2=\"10.5\"></line></svg><p class=\"self-center ml-2\">Tekst</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"></rect><line x1=\"8\" y1=\"4\" x2=\"8\" y2=\"20\"></line><line x1=\"16\" y1=\"4\" x2=\"16\" y2=\"20\"></line><line x1=\"4\" y1=\"8\" x2=\"8\" y2=\"8\"></line><line x1=\"4\" y1=\"16\" x2=\"8\" y2=\"16\"></line><line x1=\"4\" y1=\"12\" x2=\"20\" y2=\"12\"></line><line x1=\"16\" y1=\"8\" x2=\"20\" y2=\"8\"></line><line x1=\"16\" y1=\"16\" x2=\"20\" y2=\"16\"></line></svg><p class=\"self-center ml-2\">Wideo</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"></rect><polyline points=\"16 3 12 7 8 3\"></polyline></svg><p class=\"self-center ml-2\">Na żywo</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><line x1=\"15\" y1=\"8\" x2=\"15.01\" y2=\"8\"></line><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M4 15l4 -4a3 5 0 0 1 3 0l5 5\"></path><path d=\"M14 14l1 -1a3 5 0 0 1 3 0l2 2\"></path></svg><p class=\"self-center ml-2\">Zdjęcia</p></div><hr class=\"mt-2 mb-2 dark:border-gray-600\"><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><circle cx=\"7\" cy=\"5\" r=\"2\"></circle><path d=\"M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5\"></path><circle cx=\"17\" cy=\"5\" r=\"2\"></circle><path d=\"M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4\"></path></svg><p class=\"self-center ml-2\">Znajomi</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><path d=\"M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2\"></path><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"></path><path d=\"M21 21v-2a4 4 0 0 0 -3 -3.85\"></path></svg><p class=\"self-center ml-2\">Grupy</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M15 3v4a1 1 0 0 0 1 1h4\"></path><path d=\"M18 17h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h4l5 5v7a2 2 0 0 1 -2 2z\"></path><path d=\"M16 17v2a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2\"></path></svg><p class=\"self-center ml-2\">Strony</p></div><hr class=\"mt-2 mb-2 dark:border-gray-600\"><div class=\"flex-1 flex-shrink\"></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z\"></path><circle cx=\"12\" cy=\"12\" r=\"3\"></circle></svg><p class=\"self-center ml-2\">Ustawienia</p></div><p class=\"text-gray-400 text-xs text-center pt-3 pb-3\">© New Network 2021</p>", 12);
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4\"></path><line x1=\"13.5\" y1=\"6.5\" x2=\"17.5\" y2=\"10.5\"></line></svg><p class=\"self-center ml-2\">Tekst</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"></rect><line x1=\"8\" y1=\"4\" x2=\"8\" y2=\"20\"></line><line x1=\"16\" y1=\"4\" x2=\"16\" y2=\"20\"></line><line x1=\"4\" y1=\"8\" x2=\"8\" y2=\"8\"></line><line x1=\"4\" y1=\"16\" x2=\"8\" y2=\"16\"></line><line x1=\"4\" y1=\"12\" x2=\"20\" y2=\"12\"></line><line x1=\"16\" y1=\"8\" x2=\"20\" y2=\"8\"></line><line x1=\"16\" y1=\"16\" x2=\"20\" y2=\"16\"></line></svg><p class=\"self-center ml-2\">Wideo</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"></rect><polyline points=\"16 3 12 7 8 3\"></polyline></svg><p class=\"self-center ml-2\">Na żywo</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><line x1=\"15\" y1=\"8\" x2=\"15.01\" y2=\"8\"></line><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M4 15l4 -4a3 5 0 0 1 3 0l5 5\"></path><path d=\"M14 14l1 -1a3 5 0 0 1 3 0l2 2\"></path></svg><p class=\"self-center ml-2\">Zdjęcia</p></div><hr class=\"mt-2 mb-2 dark:border-gray-600\"><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><circle cx=\"7\" cy=\"5\" r=\"2\"></circle><path d=\"M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5\"></path><circle cx=\"17\" cy=\"5\" r=\"2\"></circle><path d=\"M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4\"></path></svg><p class=\"self-center ml-2\">Znajomi</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><path d=\"M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2\"></path><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"></path><path d=\"M21 21v-2a4 4 0 0 0 -3 -3.85\"></path></svg><p class=\"self-center ml-2\">Grupy</p></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M15 3v4a1 1 0 0 0 1 1h4\"></path><path d=\"M18 17h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h4l5 5v7a2 2 0 0 1 -2 2z\"></path><path d=\"M16 17v2a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2\"></path></svg><p class=\"self-center ml-2\">Strony</p></div><hr class=\"mt-2 mb-2 dark:border-gray-600\"><div class=\"flex-1 flex-shrink\"></div><div class=\"main-menu__element\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"main-menu__element__icon\" width=\"44\" height=\"44\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#2c3e50\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z\"></path><circle cx=\"12\" cy=\"12\" r=\"3\"></circle></svg><p class=\"self-center ml-2\">Ustawienia</p></div><p class=\"text-gray-400 text-xs text-center pt-3 pb-3\">© New Network 2021</p>", 12);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("nav", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([$setup.showMenu ? 'absolute w-full top-14 bottom-0 z-10' : 'hidden xl:flex'])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("nav", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([[$setup.showMenu ? 'flex h-full w-full bg-white bg-opacity-100 dark:bg-gray-900 dark:bg-opacity-100 ' : 'hidden bg-gray-200 dark:bg-gray-800'], "xl:flex w-48 pr-2 pt-3 h-full overflow-y-auto custom-scrollbar shadow-2xl sticky top-0 left-0 flex-shrink-0 bg-opacity-10 dark:bg-opacity-25"])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     onClick: _cache[0] || (_cache[0] = function () {
       return $setup.navToHome && $setup.navToHome.apply($setup, arguments);
     }),
     "class": "main-menu__element bg-gray-100 dark:bg-gray-800"
-  }, _hoisted_6), _hoisted_7])]);
+  }, _hoisted_8), _hoisted_9])])])], 2
+  /* CLASS */
+  )], 2
+  /* CLASS */
+  );
 }
 
 /***/ }),
@@ -21532,7 +21560,10 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
   state: function state() {
     return {
       createPost: false,
-      userAuthenticated: false
+      userAuthenticated: false,
+      showMenu: false,
+      showCategories: false,
+      showPopular: false
     };
   },
   mutations: {
@@ -21542,6 +21573,15 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
     switchUserAuthenticated: function switchUserAuthenticated(state) {
       state.userAuthenticated = !state.userAuthenticated;
     },
+    switchShowMenu: function switchShowMenu(state) {
+      state.showMenu = !state.showMenu;
+    },
+    switchShowCategories: function switchShowCategories(state) {
+      state.showCategories = !state.showCategories;
+    },
+    switchShowPopular: function switchShowPopular(state) {
+      state.showPopular = !state.showPopular;
+    },
     setUserAuthenticated: function setUserAuthenticated(state, value) {
       state.userAuthenticated = value;
     }
@@ -21549,6 +21589,9 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
   getters: {
     getUserAuthenticated: function getUserAuthenticated(state) {
       return state.userAuthenticated;
+    },
+    getShowMenu: function getShowMenu(state) {
+      return state.showMenu;
     }
   }
 });
