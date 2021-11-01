@@ -4,7 +4,7 @@
                     <div class="h-12 bg-blue-600 rounded-r-xl"></div>
                 </div>
                 <div class="w-full flex flex-col">
-                    <div class="main-menu__element bg-gray-100 dark:bg-gray-800">
+                    <div @click="navToHome" class="main-menu__element bg-gray-100 dark:bg-gray-800">
                         <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round"
                             stroke-linejoin="round">
@@ -117,6 +117,18 @@
             </nav>
 </template>
 <script>
+import { useRouter } from 'vue-router'
 export default {
+    setup() {
+        const router = useRouter()
+
+        const navToHome = () => {
+            router.push('/home')
+        }
+
+        return {
+            navToHome
+        }
+    }
 }
 </script>

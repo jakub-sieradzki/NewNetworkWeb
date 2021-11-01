@@ -1,5 +1,4 @@
 <template>
-    <CreatePost v-if="createPost"/>
             <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32">
                     <!--Categories-->
                         <Categories />
@@ -10,6 +9,36 @@
                     <!--Popular-->
                         <Popular />
                     <!--End popular-->
+                        <!-- NavBar bottom for mobile -->
+  <div class="lg:hidden lg:left-60 absolute w-full bottom-0 h-14 bg-gray-100 bg-opacity-95 dark:bg-gray-900 flex justify-between">
+          <div class="w-full  flex justify-center items-center">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 mr-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M19 3h-4a2 2 0 0 0 -2 2v12a4 4 0 0 0 8 0v-12a2 2 0 0 0 -2 -2" />
+                  <path d="M13 7.35l-2 -2a2 2 0 0 0 -2.828 0l-2.828 2.828a2 2 0 0 0 0 2.828l9 9" />
+                  <path d="M7.3 13h-2.3a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h12" />
+                  <line x1="17" y1="17" x2="17" y2="17.01" />
+                </svg>
+              <p class="hidden sm:block">Kategorie</p>
+            </div>
+          </div>
+          <div class="w-1/6 flex justify-center">
+            <div @click="showCreatePost" class="absolute shadow-md bottom-6 w-14 h-14 flex items-center justify-center rounded-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-900">
+                <img src="images/add.svg" alt="add" class="p-3">
+            </div>
+          </div>
+          <div class="w-full flex justify-center items-center">
+            <div class="flex items-center ">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 mr-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <polyline points="3 17 9 11 13 15 21 7" />
+                  <polyline points="14 7 21 7 21 14" />
+              </svg>
+              <p class="hidden sm:block">Popularne</p>
+            </div>
+          </div>
+        </div>
             </div>
 </template>
 <script>
