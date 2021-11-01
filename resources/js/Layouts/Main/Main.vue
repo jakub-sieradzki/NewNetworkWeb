@@ -37,7 +37,8 @@ export default {
     }
 
     return {
-        showCreatePost
+        showCreatePost,
+        createPost: computed(() => store.state.createPost),
     }
   },
 }

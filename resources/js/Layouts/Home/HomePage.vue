@@ -46,7 +46,6 @@ import Categories from './Categories.vue';
 import MainPostsList from './MainPostsList.vue';
 import Popular from './Popular.vue';
 import CreatePost from '../CreatePost.vue'
-import { computed } from 'vue'
 import { useStore } from 'vuex'
 
 
@@ -69,7 +68,6 @@ export default {
 
     return {
       // access a state in computed function
-      createPost: computed(() => store.state.createPost),
       showCreatePost
     }
   },

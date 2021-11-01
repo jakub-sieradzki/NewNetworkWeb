@@ -19777,9 +19777,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MainPostsList_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MainPostsList.vue */ "./resources/js/Layouts/Home/MainPostsList.vue");
 /* harmony import */ var _Popular_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Popular.vue */ "./resources/js/Layouts/Home/Popular.vue");
 /* harmony import */ var _CreatePost_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../CreatePost.vue */ "./resources/js/Layouts/CreatePost.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
-
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 
 
 
@@ -19794,7 +19792,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   name: "App",
   setup: function setup() {
-    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_5__.useStore)();
+    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_4__.useStore)();
 
     var showCreatePost = function showCreatePost() {
       store.commit('switchCreatePost');
@@ -19802,9 +19800,6 @@ __webpack_require__.r(__webpack_exports__);
 
     return {
       // access a state in computed function
-      createPost: (0,vue__WEBPACK_IMPORTED_MODULE_4__.computed)(function () {
-        return store.state.createPost;
-      }),
       showCreatePost: showCreatePost
     };
   }
@@ -19908,7 +19903,10 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     return {
-      showCreatePost: showCreatePost
+      showCreatePost: showCreatePost,
+      createPost: (0,vue__WEBPACK_IMPORTED_MODULE_3__.computed)(function () {
+        return store.state.createPost;
+      })
     };
   }
 });
@@ -20771,7 +20769,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   var _component_router_view = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-view");
 
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_ctx.createPost ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_CreatePost, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [$setup.createPost ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_CreatePost, {
     key: 0
   })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Navbar), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Navpanel), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_view, {
     name: "mainContent"
@@ -21494,22 +21492,24 @@ var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_10__.createRouter)({
   routes: routes
 });
 router.beforeEach(function (to, from, next) {
-  if (to.path.includes('/profile')) {
-    next();
-  } // if (to.name == 'Login' || to.name == "Register") {
-  //   if (store.getters.getUserAuthenticated) {
-  //     next('/home');
-  //   } else {
-  //     next();
-  //   }
-  // } else {
-  //   if (store.getters.getUserAuthenticated) {
-  //     next();
-  //   } else {
-  //     next({ name: 'Login' });
-  //   }
+  // if(to.path.includes('/profile')) {
+  //   next()
   // }
-
+  if (to.name == 'Login' || to.name == "Register") {
+    if (_store_js__WEBPACK_IMPORTED_MODULE_9__["default"].getters.getUserAuthenticated) {
+      next('/home');
+    } else {
+      next();
+    }
+  } else {
+    if (_store_js__WEBPACK_IMPORTED_MODULE_9__["default"].getters.getUserAuthenticated) {
+      next();
+    } else {
+      next({
+        name: 'Login'
+      });
+    }
+  }
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (router);
 

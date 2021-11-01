@@ -66,23 +66,23 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.path.includes('/profile')) {
-    next()
-  }
-
-  // if (to.name == 'Login' || to.name == "Register") {
-  //   if (store.getters.getUserAuthenticated) {
-  //     next('/home');
-  //   } else {
-  //     next();
-  //   }
-  // } else {
-  //   if (store.getters.getUserAuthenticated) {
-  //     next();
-  //   } else {
-  //     next({ name: 'Login' });
-  //   }
+  // if(to.path.includes('/profile')) {
+  //   next()
   // }
+
+  if (to.name == 'Login' || to.name == "Register") {
+    if (store.getters.getUserAuthenticated) {
+      next('/home');
+    } else {
+      next();
+    }
+  } else {
+    if (store.getters.getUserAuthenticated) {
+      next();
+    } else {
+      next({ name: 'Login' });
+    }
+  }
 })
 
 export default router
