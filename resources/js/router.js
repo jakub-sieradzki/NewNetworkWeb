@@ -1,28 +1,45 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from './Layouts/MainPage.vue'
-import Login from './Auth/Login.vue'
-import Register from './Auth/Register.vue'
+import Main from './Layouts/Main/Main.vue'
+import Login from './Layouts/Auth/Login.vue'
+import Register from './Layouts/Auth/Register.vue'
+import Home from './Layouts/Home/HomePage.vue'
 import store from './store.js'
 
 const routes = [
-    { path: '/', name: 'Home', component: Home },
-    { path: '/login', name: 'Login', component: Login },
-    { path: '/register', name: 'Register', component: Register }
-  ];
+  {
+    path: '/', name: 'Main', 
+    component: Main,
+    children: [{
+      path: 'home',
+      components: {
+        mainContent: Home,
+      },
+    }]
+  },
   
-  const router = createRouter({
-    history: createWebHashHistory(),
-    routes
-  })
-  
-  router.beforeEach((to, from, next) => {
-    if(to.name == 'Home' && !store.getters.getUserAuthenticated) next({name:'Login'})
-    else next()
-    
-    if((to.name == 'Login' || to.name == 'Register') && store.getters.getUserAuthenticated) next({name: 'Home'})
-    else next()
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/register', name: 'Register', component: Register },
+];
 
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+})
 
-  })
+router.beforeEach((to, from, next) => {
+  if(to.name == 'Login' || to.name == "Register") {
+    if(store.getters.getUserAuthenticated) {
+      next('/home');
+    } else {
+      next();
+    }
+  } else {
+    if(store.getters.getUserAuthenticated) {
+      next();
+    } else {
+      next({ name: 'Login' });
+    }
+  }
+})
 
-  export default router
+export default router

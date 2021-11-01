@@ -1,28 +1,10 @@
 <template>
-      <div class="dark:bg-gray-900 dark:text-white h-screen w-screen">
-    <CreatePost v-if="createPost"/>
+<div class="dark:bg-gray-900 dark:text-white h-screen w-screen">
     <div class="w-full h-full flex flex-col overflow-y-hidden z-0">
         <Navbar />
         <div class="overflow-y-hidden flex h-full">
             <Navpanel />
-            <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32">
-                    <!--Categories-->
-                        <Categories />
-                    <!--End Categories-->
-                    <!--Posts Section-->
-                        <Main />
-                    <!--End Post Section-->
-                    <!--Popular-->
-                        <Popular />
-                    <!--End popular-->
-            </div>
-            <!-- <div class="flex items-center absolute -right-11 top-40 mt-2 bg-white border shadow-md rounded-t-md pr-4 pl-3 transform -rotate-90">
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-8 h-8 pr-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <polyline points="6 15 12 9 18 15" />
-              </svg>
-              <p class="">Popularne</p>
-            </div> -->
+            <router-view name="mainContent"></router-view>
         </div>
     </div>
     <!-- NavBar bottom for mobile -->
@@ -58,40 +40,23 @@
 </div>
 </template>
 <script>
-import Categories from './Categories.vue';
-import Main from './Main.vue';
+import { useRouter } from 'vue-router'
 import Navbar from './Navbar.vue';
 import Navpanel from './Navpanel.vue';
-import Popular from './Popular.vue';
-import CreatePost from './CreatePost.vue'
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+
 
 
 export default {
   components: {
-    Popular,
     Navbar,
     Navpanel,
-    Categories,
-    Main,
-    CreatePost,
     },
 
-  name: "App",
+  name: "Main",
 
   setup() {
-    const store = useStore()
-
-    const showCreatePost = () => {
-        store.commit('switchCreatePost')
-    }
-
-    return {
-      // access a state in computed function
-      createPost: computed(() => store.state.createPost),
-      showCreatePost
-    }
+    const router = useRouter()
+    router.push('/home')
   },
 }
 </script>

@@ -75,8 +75,7 @@ export default {
                     router.push('/')
                 })
                 .catch(error => {
-                    console.log(error.data);
-                    alert("Nieprawidłowy login lub hasło");
+                    console.log(error);
                 })
             });
         }
