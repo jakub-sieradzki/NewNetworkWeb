@@ -23,6 +23,11 @@ Główne repozytorium projektu New Network.
     DB_USERNAME=35101402_nntest
     DB_PASSWORD=yBENm8W9z8kb
     ```
+    *Zamień ustawienia sesji:
+    ```
+    SESSION_DRIVER=cookie
+    ```
+    
 3. Wykonaj następujące komendy w terminalu VS Code:
     1. **composer install**
     2. **npm install**
