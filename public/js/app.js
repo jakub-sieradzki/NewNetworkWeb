@@ -21516,7 +21516,7 @@ var routes = [{
   component: _Layouts_Auth_Register_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
 }];
 var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_10__.createRouter)({
-  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_10__.createWebHashHistory)(),
+  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_10__.createWebHistory)(),
   routes: routes
 });
 router.beforeEach(function (to, from, next) {
