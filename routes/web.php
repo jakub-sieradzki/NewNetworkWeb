@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::view('/register-test', 'register-test');
+Route::view('/login-test', 'login-test');
 Route::view('{any?}', "home");
 
 Route::middleware(['auth', 'verified'])->group(function () {

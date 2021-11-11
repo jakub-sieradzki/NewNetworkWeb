@@ -30,7 +30,6 @@ export default {
   setup() {
     const router = useRouter()
     const store = useStore()
-    router.push('/home')
 
     const showCreatePost = () => {
         store.commit('switchCreatePost')
