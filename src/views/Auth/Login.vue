@@ -12,7 +12,7 @@
                         <p class="text-xl font-bold mb-5">Logowanie</p>
                             <div class="flex flex-col">
                                 <input class="input input-bordered focus:shadow-none mb-2 dark:bg-gray-900" type="email" name="email" v-model="formData.email" placeholder="Adres e-mail">
-                                <input class="input input-bordered focus:shadow-none mb-2 dark:bg-gray-900" type="password" name="password" v-model="formData.password" placeholder="Hasło">
+                                <input v-on:keyup.enter="login" class="input input-bordered focus:shadow-none mb-2 dark:bg-gray-900" type="password" name="password" v-model="formData.password" placeholder="Hasło">
                                 <div class="flex gap-2 flex-col lg:flex-row justify-between flex-shrink-0 items-center mt-1 mb-5">
                                     <a class="text-sm hover:underline px-4 pb-1 lg:pb-0 w-full lg:w-1/2" href="">Przywróć hasło</a>
                                     <div class="px-3 py-1 card flex-shrink-0 rounded-lg border border-gray-300 dark:border-gray-700 w-full lg:w-1/2 self-end transition hover:bg-gray-200 dark:hover:bg-gray-700">

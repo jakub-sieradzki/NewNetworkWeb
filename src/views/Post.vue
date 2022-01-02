@@ -3,7 +3,7 @@
                                 <div class="post flex-grow">
                                     <!-- Header -->
                                     <div class="post__header">
-                                        <div class="post__header__user-info">
+                                        <div @click="showProfile()" class="post__header__user-info">
                                             <img ref="profileImg"
                                                 class="post__header__user-info__profile-picture rounded-full" alt="photo">
                                             <div class="overflow-hidden">
@@ -28,7 +28,7 @@
                                     </div>
                                     <!-- End Content -->
                                     <!-- Info -->
-                                    <div class="h-auto w-full flex justify-between">
+                                    <div class="h-auto w-full flex justify-end">
                                         <!--Categories list-->
                                             <div style="display: none;" class="pt-1 pr-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center" @click="toggleShowCategories">
                                                 <p>Kategorie</p>
@@ -37,7 +37,7 @@
                                                     <polyline points="6 9 12 15 18 9" />
                                                 </svg>
                                             </div>
-                                        <p class="post__info__time flex-shrink truncate justify-center">{{ date_created }}</p>
+                                        <p class="post__info__time flex-shrink truncate justify-end">{{ localDate }}</p>
                                     </div>
                                     <div v-if="showCategories" class="flex flex-wrap gap-1 mt-4">
                                         <div class="bg-green-800 post__info__category">
@@ -133,6 +133,8 @@
 <script>
 import { ref } from 'vue'
 import { ref as storageRef, getStorage, getDownloadURL } from "firebase/storage";
+import { useRouter } from "vue-router";
+import { Timestamp } from '@firebase/firestore';
 export default {
     props: ['name', 'surname', 'username', 'profileImageUrl', 'content', 'date_created', 'views', 'com_count'],
     setup() {
@@ -140,22 +142,36 @@ export default {
         const toggleShowCategories = () => {
             showCategories.value = !showCategories.value
         }
-
-        return {showCategories, toggleShowCategories}
+        let localDate = ref();
+        
+        return {showCategories, toggleShowCategories, localDate}
+    },
+    methods: {
+        showProfile() {
+            this.$router.push('/user/' + this.username + '/posts');
+            console.log(this.username);
+        }
     },
     mounted() {
+        const date = this.date_created.toDate();
+        this.localDate = date.toLocaleString();
         const storage = getStorage();
+        const img = this.$refs.profileImg;
+        if(this.profileImageUrl) {
             getDownloadURL(storageRef(storage, this.profileImageUrl))
             .then((url) => {
 
                 // Or inserted into an <img> element
-                const img = this.$refs.profileImg;
+
                 img.setAttribute('src', url);
-                imgDetails.setAttribute('src', url);
             })
             .catch((error) => {
                 // Handle any errors
             });
+        } else {
+            img.setAttribute('src', '/img/avatar.png');
+        }
+
     }
 
 }

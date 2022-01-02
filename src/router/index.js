@@ -23,7 +23,7 @@ const routes = [
         },
       },
       {
-        path: 'profile',
+        path: 'user/:username',
         components: {
           mainContent: Profile,
         },
@@ -67,23 +67,30 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // if(to.path.includes('/profile')) {
-  //   next()
-  // }
-  next()
-  // if (to.name == 'Login' || to.name == "Register") {
-  //   if (store.getters.getUid) {
-  //     next('/home');
-  //   } else {
-  //     next();
-  //   }
-  // } else {
-  //   if (store.getters.getUid) {
-  //     next();
-  //   } else {
-  //     next({ name: 'Login' });
-  //   }
-  // }
-})
+  if(store.getters.getGotUserInfo) {
+    next();
+  }
+});
+
+//   next();
+
+//   // if(to.path.includes('/profile')) {
+//   //   next()
+//   // }
+//   // next()
+//   // if (to.name == 'Login' || to.name == "Register") {
+//   //   if (store.getters.getUid) {
+//   //     next('/home');
+//   //   } else {
+//   //     next();
+//   //   }
+//   // } else {
+//   //   if (store.getters.getUid) {
+//   //     next();
+//   //   } else {
+//   //     next({ name: 'Login' });
+//   //   }
+//   // }
+// })
 
 export default router;

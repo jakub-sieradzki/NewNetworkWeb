@@ -10,9 +10,17 @@
                 </svg>
             </div>
             <p class="font-main text-xl absolute top-1/2 left-11 xl:left-0 transform -translate-y-1/2">New Network<span
-                    class="text-xs text-gray-400 ml-1">ALPHA</span>
+                    class="text-xs text-gray-400 ml-1">v.0.2.0</span>
             </p>
-            <input placeholder="Szukaj" class="hidden md:block absolute left-1/2 transform -translate-x-1/2 md:w-80 lg:w-96 h-10 focus:outline-none p-4 rounded-full border border-gray-300 bg-gray-200 dark:bg-gray-700 dark:border-gray-900 focus:border-blue-500">
+            <div class="dropdown hidden md:block absolute left-1/2 transform -translate-x-1/2">
+            <input tabindex="0" placeholder="Szukaj" v-model="searchQuery" class=" md:w-80 lg:w-96 h-10 focus:outline-none p-4 rounded-full border border-gray-300 bg-gray-200 dark:bg-gray-700 dark:border-gray-900 focus:border-blue-500">
+            <ul tabindex="0" class="z-10 p-2 shadow menu dropdown-content bg-base-100 rounded-box md:w-80 lg:w-96">
+                <li class="py-2 px-2 cursor-pointer hover:underline" @click="pushToProfile(result.username)" v-for="result in searchResult" :key="result.username">
+                    <p class="font-bold">{{result.name}} {{result.surname}}</p>
+                    <p>@{{result.username}}</p>
+                </li>
+            </ul>
+            </div>
             <div class="flex h-10 self-center absolute top-0 right-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="p-2 w-10 h-10 mr-2 stroke-current rounded-full cursor-pointer border bg-gray-200 border-gray-300 dark:bg-gray-700 dark:border-gray-900" width="44" height="44"
                     viewBox="0 0 24 24" stroke-width="1.5" stroke="#000" fill="none" stroke-linecap="round"
@@ -64,8 +72,15 @@ import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { getAuth, signOut } from "firebase/auth";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getFirestore, query, where, getDocs, collection } from "firebase/firestore";
 
 export default {
+    data() {
+        return {
+            searchQuery: "",
+            searchResult: [],
+        }
+    },
         setup() {
         const router = useRouter()
         const store = useStore()
@@ -95,31 +110,64 @@ export default {
             }).catch((error) => {
                 console.log(error)
             });
-
         }
         const editProfile = () => {
-            router.push('/profile/posts')
+            const store = useStore()
+            router.push('/user/' + username.value + '/posts');
         }
 
-        return { toggleShowMenu, logout, editProfile, name, surname, username, profileImage }
+        return { toggleShowMenu, logout, editProfile, name, surname, username, profileImage}
     },
+    computed: {
 
+    },
+    watch: {
+        searchQuery: function(newQuery, oldQuery) {
+            this.resultQuery(newQuery);
+        }
+    },
+    methods: {
+        async resultQuery(s) {
+            let queryArray = [];
+            if(s.length > 2) {
+                const db = getFirestore();
+                console.log(s);
+                const q = query(collection(db, "users"), where("username", ">=", s), where("username", "<=", s + '\uf8ff'));
+                await getDocs(q)
+                    .then((docs) => {
+                        docs.forEach(doc => {
+                            queryArray.push(doc.data());
+                        })
+                        this.searchResult = queryArray;
+                    });
+            }
+            else {
+                this.searchResult = [];
+            }
+        },
+        pushToProfile(username) {
+            this.$router.push("/user/" + username + "/posts");
+        }
+    },
     mounted() {
         const storage = getStorage();
-        console.log(this.profileImage);
+        console.log("profileImage from navbar: " + this.profileImage);
+        const img = this.$refs.profileImg;
+        const imgDetails = this.$refs.profileImgDetails;
         if(this.profileImage) {
             getDownloadURL(ref(storage, this.profileImage))
             .then((url) => {
 
                 // Or inserted into an <img> element
-                const img = this.$refs.profileImg;
-                const imgDetails = this.$refs.profileImgDetails;
                 img.setAttribute('src', url);
                 imgDetails.setAttribute('src', url);
             })
             .catch((error) => {
                 // Handle any errors
             });
+        } else {
+            img.setAttribute('src', '/img/avatar.png');
+            imgDetails.setAttribute('src', '/img/avatar.png');
         }
 
     }

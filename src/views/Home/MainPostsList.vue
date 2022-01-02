@@ -1,5 +1,5 @@
 <template>
-        <div class="max-w-xl ml-4 mr-4 flex-shrink" style="height: max-content">
+        <div class="max-w-xl ml-4 mr-4 flex-shrink flex-grow" style="height: max-content">
                         <div class="m-auto w-full">
                             <div class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-3 border rounded-md dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40">
                                 <p>Najnowsze</p>
@@ -23,23 +23,32 @@
 </template>
 <script>
 import Post from '../Post.vue';
-import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where } from 'firebase/firestore';
+import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ref } from 'vue';
+import { useStore } from 'vuex';
 export default {
     components: { Post },
     setup() {
+        const store = useStore();
+        console.log("setupMainPosts");
         let postsLoaded = ref(false);
         let posts = ref([]);
-        const db = getFirestore();
-        const q = query(collection(db, "posts"), where("uid", "==", getAuth().currentUser.uid));
-        getDocs(q)
-            .then((docs) => {
-                docs.forEach(doc => {
-                    posts.value.push(doc.data());
-                })
-                postsLoaded.value = true;
-            });
+
+        if(store.getters.getPeopleObserved.length != 0) {
+            console.log(store.getters.getPeopleObserved);
+            const db = getFirestore();
+            const q = query(collection(db, "posts"), where("uid", "in", store.getters.getPeopleObserved), orderBy("createdTimestamp", "desc"));
+            getDocs(q)
+                .then((docs) => {
+                    docs.forEach(doc => {
+                        posts.value.push(doc.data());
+                        console.log(doc.data());
+                    })
+                    postsLoaded.value = true;
+                });
+        }
+
         return { posts, postsLoaded }
     },
     mounted() {
@@ -47,7 +56,7 @@ export default {
     },
     methods: {
         loadPosts: function() {
-
+                    console.log("mountedMainPosts");
         }
     }
 }

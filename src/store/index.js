@@ -8,11 +8,28 @@ export default createStore({
       showMenu: false,
       showCategories: false,
       showPopular: false,
+      gotUserInfo: false,
+
       uid: '',
+      username: '',
+
       name: '',
       surname: '',
-      username: '',
-      profileImage: '',
+      gender: -1,
+      birthyear: -1,
+      description: '',
+
+      peopleBlocked: [],
+      peopleFriends: [],
+      peopleObserved: [],
+
+      groupsBlocked: [],
+      groupsJoined: [],
+      groupsObserved: [],
+
+      pagesBlocked: [],
+      pagesLiked: [],
+      pagesObserved: [],
     }
   },
   mutations: {
@@ -48,7 +65,46 @@ export default createStore({
       },
       setProfileImage (state, value) {
         state.profileImage = value
-      }
+      },
+      setGotUserInfo(state, value) {
+        state.gotUserInfo = value
+      },
+      setGender(state, value) {
+        state.gender = value
+      },
+      setBirthyear(state, value) {
+        state.birthyear = value
+      },
+      setDescription(state, value) {
+        state.description = value
+      },
+      setPeopleBlocked(state, value) {
+        state.peopleBlocked = value
+      },
+      setPeopleFriends(state, value) {
+        state.peopleFriends = value
+      },
+      setPeopleObserved(state, value) {
+        state.peopleObserved = value
+      },
+      setGroupsBlocked(state, value) {
+        state.groupsBlocked = value
+      },
+      setGroupsJoined(state, value) {
+        state.groupsJoined = value
+      },
+      setGroupsObserved(state, value) {
+        state.GroupsObserved = value
+      },
+      setPagesBlocked(state, value) {
+        state.pagesBlocked = value
+      },
+      setPagesLiked(state, value) {
+        state.pagesLiked = value
+      },
+      setPagesObserved(state, value) {
+        state.pagesObserved = value
+      },
   },
 
   getters: {
@@ -72,6 +128,45 @@ export default createStore({
     },
     getProfileImage(state) {
       return state.profileImage
+    },
+    getGotUserInfo(state) {
+      return state.gotUserInfo
+    },
+    getGender(state) {
+      return state.gender
+    },
+    getBirthyear(state) {
+      return state.birthyear
+    },
+    getDescription(state) {
+      return state.description
+    },
+    getPeopleBlocked(state) {
+      return state.peopleBlocked
+    },
+    getPeopleFriends(state) {
+      return state.peopleFriends
+    },
+    getPeopleObserved(state) {
+      return state.peopleObserved
+    },
+    getGroupsBlocked(state) {
+      return state.groupsBlocked
+    },
+    getGroupsJoined(state) {
+      return state.groupsJoined
+    },
+    getGroupsObserved(state) {
+      return state.groupsObserved
+    },
+    getPagesBlocked(state) {
+      return state.pagesBlocked
+    },
+    getPagesLiked(state) {
+      return state.pagesLiked
+    },
+    getPagesObserved(state) {
+      return state.pagesObserved
     },
   },
 });

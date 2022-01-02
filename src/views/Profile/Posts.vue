@@ -7,29 +7,36 @@
     </div>
 </template>
 <script>
-import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where } from 'firebase/firestore';
+import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { computed, ref } from 'vue';
 import Post from '../Post.vue';
 
 export default {
     components: { Post },
-    setup() {
-        let postsLoaded = ref(false);
-        let posts = ref([]);
+    data() {
+        return {
+            postsLoaded: false,
+            posts: []
+        }
+    },
+    beforeRouteEnter(to, from, next) {
         const db = getFirestore();
-        const q = query(collection(db, "posts"), where("uid", "==", getAuth().currentUser.uid));
+        console.log(to.params.username);
+        const q = query(collection(db, "posts"), where("username", "==", to.params.username, orderBy("createdTimestamp", "desc")));
         getDocs(q)
             .then((docs) => {
-
+                let docsPosts = [];
                 docs.forEach(doc => {
-                    posts.value.push(doc.data());
+                    docsPosts.push(doc.data());
                 })
-                postsLoaded.value = true;
-            });
-        
 
-        return { posts, postsLoaded }
+                next(vm => {
+                    vm.posts = docsPosts;
+                    vm.postsLoaded = true;
+                })
+
+            });
     },
     mounted() {
 
