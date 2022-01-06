@@ -1,7 +1,7 @@
 <template>
-    <div v-if="postsLoaded" class="m-auto" style="">
+    <div v-if="postsLoaded" class="m-auto flex flex-col gap-6" style="">
         <div v-for="post in posts" :key="post.id">
-            <Post :name="post.name" :surname="post.surname" :username="post.username" :profileImageUrl="post.profileImage" :content="post.content" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" />
+            <Post :isShareView="false" :id="post.id" :uid="post.uid" :name="post.name" :surname="post.surname" :username="post.username" :profileImageUrl="post.profileImage" :content="post.content" :shareId="post.shareId"  :files="post.files" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" />
         </div>
 
     </div>
@@ -28,7 +28,9 @@ export default {
             .then((docs) => {
                 let docsPosts = [];
                 docs.forEach(doc => {
-                    docsPosts.push(doc.data());
+                    let docData = doc.data();
+                    docData.id = doc.id;
+                    docsPosts.push(docData);
                 })
 
                 next(vm => {

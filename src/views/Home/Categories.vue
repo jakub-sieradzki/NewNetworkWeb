@@ -1,4 +1,5 @@
 <template>
+    <CreatePost v-if="createPost"/>
         <div class="hidden lg:flex sticky top-0 flex-shrink-0 ml-5 mt-12 w-64" style="height: 600px;">
                         <div class="flex-shrink w-full" style="height: 600px;">
                             <div
@@ -76,16 +77,22 @@
                     </div>
 </template>
 <script>
+import CreatePost from '../CreatePost.vue';
 import { useStore } from 'vuex'
 
 export default {
-    setup() {
-        const store = useStore()
-
-        const showCreatePost = () => {
-            store.commit('switchCreatePost')
+    components: {
+        CreatePost
+    },
+    data() {
+        return {
+            createPost: false,
         }
-        return {showCreatePost}
+    },
+    methods: {
+        showCreatePost() {
+            this.createPost = true;
+        }
     }
 }
 </script>

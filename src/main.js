@@ -27,6 +27,3 @@ const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
   createApp(App).use(store).use(router).mount("#app");
 });
-
-
-

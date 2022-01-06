@@ -3,7 +3,6 @@ import { createStore } from "vuex";
 export default createStore({
   state() {
     return {
-      createPost: false,
       userAuthenticated: false,
       showMenu: false,
       showCategories: false,
@@ -33,9 +32,6 @@ export default createStore({
     }
   },
   mutations: {
-      switchCreatePost (state) {
-          state.createPost = !state.createPost
-      },
       switchUserAuthenticated (state) {
           state.userAuthenticated = !state.userAuthenticated
       },

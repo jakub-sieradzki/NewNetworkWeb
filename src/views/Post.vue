@@ -1,6 +1,45 @@
 <template>
     <!-- Post -->
-                                <div class="post flex-grow">
+    <CreatePost v-if="createPost" :shareId="this.id" :shareUid="this.uid" :shareUsername="this.username" :shareContent="this.content" />
+    <div v-if="this.shareId && !this.content">
+        <div class="flex flex-col dark:border-gray-800 rounded-lg shadow-inner bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40">
+            <div class="flex justify-between px-4 py-3">
+                <div class=" flex items-center pl-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" />
+                        <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />
+                    </svg>
+                    <p class="pl-5 text-sm"><span class="cursor-pointer hover:underline" @click="this.$router.push('/user/' + this.username + '/posts')">@{{this.username}}</span> udostępnił post</p>
+                </div>
+             <div class="dropdown dropdown-end">
+                                            <svg xmlns="http://www.w3.org/2000/svg" tabindex="0" class="post__header__actions-button"
+                                                width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
+                                                stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <circle cx="12" cy="12" r="1" />
+                                                <circle cx="12" cy="19" r="1" />
+                                                <circle cx="12" cy="5" r="1" />
+                                            </svg>
+                                            <ul class="dropdown-content dark:bg-gray-800 border dark:border-gray-700 shadow mt-3 rounded-lg w-52 h-14" tabindex="0">
+                                                <li @click="deletePost()" class="flex items-center p-4 cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                        <line x1="4" y1="7" x2="20" y2="7" />
+                                                        <line x1="10" y1="11" x2="10" y2="17" />
+                                                        <line x1="14" y1="11" x2="14" y2="17" />
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                    </svg>
+                                                    <p class="text-sm pl-3">Usuń post</p>
+                                                </li>
+                                            </ul>
+                                        </div>   
+            </div>
+            <Post v-if="sharedPost.length != 0" :isShareView="false" :id="sharedPost.id" :uid="sharedPost.uid" :name="sharedPost.name" :surname="sharedPost.surname" :username="sharedPost.username" :profileImageUrl="sharedPost.profileImage" :content="sharedPost.content" :shareId="sharedPost.shareId"  :files="sharedPost.files" :date_created="sharedPost.createdTimestamp" :views="sharedPost.views" :com_count="sharedPost.comments_count" />
+        </div>
+    </div>
+                                <div v-else class="post flex-grow" style="max-width: 650px;">
                                     <!-- Header -->
                                     <div class="post__header">
                                         <div @click="showProfile()" class="post__header__user-info">
@@ -12,23 +51,43 @@
                                                     @{{ username }}</p>
                                             </div>
                                         </div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="post__header__actions-button"
-                                            width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
-                                            stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="12" cy="12" r="1" />
-                                            <circle cx="12" cy="19" r="1" />
-                                            <circle cx="12" cy="5" r="1" />
-                                        </svg>
+                                        <div class="dropdown dropdown-end">
+                                            <svg xmlns="http://www.w3.org/2000/svg" tabindex="0" class="post__header__actions-button"
+                                                width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
+                                                stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <circle cx="12" cy="12" r="1" />
+                                                <circle cx="12" cy="19" r="1" />
+                                                <circle cx="12" cy="5" r="1" />
+                                            </svg>
+                                            <ul class="dropdown-content dark:bg-gray-800 border dark:border-gray-700 shadow mt-3 rounded-lg w-52 h-14" tabindex="0">
+                                                <li @click="deletePost()" class="flex items-center p-4 cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                        <line x1="4" y1="7" x2="20" y2="7" />
+                                                        <line x1="10" y1="11" x2="10" y2="17" />
+                                                        <line x1="14" y1="11" x2="14" y2="17" />
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                    </svg>
+                                                    <p class="text-sm pl-3">Usuń post</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </div>
                                     <!-- End Header -->
                                     <!-- Content -->
                                     <div class="post__content">
                                         <p class="">{{ content }}</p>
                                     </div>
+                                    <div v-if="imagesUrls.length != 0" class="flex flex-shrink-0 overflow-x-auto custom-scrollbar rounded-lg mb-4">
+                                        <img v-for="url in imagesUrls" :key="url" :src="url" alt="img">
+                                    </div>
                                     <!-- End Content -->
+                                    <Post v-if="sharedPost.length != 0" :isShareView="true" :id="sharedPost.id" :uid="sharedPost.uid" :name="sharedPost.name" :surname="sharedPost.surname" :username="sharedPost.username" :profileImageUrl="sharedPost.profileImage" :content="sharedPost.content" :shareId="sharedPost.shareId"  :files="sharedPost.files" :date_created="sharedPost.createdTimestamp" :views="sharedPost.views" :com_count="sharedPost.comments_count" />
                                     <!-- Info -->
-                                    <div class="h-auto w-full flex justify-end">
+                                    <div class="h-auto w-full flex justify-end mt-4">
                                         <!--Categories list-->
                                             <div style="display: none;" class="pt-1 pr-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center" @click="toggleShowCategories">
                                                 <p>Kategorie</p>
@@ -82,7 +141,7 @@
                                     </div>
                                     <!-- End Info -->
                                     <!--Actions-->
-                                    <div class="post__actions">
+                                    <div v-if="!this.isShareView" class="post__actions">
                                         <div class="post__actions__action">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="post__actions__action__icon"
                                                 width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
@@ -96,7 +155,7 @@
                                             </svg>
                                             <p class="post__actions__action__text">{{ views }}</p>
                                         </div>
-                                        <div class="post__actions__action">
+                                        <div @click="showComments = !showComments; clickComments(showComments)" class="post__actions__action">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="post__actions__action__icon"
                                                 width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
                                                 stroke="#2c3e50" fill="none" stroke-linecap="round"
@@ -107,11 +166,11 @@
                                                 <line x1="8" y1="9" x2="16" y2="9" />
                                                 <line x1="8" y1="13" x2="14" y2="13" />
                                             </svg>
-                                            <p class="post__actions__action__text"><span class="hidden sm:inline-block">Komentarze</span> <span
-                                                    class="sm:text-xs"><span class="hidden sm:inline-block">(</span>{{ com_count }}<span class="hidden sm:inline-block">)</span></span>
+                                            <p class="post__actions__action__text"><span class="hidden sm:inline-block">Komentarze</span> 
+                                            <!-- <span class="sm:text-xs"><span class="hidden sm:inline-block">(</span>{{ com_count }}<span class="hidden sm:inline-block">)</span></span> -->
                                             </p>
                                         </div>
-                                        <div class="post__actions__action">
+                                        <div @click="shareClick" class="post__actions__action">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="post__actions__action__icon"
                                                 width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
                                                 stroke="#2c3e50" fill="none" stroke-linecap="round"
@@ -127,32 +186,142 @@
                                         </div>
                                     </div>
                                     <!--End Actions-->
+                                    <!--Comments-->
+                                        <div v-if="showComments" class="flex flex-col my-3">
+                                            <div class="flex gap-3 h-9 items-center">
+                                                <img src="/img/avatar.png" class="w-8 h-8" alt="avatar">
+                                                <input type="text" v-model="comment" placeholder="Twój komentarz..." class="input input-ghost border border-gray-500 h-9 flex-grow">
+                                                <button @click="sendComment()" class="">Wyślij</button>
+                                            </div>
+                                            <div class="flex flex-col gap-2 mt-5">
+                                                <div class="flex flex-col bg-gray-200 bg-opacity-60 dark:bg-gray-800 px-5 pt-3 pb-4 rounded-lg" v-for="com in comments" :key="com.id">
+                                                    <div class="flex justify-between items-center">
+                                                        <div @click="navigateToProfile(com.username)" class="flex cursor-pointer hover:underline gap-1 h-7 items-center">
+                                                            <img class="h-5 w-5" src="/img/avatar.png" alt="avatar">
+                                                            <p class="text-sm">@{{com.username}}</p>
+                                                        </div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-current cursor-pointer"
+                                                            width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
+                                                            stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <circle cx="12" cy="12" r="1" />
+                                                            <circle cx="12" cy="19" r="1" />
+                                                            <circle cx="12" cy="5" r="1" />
+                                                        </svg>
+                                                    </div>
+                                                    
+                                                    <p class="my-1">{{com.content}}</p>
+                                                    <div class="flex justify-between mt-1">
+                                                        <p class="text-xs">{{com.createdTimestamp}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!-- End comments -->
+
                                 </div>
                                 <!-- End Post -->
 </template>
 <script>
+import CreatePost from '../views/CreatePost.vue';
+import Post from '../views/Post.vue';
 import { ref } from 'vue'
-import { ref as storageRef, getStorage, getDownloadURL } from "firebase/storage";
+import { ref as storageRef, getStorage, getDownloadURL, getBlob, deleteObject } from "firebase/storage";
+import { getFirestore, collection, addDoc, doc, serverTimestamp, query, getDoc } from 'firebase/firestore';
 import { useRouter } from "vue-router";
-import { Timestamp } from '@firebase/firestore';
+import { deleteDoc, getDocs, orderBy, Timestamp } from '@firebase/firestore';
+import { getAuth } from "firebase/auth";
 export default {
-    props: ['name', 'surname', 'username', 'profileImageUrl', 'content', 'date_created', 'views', 'com_count'],
-    setup() {
-        const showCategories = ref(false)
-        const toggleShowCategories = () => {
-            showCategories.value = !showCategories.value
+    components: {
+        CreatePost,
+        Post
+    },
+    props: ['id', 'uid', 'name', 'surname', 'username', 'profileImageUrl', 'content', 'shareId', 'files', 'date_created', 'views', 'com_count', 'isShareView'],
+    data() {
+        return {
+            showCategories: false,
+            showComments: false,
+            localDate: '',
+            imagesUrls: [],
+            comment: '',
+            comments: [],
+            createPost: false,
+            sharedPost: [],
         }
-        let localDate = ref();
-        
-        return {showCategories, toggleShowCategories, localDate}
     },
     methods: {
         showProfile() {
             this.$router.push('/user/' + this.username + '/posts');
             console.log(this.username);
+        },
+        toggleShowCategories() {
+            showCategories.value = !showCategories.value
+        },
+        async sendComment() {
+            if(this.comment != '') {
+                const db = getFirestore();
+                console.log(this.id);
+                const colRef = collection(db, "posts", this.id, "comments");
+                await addDoc(colRef, {
+                    content: this.comment,
+                    username: this.$store.getters.getUsername,
+                    uid: this.$store.getters.getUid,         
+                    createdTimestamp: serverTimestamp(),
+                }).then((snapshot) => {
+                    console.log("snapshot", snapshot);
+                    this.comment = '';
+                    console.log("comment sent");
+                });
+            }
+        },
+        async clickComments(show) {
+            if(show) {
+                const db = getFirestore();
+                const colRef = collection(db, "posts", this.id, "comments");
+                const q = query(colRef, orderBy("createdTimestamp", "desc"));
+                const querySnapshot  = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    let singleDoc = doc.data();
+                    singleDoc.id = doc.id;
+                    singleDoc.createdTimestamp = singleDoc.createdTimestamp.toDate().toLocaleString();
+                    this.comments.push(singleDoc);
+                });
+            }
+            else {
+                this.comments = []
+            }
+        },
+        navigateToProfile(username) {
+            this.$router.push("/user/" + username + "/posts");
+        },
+        shareClick() {
+            this.createPost = true;
+        },
+        async deletePost() {
+            const user = getAuth().currentUser;
+            if(user.uid == this.uid) {
+                const storage = getStorage();
+                for(var i = 0; i < this.files.length; i++) {
+                    const fileRef = storageRef(storage, user.uid + '/' + this.files[i]);
+                    await deleteObject(fileRef).then(() => {
+                        console.log("Photo: " + this.files[i] + " removed successfully");
+                    }).catch((error) => {
+                         console.log("Error removing photo: " + this.files[i] + ": ", error);
+                    });
+                }
+
+                const db = getFirestore();
+                await deleteDoc(doc(db, "posts", this.id)).then(() => {
+                    alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
+                });
+            }
+            else {
+                alert("To nie jest Twój post, więc nie możesz go usunąć :)");
+            }
+
         }
     },
-    mounted() {
+    async mounted() {
         const date = this.date_created.toDate();
         this.localDate = date.toLocaleString();
         const storage = getStorage();
@@ -172,6 +341,26 @@ export default {
             img.setAttribute('src', '/img/avatar.png');
         }
 
+        if(this.files) {
+            for(let i = 0; i < this.files.length; i++) {
+                getDownloadURL(storageRef(storage, this.uid + "/" + this.files[i]))
+                    .then((url) => {
+                        this.imagesUrls.push(url);
+
+                });
+            }
+        }
+
+        if(this.shareId) {
+            const db = getFirestore();
+            const docRef = doc(db, "posts", this.shareId);
+            await getDoc(docRef)
+            .then((doc) => {
+                let docData = doc.data();
+                docData.id = doc.id;
+                this.sharedPost = docData;
+            });
+        }
     }
 
 }

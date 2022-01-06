@@ -10,9 +10,9 @@
                                     <polyline points="6 9 12 15 18 9" />
                                 </svg>
                             </div>
-                            <div class="m-auto" style="">
+                            <div class="m-auto flex flex-col gap-6" style="">
                                 <div v-for="post in posts" :key="post.id">
-                                    <Post :name="post.name" :surname="post.surname" :username="post.username" :content="post.content" :profileImageUrl="post.profileImage" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" />
+                                    <Post :isShareView="false" :id="post.id" :uid="post.uid" :name="post.name" :surname="post.surname" :username="post.username" :content="post.content" :shareId="post.shareId" :files="post.files" :profileImageUrl="post.profileImage" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" />
                                 </div>
                             </div>
                         </div>
@@ -42,8 +42,10 @@ export default {
             getDocs(q)
                 .then((docs) => {
                     docs.forEach(doc => {
-                        posts.value.push(doc.data());
-                        console.log(doc.data());
+                        let docData = doc.data();
+                        docData.id = doc.id;
+                        posts.value.push(docData);
+                        console.log(docData);
                     })
                     postsLoaded.value = true;
                 });
