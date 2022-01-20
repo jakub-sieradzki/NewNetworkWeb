@@ -24,20 +24,12 @@
 
 }
 
-.categories__single-item {
-    @apply mb-2 p-2 cursor-pointer border rounded-sm flex items-center transition
-}
-
 .post {
     @apply pt-4 pr-4 pl-4 pb-2 border dark:border-gray-800 rounded-lg shadow-lg bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40
 }
 
 .post__header {
     @apply mb-4 h-auto w-full flex justify-between relative
-}
-
-.post__header__user-info {
-    @apply mr-10 w-auto min-w-0 max-w-full flex cursor-pointer overflow-hidden hover:underline
 }
 
 .post__header__user-info__profile-picture {
