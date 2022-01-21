@@ -1,65 +1,77 @@
 <template>
-        <div class="max-w-xl ml-4 mr-4 flex-shrink flex-grow" style="height: max-content">
-                        <div class="m-auto w-full">
-                            <div class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-3 border rounded-md dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40">
-                                <p>Najnowsze</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44"
-                                    height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <polyline points="6 9 12 15 18 9" />
-                                </svg>
-                            </div>
-                            <div class="m-auto flex flex-col gap-6" style="">
-                                <div v-for="post in posts" :key="post.id">
-                                    <Post :isShareView="false" :id="post.id" :uid="post.uid" :name="post.name" :surname="post.surname" :username="post.username" :content="post.content" :shareId="post.shareId" :files="post.files" :profileImageUrl="post.profileImage" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" />
-                                </div>
-                            </div>
-                        </div>
+  <div class="max-w-xl ml-4 mr-4 flex-shrink flex-grow" style="height: max-content">
+    <div class="m-auto w-full">
+      <div class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-3 border rounded-md dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40">
+        <p>Najnowsze</p>
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+      <div class="m-auto flex flex-col gap-6" style="">
+        <div v-for="post in posts" :key="post.id">
+          <Post :isShareView="false" :id="post.id" :uid="post.uid" :name="post.name" :surname="post.surname" :username="post.username" :content="post.content" :shareId="post.shareId" :files="post.files" :profileImageUrl="post.profileImage" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" :categories="post.categories" />
+        </div>
+      </div>
+    </div>
 
-                        <div class="h-10">
-                        </div>
-                    </div>
+    <div class="h-10"></div>
+  </div>
 </template>
 <script>
-import Post from '../Post.vue';
-import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from 'firebase/firestore';
+import Post from "../Post.vue";
+import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { ref, watch } from "vue";
+import { useStore } from "vuex";
 export default {
-    components: { Post },
-    setup() {
-        const store = useStore();
-        console.log("setupMainPosts");
-        let postsLoaded = ref(false);
-        let posts = ref([]);
-
-        if(store.getters.getPeopleObserved.length != 0) {
-            console.log(store.getters.getPeopleObserved);
-            const db = getFirestore();
-            const q = query(collection(db, "posts"), where("uid", "in", store.getters.getPeopleObserved), orderBy("createdTimestamp", "desc"));
-            getDocs(q)
-                .then((docs) => {
-                    docs.forEach(doc => {
-                        let docData = doc.data();
-                        docData.id = doc.id;
-                        posts.value.push(docData);
-                        console.log(docData);
-                    })
-                    postsLoaded.value = true;
-                });
-        }
-
-        return { posts, postsLoaded }
-    },
-    mounted() {
-        this.loadPosts();
-    },
-    methods: {
-        loadPosts: function() {
-                    console.log("mountedMainPosts");
-        }
+  components: { Post },
+  data() {
+    return {
+      postsData: [],
+      posts: [],
+      postsLoaded: false,
+    };
+  },
+  mounted() {
+    if (this.$store.getters.getPeopleObserved.length != 0) {
+      const db = getFirestore();
+      const q = query(collection(db, "posts"), where("uid", "in", this.$store.getters.getPeopleObserved), orderBy("createdTimestamp", "desc"));
+      getDocs(q).then((docs) => {
+        docs.forEach((doc) => {
+          let docData = doc.data();
+          docData.id = doc.id;
+          this.postsData.push(docData);
+        });
+        this.posts = this.postsData;
+        this.postsLoaded = true;
+      });
     }
-}
+    this.loadPosts(this.$store.getters.getCategoriesObserved);
+
+    this.$store.watch(
+      (state, getters) => {
+        return getters.getCategoriesObserved;
+      },
+      (newValue, oldValue) => {
+        this.loadPosts(newValue);
+      }
+    );
+  },
+  methods: {
+    loadPosts(observedCategories) {
+      let filteredPosts = [];
+      for (let postNumber in this.postsData) {
+        if (this.postsData[postNumber].categories) {
+          if (this.postsData[postNumber].categories.some((r) => observedCategories.includes(r))) {
+            console.log("this post contains at least one category: ", this.postsData[postNumber]);
+            filteredPosts.push(this.postsData[postNumber]);
+          }
+        }
+      }
+
+      this.posts = filteredPosts;
+    },
+  },
+};
 </script>

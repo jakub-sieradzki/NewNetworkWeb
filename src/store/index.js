@@ -29,6 +29,10 @@ export default createStore({
       pagesBlocked: [],
       pagesLiked: [],
       pagesObserved: [],
+
+      allCategories: [],
+      allCategoriesNames: {},
+      categoriesObserved: [],
     }
   },
   mutations: {
@@ -101,6 +105,15 @@ export default createStore({
       setPagesObserved(state, value) {
         state.pagesObserved = value
       },
+      setAllCategories(state, value) {
+        state.allCategories = value
+      },
+      setAllCategoriesNames(state, value) {
+        state.allCategoriesNames = value
+      },
+      setCategoriesObserved(state, value) {
+        state.categoriesObserved = value
+      }
   },
 
   getters: {
@@ -164,5 +177,14 @@ export default createStore({
     getPagesObserved(state) {
       return state.pagesObserved
     },
+    getAllCategories(state) {
+      return state.allCategories
+    },
+    getAllCategoriesNames(state) {
+      return state.allCategoriesNames
+    },
+    getCategoriesObserved(state) {
+      return state.categoriesObserved
+    }
   },
 });

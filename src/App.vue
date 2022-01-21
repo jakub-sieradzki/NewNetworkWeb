@@ -5,14 +5,8 @@
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  getDocs,
-  collection,
-} from "firebase/firestore";
-
+import { getFirestore, doc, getDoc, getDocs, collection } from "firebase/firestore";
+import categories from "./data/categories";
 export default {
   name: "App",
   data() {
@@ -55,9 +49,7 @@ export default {
         });
     },
     async getUserDetails(user, db, store) {
-      const querySnapshot = await getDocs(
-        collection(db, "users", user.uid, "details")
-      );
+      const querySnapshot = await getDocs(collection(db, "users", user.uid, "details"));
       querySnapshot.forEach((doc) => {
         if (doc.id == "groups") {
           store.commit("setGroupsBlocked", doc.data().blocked);
@@ -77,8 +69,27 @@ export default {
           store.commit("setPeopleObserved", doc.data().observed);
         }
       });
+      this.loadAllCategories(store);
       store.commit("setGotUserInfo", true);
       console.log("getting data2 done");
+    },
+    loadAllCategories(store) {
+      let allCategories = [];
+      let allCategoriesNames = {};
+      for (let cat in categories) {
+        allCategories.push(categories[cat].id);
+        allCategoriesNames[categories[cat].id] = categories[cat].name;
+        if (categories[cat].subcategories) {
+          for (let subcat in categories[cat].subcategories) {
+            allCategories.push(categories[cat].subcategories[subcat].id);
+            allCategoriesNames[categories[cat].subcategories[subcat].id] = categories[cat].subcategories[subcat].name;
+          }
+        }
+      }
+
+      store.commit("setAllCategories", allCategories);
+      store.commit("setAllCategoriesNames", allCategoriesNames);
+      store.commit("setCategoriesObserved", allCategories);
     },
   },
 };

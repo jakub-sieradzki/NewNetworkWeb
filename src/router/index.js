@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Main from '../views/Main/Main.vue'
 import Splash from '../views/SplashScreen.vue'
+import PostView from '../views/PostView.vue'
 import Login from '../views/Auth/Login.vue'
 import Register from '../views/Auth/Register.vue'
 import Home from '../views/Home/HomePage.vue'
@@ -54,6 +55,12 @@ const routes = [
           },
         ]
       },
+      {
+        path: '/post/:postId', 
+        components: {
+          mainContent: PostView
+        }
+      },
     ]
   },
 
@@ -67,7 +74,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(store.getters.getGotUserInfo) {
+  if (store.getters.getGotUserInfo) {
     next();
   }
 });
