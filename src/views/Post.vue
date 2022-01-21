@@ -85,9 +85,9 @@
     <!-- End Content -->
     <Post v-if="sharedPost.length != 0" :isShareView="true" :id="sharedPost.id" :uid="sharedPost.uid" :name="sharedPost.name" :surname="sharedPost.surname" :username="sharedPost.username" :profileImageUrl="sharedPost.profileImage" :content="sharedPost.content" :shareId="sharedPost.shareId" :files="sharedPost.files" :date_created="sharedPost.createdTimestamp" :views="sharedPost.views" :com_count="sharedPost.comments_count" />
     <!-- Info -->
-    <div class="h-auto w-full flex justify-between mt-4">
+    <div class="h-auto w-full flex mt-4" :class="[isShareView ? 'justify-end' : 'justify-between']">
       <!--Categories list-->
-      <div class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 bg-slate-200 bg-opacity-60 hover:bg-slate-200 dark:bg-slate-800 hover:dark:bg-slate-700 hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
+      <div v-if="!this.isShareView" class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 bg-slate-200 bg-opacity-60 hover:bg-slate-200 dark:bg-slate-800 hover:dark:bg-slate-700 hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
         <svg xmlns="http://www.w3.org/2000/svg" :class="{'rotate-45': showCategories}" class="stroke-current w-5 h-5 transition duration-300" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M3 12l3 3l3 -3l-3 -3z" />
@@ -101,7 +101,7 @@
           <polyline points="6 9 12 15 18 9" />
         </svg> -->
       </div>
-      <p class="self-center text-gray-400 text-sm flex-shrink truncate justify-center">{{ localDate }}</p>
+      <p class="self-center text-gray-400 text-sm flex-shrink truncate justify-center" >{{ localDate }}</p>
     </div>
     <div v-if="showCategories" class="flex flex-wrap gap-2 mt-4">
       <div v-for="cat in categoriesList" :key="cat.id" :class="cat.background" class="px-4 py-2 rounded-2xl">
