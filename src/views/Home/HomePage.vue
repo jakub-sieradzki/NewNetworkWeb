@@ -49,7 +49,7 @@
 import Categories from "./Categories.vue";
 import MainPostsList from "./MainPostsList.vue";
 import Popular from "./Popular.vue";
-import CreatePost from "../CreatePost.vue";
+import CreatePost from "../Post/CreatePost.vue";
 import { useStore } from "vuex";
 
 export default {

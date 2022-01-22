@@ -8,24 +8,21 @@
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </div>
-      <div class="m-auto flex flex-col gap-6" style="">
-        <div v-for="post in posts" :key="post.id">
-          <Post :isShareView="false" :id="post.id" :uid="post.uid" :name="post.name" :surname="post.surname" :username="post.username" :content="post.content" :shareId="post.shareId" :files="post.files" :profileImageUrl="post.profileImage" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" :categories="post.categories" />
-        </div>
-      </div>
+      <PostsList :postsData="posts"/>
     </div>
 
     <div class="h-10"></div>
   </div>
 </template>
 <script>
-import Post from "../Post.vue";
+import Post from "../Post/Post.vue";
+import PostsList from "../Post/PostsList.vue";
 import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ref, watch } from "vue";
 import { useStore } from "vuex";
 export default {
-  components: { Post },
+  components: { Post, PostsList },
   data() {
     return {
       postsData: [],

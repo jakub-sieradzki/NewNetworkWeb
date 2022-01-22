@@ -128,8 +128,8 @@ import { useStore } from "vuex";
 import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import CategoriesList from "./Categories/CategoriesList.vue";
-import categories from "../data/categories";
+import CategoriesList from "../Categories/CategoriesList.vue";
+import categories from "../../data/categories";
 
 export default {
   props: ["shareId", "shareUid", "shareUsername", "shareContent"],
@@ -216,7 +216,6 @@ export default {
       this.imagesURLs.splice(this.imagesURLs.indexOf(u), 1);
     },
     emittedCategories(value) {
-      console.log("emitted: ", value);
       this.selectedCategories = value;
     }
   },

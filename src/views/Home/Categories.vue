@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-import CreatePost from "../CreatePost.vue";
+import CreatePost from "../Post/CreatePost.vue";
 import { useStore } from "vuex";
 import categories from "../../data/categories";
 import CategoriesList from "../Categories/CategoriesList.vue";

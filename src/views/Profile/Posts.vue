@@ -1,18 +1,14 @@
 <template>
   <div v-if="postsLoaded" class="m-auto flex flex-col gap-6" style="">
-    <div v-for="post in posts" :key="post.id">
-      <Post :isShareView="false" :id="post.id" :uid="post.uid" :name="post.name" :surname="post.surname" :username="post.username" :profileImageUrl="post.profileImage" :content="post.content" :shareId="post.shareId" :files="post.files" :date_created="post.createdTimestamp" :views="post.views" :com_count="post.comments_count" :categories="post.categories" />
-    </div>
+    <PostsList :postsData="posts" />
   </div>
 </template>
 <script>
-import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { computed, ref } from "vue";
-import Post from "../Post.vue";
+import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
+import PostsList from "../Post/PostsList.vue";
 
 export default {
-  components: { Post },
+  components: { PostsList },
   data() {
     return {
       postsLoaded: false,
