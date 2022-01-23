@@ -33,6 +33,8 @@ export default createStore({
       allCategories: [],
       allCategoriesNames: {},
       categoriesObserved: [],
+
+      postsRated: null,
     }
   },
   mutations: {
@@ -113,6 +115,9 @@ export default createStore({
       },
       setCategoriesObserved(state, value) {
         state.categoriesObserved = value
+      },
+      setPostsRated(state, value) {
+        state.postsRated = value
       }
   },
 
@@ -185,6 +190,9 @@ export default createStore({
     },
     getCategoriesObserved(state) {
       return state.categoriesObserved
+    },
+    getPostsRated(state) {
+      return state.postsRated
     }
   },
 });

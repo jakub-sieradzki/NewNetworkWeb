@@ -195,6 +195,7 @@ export default {
       }
       const db = getFirestore();
       const colRef = collection(db, "posts");
+
       await addDoc(colRef, {
         uid: store.getters.getUid,
         username: store.getters.getUsername,
@@ -206,6 +207,14 @@ export default {
         files: storageFilesNames,
         shareId: sId,
         categories: this.selectedCategories,
+        ratings: {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "count": 0
+        }
       }).then(() => {
         console.log("success");
         this.$parent.createPost = false;

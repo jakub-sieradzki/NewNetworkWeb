@@ -1,6 +1,6 @@
 <template>
   <div class="lg:absolute lg:flex lg:flex-col lg:h-screen lg:w-screen m-auto">
-    <div class="bg-cover bg-center bg-no-repeat" style="background-image: url('images/wallpaper.jpg')">
+    <div class="bg-cover bg-center bg-no-repeat" style="background-image: url('/img/wallpaper.jpg')">
       <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm bg-gray-500 dark:bg-gray-700 bg-opacity-75 custom-scrollbar">
         <header class="relative flex justify-between w-full h-12 lg:h-16 mt-6 mb-3">
           <p class="self-end ml-7 lg:ml-20 text-2xl text-white">New Network</p>

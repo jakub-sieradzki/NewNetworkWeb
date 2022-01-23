@@ -1,6 +1,6 @@
 <template>
   <body class="dark:bg-gray-800">
-    <div class="bg-cover bg-center bg-no-repeat" style="background-image: url('img/wallpaper.jpg')">
+    <div class="bg-cover bg-center bg-no-repeat" style="background-image: url(/img/wallpaper.jpg)">
       <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm dark:bg-gray-800 bg-opacity-75 custom-scrollbar">
         <header class="h-16 w-full flex flex-shrink-0 justify-center md:justify-start">
           <p class="text-2xl self-end md:pl-20 md:text-left">New Network</p>

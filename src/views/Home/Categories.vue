@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div @click="showCreatePost" class="hidden w-full lg:flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-lg transition cursor-pointer transform hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
+      <div @click="showCreatePost" class="hidden w-full lg:flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-lg transition duration-500 cursor-pointer transform hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
         <img src="img/add.svg" alt="add" class="w-8 h-8 mr-1" />
         <p class="text-xl text-white text-center">Nowy post</p>
       </div>

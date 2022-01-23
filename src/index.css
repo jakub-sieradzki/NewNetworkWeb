@@ -61,11 +61,11 @@
 }
 
 .post__actions {
-    @apply mt-3 h-auto flex
+    @apply mt-3 h-auto w-full flex
 }
 
 .post__actions__action {
-    @apply w-1/3 flex justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition
+    @apply w-1/3 flex justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition items-center gap-2
 }
 
 .post__actions__action__icon {
@@ -73,7 +73,7 @@
 }
 
 .post__actions__action__text {
-    @apply ml-2 self-center text-sm
+    @apply self-center text-sm
 }
 
 .popular__header {
