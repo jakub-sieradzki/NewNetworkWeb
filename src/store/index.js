@@ -35,6 +35,8 @@ export default createStore({
       categoriesObserved: [],
 
       postsRated: null,
+
+      currentType: null,
     }
   },
   mutations: {
@@ -118,6 +120,9 @@ export default createStore({
       },
       setPostsRated(state, value) {
         state.postsRated = value
+      },
+      setCurrentType(state, value) {
+        state.currentType = value
       }
   },
 
@@ -193,6 +198,9 @@ export default createStore({
     },
     getPostsRated(state) {
       return state.postsRated
+    },
+    getCurrentType(state) {
+      return state.currentType
     }
   },
 });

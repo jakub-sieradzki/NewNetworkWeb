@@ -69,29 +69,30 @@ export default {
       });
     });
   },
-  beforeRouteUpdate(to, from, next) {
+  async beforeRouteUpdate(to, from, next) {
+    console.log("route update");
     const db = getFirestore();
     const q = query(collection(db, "users"), where("username", "==", to.params.username));
-    getDocs(q).then((docs) => {
+    console.log(to.params.username);
+    await getDocs(q).then((docs) => {
       docs.forEach((doc) => {
-        next((vm) => {
-          console.log("next started");
-          vm.name = doc.data().name;
-          vm.surname = doc.data().surname;
-          vm.description = doc.data().description;
-          vm.profileImageUrl = doc.data().profileImageUrl;
-          vm.username = to.params.username;
-          vm.uid = doc.id;
-          console.log(doc.data());
-          console.log("Uid: " + doc.id);
-          console.log(vm.profileImageUrl);
-          console.log("next ended");
-          vm.loadProfilePhoto();
-          vm.checkFriend();
-          console.log("getPeopleFriends: ", vm.$store.getters.getPeopleFriends);
-        });
+        console.log("next started");
+        this.name = doc.data().name;
+        this.surname = doc.data().surname;
+        this.description = doc.data().description;
+        this.profileImageUrl = doc.data().profileImageUrl;
+        this.username = to.params.username;
+        this.uid = doc.id;
+        console.log(doc.data());
+        console.log("Uid: " + doc.id);
+        console.log(this.profileImageUrl);
+        console.log("next ended");
+        this.loadProfilePhoto();
+        this.checkFriend();
+        console.log("getPeopleFriends: ", this.$store.getters.getPeopleFriends); 
       });
     });
+    next();
   },
   methods: {
     loadProfilePhoto() {
@@ -149,6 +150,7 @@ export default {
   },
   mounted() {
     console.log("working");
+    console.log("name: ", this.name);
     const fileInput = this.$refs.imageFile;
     fileInput.onchange = () => {
       const selectedFile = fileInput.files[0];

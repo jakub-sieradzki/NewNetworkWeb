@@ -1,6 +1,6 @@
 <template>
   <CreatePost v-if="createPost" />
-  <div class="sticky top-0 flex-shrink-0 ml-5 mt-12 w-64" style="height: 600px">
+  <div class="sticky top-0 flex-shrink-0 ml-5 mt-12 w-64">
     <div class="flex-shrink w-full" style="height: 600px">
       <div class="rounded-md overflow-hidden border border-gray-300 dark:border-gray-800 shadow-lg bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
         <div @click="switchShowCategories()" class="flex h-12 items-center pl-4 pr-4 hover:bg-gray-100 dark:hover:bg-gray-700 overflow-y cursor-pointer transition flex-shrink-0 justify-between">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div @click="showCreatePost" class="hidden w-full lg:flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-lg transition duration-500 cursor-pointer transform hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
-        <img src="img/add.svg" alt="add" class="w-8 h-8 mr-1" />
+        <img src="/img/add.svg" alt="add" class="w-8 h-8 mr-1" />
         <p class="text-xl text-white text-center">Nowy post</p>
       </div>
     </div>

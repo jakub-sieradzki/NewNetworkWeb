@@ -33,6 +33,24 @@ export default {
       });
     });
   },
+  beforeRouteUpdate(to, from, next) {
+    const db = getFirestore();
+    console.log(to.params.username);
+    const q = query(collection(db, "posts"), where("username", "==", to.params.username, orderBy("createdTimestamp", "desc")));
+    getDocs(q).then((docs) => {
+      let docsPosts = [];
+      docs.forEach((doc) => {
+        let docData = doc.data();
+        docData.id = doc.id;
+        docsPosts.push(docData);
+      });
+
+      this.posts = docsPosts;
+      this.postsLoaded = true;
+      
+      next();
+    });
+  },
   mounted() {},
 };
 </script>

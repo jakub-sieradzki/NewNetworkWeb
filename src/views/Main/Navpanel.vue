@@ -5,10 +5,10 @@
         <input placeholder="Szukaj" class="md:hidden h-10 mb-6 ml-2 focus:outline-none p-4 rounded-full border border-gray-300 bg-transparent dark:border-gray-700 focus:border-blue-500" />
         <div class="flex w-full h-full">
           <div class="w-1 h-auto">
-            <div class="h-12 bg-blue-600 rounded-r-xl"></div>
+            <div class="h-12 bg-blue-600 rounded-r-xl transition-transform" :class="{'translate-y-12' : currentType == 'txt', 'translate-y-24' : currentType == 'img'}"></div>
           </div>
           <div class="w-full h-full flex flex-col">
-            <div @click="navToHome" class="main-menu__element bg-gray-100 dark:bg-gray-800">
+            <div @click="navTo('all')" class="main-menu__element " :class="{'bg-gray-100 dark:bg-gray-800' : currentType == 'all' }">
               <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <polyline points="5 12 3 12 12 3 21 12 19 12" />
@@ -17,7 +17,7 @@
               </svg>
               <p class="self-center ml-2">Główna</p>
             </div>
-            <div class="main-menu__element">
+            <div @click="navTo('text')" class="main-menu__element" :class="{'bg-gray-100 dark:bg-gray-800' : currentType == 'txt'}">
               <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -25,7 +25,7 @@
               </svg>
               <p class="self-center ml-2">Tekst</p>
             </div>
-            <div class="main-menu__element">
+            <!-- <div class="main-menu__element">
               <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <rect x="4" y="4" width="16" height="16" rx="2" />
@@ -38,16 +38,16 @@
                 <line x1="16" y1="16" x2="20" y2="16" />
               </svg>
               <p class="self-center ml-2">Wideo</p>
-            </div>
-            <div class="main-menu__element">
+            </div> -->
+            <!-- <div class="main-menu__element">
               <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <rect x="3" y="7" width="18" height="13" rx="2" />
                 <polyline points="16 3 12 7 8 3" />
               </svg>
               <p class="self-center ml-2">Na żywo</p>
-            </div>
-            <div class="main-menu__element">
+            </div> -->
+            <div @click="navTo('images')" class="main-menu__element" :class="{'bg-gray-100 dark:bg-gray-800' : currentType == 'img' }">
               <svg xmlns="http://www.w3.org/2000/svg" class="main-menu__element__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <line x1="15" y1="8" x2="15.01" y2="8" />
@@ -107,26 +107,23 @@
   </div>
 </template>
 <script>
-import { useRouter } from "vue-router";
-import { computed } from "vue";
-import { useStore } from "vuex";
-
 export default {
-  setup() {
-    const router = useRouter();
-    const store = useStore();
-    const showMen = true;
-
-    const navToHome = () => {
+  data() {
+    return {};
+  },
+  methods: {
+    navTo(value) {
       //store.commit('switchShowMenu')
-      router.push("/home");
-    };
-
-    return {
-      navToHome,
-      showMenu: computed(() => store.getters.getShowMenu),
-      showMen,
-    };
+      this.$router.push("/home/" + value);
+    },
+  },
+  computed: {
+    currentType() {
+      return this.$store.getters.getCurrentType;
+    },
+    showMenu() {
+      return this.$store.getters.getShowMenu;
+    },
   },
 };
 </script>

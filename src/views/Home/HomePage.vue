@@ -2,13 +2,13 @@
   <CreatePost v-if="createPost" />
   <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32">
     <!--Categories-->
-    <div class="" :class="[showMobileCategories ? ['absolute w-full dark:bg-gray-900 z-10'] : ['hidden lg:flex']]">
+    <div class="" :class="[showMobileCategories ? ['absolute w-full dark:bg-gray-900 z-10'] : ['hidden lg:flex lg:sticky lg:top-0 lg:z-10']]">
       <Categories />
     </div>
 
     <!--End Categories-->
     <!--Posts Section-->
-    <MainPostsList />
+    <MainPostsList v-if="allLoaded"/>
     <!--End Post Section-->
     <!--Popular-->
     <Popular />
@@ -29,7 +29,7 @@
       </div>
       <div class="w-1/6 flex justify-center">
         <div @click="showCreatePost" class="absolute shadow-md bottom-6 w-14 h-14 flex items-center justify-center rounded-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-900">
-          <img src="img/add.svg" alt="add" class="p-3" />
+          <img src="/img/add.svg" alt="add" class="p-3" />
         </div>
       </div>
       <div class="w-full flex justify-center items-center">
@@ -66,17 +66,33 @@ export default {
     return {
       createPost: false,
       showMobileCategories: false,
+      allLoaded: false,
     };
   },
-  setup() {
-    const seeUser = () => {};
+  beforeRouteEnter(to, from, next) {
+    console.log("before");
+    next((vm) => {
+      if (to.params.id == "text") {
+        vm.$store.commit("setCurrentType", "txt");
+      } else if (to.params.id == "images") {
+        vm.$store.commit("setCurrentType", "img");
+      } else {
+        vm.$store.commit("setCurrentType", "all");
+      }
+      vm.allLoaded = true;
+    });
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (to.params.id == "text") {
+      this.$store.commit("setCurrentType", "txt");
+    } else if (to.params.id == "images") {
+      this.$store.commit("setCurrentType", "img");
+    } else {
+      this.$store.commit("setCurrentType", "all");
+    }
+    this.allLoaded = true;
 
-    return {
-      seeUser,
-    };
-  },
-  beforeCreate() {
-    this.seeUser();
+    next();
   },
   methods: {
     showCreatePost() {
@@ -84,7 +100,7 @@ export default {
     },
     showMobileCategoriesClick() {
       this.showMobileCategories = !this.showMobileCategories;
-    }
+    },
   },
 };
 </script>

@@ -8,7 +8,7 @@
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </div>
-      <PostsList :postsData="posts"/>
+      <PostsList :postsData="posts" />
     </div>
 
     <div class="h-10"></div>
@@ -27,24 +27,21 @@ export default {
     return {
       postsData: [],
       posts: [],
-      postsLoaded: false,
     };
   },
-  mounted() {
+  async mounted() {
     if (this.$store.getters.getPeopleObserved.length != 0) {
       const db = getFirestore();
       const q = query(collection(db, "posts"), where("uid", "in", this.$store.getters.getPeopleObserved), orderBy("createdTimestamp", "desc"));
-      getDocs(q).then((docs) => {
+      await getDocs(q).then((docs) => {
         docs.forEach((doc) => {
           let docData = doc.data();
           docData.id = doc.id;
           this.postsData.push(docData);
         });
-        this.posts = this.postsData;
-        this.postsLoaded = true;
       });
     }
-    this.loadPosts(this.$store.getters.getCategoriesObserved);
+    this.loadPosts(this.$store.getters.getCategoriesObserved, this.$store.getters.getCurrentType);
 
     this.$store.watch(
       (state, getters) => {
@@ -56,18 +53,29 @@ export default {
     );
   },
   methods: {
-    loadPosts(observedCategories) {
+    loadPosts(observedCategories, type) {
       let filteredPosts = [];
       for (let postNumber in this.postsData) {
         if (this.postsData[postNumber].categories) {
           if (this.postsData[postNumber].categories.some((r) => observedCategories.includes(r))) {
-            console.log("this post contains at least one category: ", this.postsData[postNumber]);
-            filteredPosts.push(this.postsData[postNumber]);
+            if (type == "all" || this.postsData[postNumber].type == type) {
+              filteredPosts.push(this.postsData[postNumber]);
+            }
           }
         }
       }
 
       this.posts = filteredPosts;
+    },
+  },
+  computed: {
+    currentType() {
+      return this.$store.getters.getCurrentType;
+    },
+  },
+  watch: {
+    currentType(newType, oldType) {
+      this.loadPosts(this.$store.getters.getCategoriesObserved, newType);
     },
   },
 };
