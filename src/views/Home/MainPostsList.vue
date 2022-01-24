@@ -48,7 +48,7 @@ export default {
         return getters.getCategoriesObserved;
       },
       (newValue, oldValue) => {
-        this.loadPosts(newValue);
+        this.loadPosts(newValue, this.$store.getters.getCurrentType);
       }
     );
   },
