@@ -7,6 +7,9 @@
     src: url("fonts/SourceSansPro-Regular.ttf");
 } */
 
+.postLinkStyle {
+    @apply text-blue-500 hover:underline cursor-pointer
+}
 .customCommentSpan[contenteditable]:empty::before{
     content: "Twój komentarz...";
     color: #9ca3af;

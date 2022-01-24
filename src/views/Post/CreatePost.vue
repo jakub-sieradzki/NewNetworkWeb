@@ -41,26 +41,25 @@
           </div>
         </div>
         <div>
-        <div class="flex items-center gap-1  px-2 py-1 rounded-lg border border-dashed border-gray-400" v-if="postType == 'txt'">
-          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-4 h-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-            <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-          </svg>
-          <p class="text-sm">Tekst</p>
+          <div class="flex items-center gap-1 px-2 py-1 rounded-lg border border-dashed border-gray-400" v-if="postType == 'txt'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-4 h-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+              <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+            </svg>
+            <p class="text-sm">Tekst</p>
+          </div>
+          <div class="flex items-center gap-1 px-2 py-1 rounded-lg border border-dashed border-gray-400" v-else-if="postType == 'img'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-4 h-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <line x1="15" y1="8" x2="15.01" y2="8" />
+              <rect x="4" y="4" width="16" height="16" rx="3" />
+              <path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5" />
+              <path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2" />
+            </svg>
+            <p class="text-sm">Zdjęcia</p>
+          </div>
         </div>
-        <div class="flex items-center gap-1  px-2 py-1 rounded-lg border border-dashed border-gray-400" v-else-if="postType == 'img'">
-          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-4 h-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <line x1="15" y1="8" x2="15.01" y2="8" />
-            <rect x="4" y="4" width="16" height="16" rx="3" />
-            <path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5" />
-            <path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2" />
-          </svg>
-          <p class="text-sm">Zdjęcia</p>
-        </div>
-        </div>
-
       </div>
 
       <div class="mt-3 flex flex-col" v-if="share">
@@ -181,6 +180,20 @@ export default {
         alert("Wybierz co najmniej jedną kategorię");
         return;
       }
+
+      // search for hashtags and lowercase it
+      const hashtagsRegex = /[#][a-zA-Z0-9]{3,}/g;
+      let array1;
+      let hashtagsArray = [];
+      while ((array1 = hashtagsRegex.exec(this.postContent.content)) !== null) {
+        let hashtag = array1[0];
+        hashtag = hashtag.substring(1);
+        hashtag = hashtag.toLowerCase();
+        
+        hashtagsArray.push(hashtag);
+      }
+
+      console.log(hashtagsArray);
       const store = this.$store;
       const storage = getStorage();
 
@@ -226,6 +239,7 @@ export default {
           count: 0,
         },
         type: this.postType,
+        hashtags: hashtagsArray,
       }).then(() => {
         console.log("success");
         this.$parent.createPost = false;

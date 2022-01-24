@@ -32,6 +32,9 @@
               </svg>
               <p class="text-sm pl-3">Usuń post</p>
             </li>
+            <li @click="this.$router.push('/post/' + postData.id)" class="flex items-center p-4 cursor-pointer">
+              <p class="text-sm pl-3">Otwórz posta</p>
+            </li>
           </ul>
         </div>
       </div>
@@ -39,8 +42,8 @@
     <!-- End Header -->
     <!-- Content -->
     <div>
-      <div @click="this.$router.push('/post/' + postData.id)" class="post__content cursor-pointer select-ghost">
-        <p class="">{{ postData.content }}</p>
+      <div class="post__content select-ghost">
+        <PostContent :postContent="this.postData.content" :postHashtags="this.postData.hashtags" />
       </div>
       <div v-if="imagesUrls.length != 0" class="flex flex-shrink-0 overflow-x-auto custom-scrollbar rounded-lg mb-4">
         <img class="w-full" v-for="url in imagesUrls" :key="url" :src="url" alt="img" />
@@ -149,6 +152,7 @@ import CreatePost from "./CreatePost.vue";
 import Post from "./Post.vue";
 import PostCategories from "./PostComments.vue";
 import SharedPost from "./SharedPost.vue";
+import PostContent from "./PostContent.vue";
 
 import { ref as storageRef, getStorage, getDownloadURL, deleteObject } from "firebase/storage";
 import { getFirestore, doc, deleteDoc, runTransaction, onSnapshot, updateDoc, increment, deleteField } from "firebase/firestore";
@@ -161,6 +165,7 @@ export default {
     Post,
     SharedPost,
     PostCategories,
+    PostContent
   },
   props: ["postData"],
   data() {
@@ -389,6 +394,9 @@ export default {
           this.showReactionsTimeout = null;
         }, 500);
       }
+    },
+    navToHashtag() {
+      console.log("Test");
     },
   },
   async mounted() {
