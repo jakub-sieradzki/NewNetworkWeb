@@ -5,7 +5,7 @@
       <div class="rounded-md overflow-hidden border border-gray-300 dark:border-gray-800 shadow-lg bg-gray-200 bg-opacity-10 dark:bg-gray-800 dark:bg-opacity-25">
         <div @click="switchShowCategories()" class="flex h-12 items-center pl-4 pr-4 hover:bg-gray-100 dark:hover:bg-gray-700 overflow-y cursor-pointer transition flex-shrink-0 justify-between">
           <p class="text-center">Kategorie</p>
-          <svg xmlns="http://www.w3.org/2000/svg" :class="[!showCategories ? 'rotate-180' : '']" class="stroke-current w-5 h-5 transition duration-300" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" :class="[showCategories ? 'rotate-180' : '']" class="stroke-current w-5 h-5 transition duration-300" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
             <polyline points="6 9 12 15 18 9" />
           </svg>

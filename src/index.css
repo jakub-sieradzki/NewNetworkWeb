@@ -7,6 +7,11 @@
     src: url("fonts/SourceSansPro-Regular.ttf");
 } */
 
+.customCommentSpan[contenteditable]:empty::before{
+    content: "Twój komentarz...";
+    color: #9ca3af;
+    cursor: text;
+}
 .main-menu__element {
     @apply h-12 p-2 flex w-auto cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-md transition-all
 }

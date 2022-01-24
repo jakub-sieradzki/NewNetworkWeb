@@ -147,7 +147,7 @@
 <script>
 import CreatePost from "./CreatePost.vue";
 import Post from "./Post.vue";
-import PostCategories from "./PostCategories.vue";
+import PostCategories from "./PostComments.vue";
 import SharedPost from "./SharedPost.vue";
 
 import { ref as storageRef, getStorage, getDownloadURL, deleteObject } from "firebase/storage";
