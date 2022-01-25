@@ -1,5 +1,5 @@
 <template>
-  <div class="m-auto flex flex-col gap-6 w-full max-w-xl">
+  <div class="m-auto flex flex-col gap-6 w-full max-w-xl h-full">
     <div v-for="post in postsData" :key="post.id">
       <Post v-if="!post.shareId || (post.shareId && (post.content || post.files.length > 0))" :postData="post"/>
       <SharedPostNoContent v-else :postData="post"/>

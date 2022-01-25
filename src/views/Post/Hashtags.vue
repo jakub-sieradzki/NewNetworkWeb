@@ -18,9 +18,10 @@ export default {
     };
   },
   async beforeRouteEnter(to, from, next) {
+    const hashtag = to.params.id.toLowerCase();
     let postsData = [];
     const db = getFirestore();
-    const q = query(collection(db, "posts"), where("hashtags", "array-contains", to.params.id), orderBy("createdTimestamp", "desc"));
+    const q = query(collection(db, "posts"), where("hashtags", "array-contains", hashtag), orderBy("createdTimestamp", "desc"));
     await getDocs(q).then((docs) => {
       docs.forEach((doc) => {
         let docData = doc.data();
@@ -29,7 +30,7 @@ export default {
       });
     });
     next((vm) => {
-      vm.hashtag = to.params.id;
+      vm.hashtag = hashtag;
       vm.postsData = postsData;
     });
   },

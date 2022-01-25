@@ -5,7 +5,7 @@
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc, getDocs, collection } from "firebase/firestore";
+import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot, query, where } from "firebase/firestore";
 import categories from "./data/categories";
 export default {
   name: "App",
@@ -20,6 +20,8 @@ export default {
       const db = getFirestore();
       await this.getUser(user, db, store);
       await this.getUserDetails(user, db, store);
+      //this.getUnreadNotifications(user, db, store);
+      this.listenToNotifications(user, db, store);
       router.push(document.location.pathname);
     } else {
       store.commit("setGotUserInfo", true);
@@ -67,7 +69,7 @@ export default {
           store.commit("setPeopleBlocked", doc.data().blocked);
           store.commit("setPeopleFriends", doc.data().friends);
           store.commit("setPeopleObserved", doc.data().observed);
-        } else if(doc.id == "posts") {
+        } else if (doc.id == "posts") {
           store.commit("setPostsRated", doc.data().rated);
         }
       });
@@ -92,6 +94,45 @@ export default {
       store.commit("setAllCategories", allCategories);
       store.commit("setAllCategoriesNames", allCategoriesNames);
       store.commit("setCategoriesObserved", allCategories);
+    },
+    async getUnreadNotifications(user, db, store) {
+      let allNotifications = [];
+      const querySnapshot = await getDocs(collection(db, "users", user.uid, "notifications"));
+      querySnapshot.forEach((doc) => {
+        allNotifications.push(doc.data());
+      });
+
+      store.commit("setUnreadNotificationsList", allNotifications);
+    },
+    listenToNotifications(user, db, store) {
+      const q = query(collection(getFirestore(), "users", user.uid, "notifications"), where("read", "==", false));
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          let notifiList = [];
+          querySnapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+              console.log("added notification!: ", change.doc.data());
+              let singleNotifi = change.doc.data();
+              singleNotifi["id"] = change.doc.id;
+              notifiList.push(singleNotifi);
+              console.log("notifiList: ", notifiList);
+            }
+          });
+          let newNotifi;
+          if (store.getters.getUnreadNotificationsList != null) {
+            console.log("this if");
+            newNotifi = [...store.getters.getUnreadNotificationsList, ...notifiList];
+            console.log("newNotifi: ", newNotifi);
+          } else {
+            newNotifi = notifiList;
+          }
+          store.commit("setUnreadNotificationsList", new Array(...newNotifi));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
 };

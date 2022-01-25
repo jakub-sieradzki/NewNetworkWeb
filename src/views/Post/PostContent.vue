@@ -2,7 +2,7 @@
   <div v-if="allSegments">
     <span v-for="segment in allSegments" :key="segment.key">
       <span>{{ segment.before }}</span>
-      <span class="postLinkStyle" @click="navToHashtag(segment.hashtag.slice(1))">{{ segment.hashtag }}</span>
+      <span class="postLinkStyle" @click="navToHashtag(segment.hashtag.slice(1).toLowerCase())">{{ segment.hashtag }}</span>
       <span>{{ segment.after }}</span>
     </span>
   </div>
@@ -28,7 +28,6 @@ export default {
           let segment = {};
           let hashtag = "#" + hashtagsArray[i];
           let hashtagIndex = postContentLowerCase.indexOf(hashtag);
-          console.log(hashtagIndex);
           segment["before"] = contentString.slice(0, hashtagIndex);
           segment["hashtag"] = contentString.slice(hashtagIndex, hashtagIndex + hashtag.length);
 
@@ -40,7 +39,6 @@ export default {
           postContentLowerCase = postContentLowerCase.slice(hashtagIndex + hashtag.length);
 
           allContent[i] = segment;
-          console.log("single segment: ", segment);
         }
         this.allSegments = allContent;
       }

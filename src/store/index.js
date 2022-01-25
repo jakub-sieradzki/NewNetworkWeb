@@ -9,14 +9,14 @@ export default createStore({
       showPopular: false,
       gotUserInfo: false,
 
-      uid: '',
-      username: '',
+      uid: "",
+      username: "",
 
-      name: '',
-      surname: '',
+      name: "",
+      surname: "",
       gender: -1,
       birthyear: -1,
-      description: '',
+      description: "",
 
       peopleBlocked: [],
       peopleFriends: [],
@@ -34,173 +34,181 @@ export default createStore({
       allCategoriesNames: {},
       categoriesObserved: [],
 
+      unreadNotificationsList: null,
+
       postsRated: null,
 
       currentType: null,
-    }
+    };
   },
   mutations: {
-      switchUserAuthenticated (state) {
-          state.userAuthenticated = !state.userAuthenticated
-      },
-      switchShowMenu (state) {
-          state.showMenu = !state.showMenu
-      },
-      switchShowCategories (state) {
-          state.showCategories = !state.showCategories
-      },
-      switchShowPopular (state) {
-          state.showPopular = !state.showPopular
-      },
-      setUserAuthenticated (state, value) {
-          state.userAuthenticated = value
-      },
-      setUid (state, value) {
-        state.uid = value
-      },
-      setName (state, value) {
-        state.name = value
-      },
-      setSurname (state, value) {
-        state.surname = value
-      },
-      setUsername (state, value) {
-        state.username = value
-      },
-      setProfileImage (state, value) {
-        state.profileImage = value
-      },
-      setGotUserInfo(state, value) {
-        state.gotUserInfo = value
-      },
-      setGender(state, value) {
-        state.gender = value
-      },
-      setBirthyear(state, value) {
-        state.birthyear = value
-      },
-      setDescription(state, value) {
-        state.description = value
-      },
-      setPeopleBlocked(state, value) {
-        state.peopleBlocked = value
-      },
-      setPeopleFriends(state, value) {
-        state.peopleFriends = value
-      },
-      setPeopleObserved(state, value) {
-        state.peopleObserved = value
-      },
-      setGroupsBlocked(state, value) {
-        state.groupsBlocked = value
-      },
-      setGroupsJoined(state, value) {
-        state.groupsJoined = value
-      },
-      setGroupsObserved(state, value) {
-        state.GroupsObserved = value
-      },
-      setPagesBlocked(state, value) {
-        state.pagesBlocked = value
-      },
-      setPagesLiked(state, value) {
-        state.pagesLiked = value
-      },
-      setPagesObserved(state, value) {
-        state.pagesObserved = value
-      },
-      setAllCategories(state, value) {
-        state.allCategories = value
-      },
-      setAllCategoriesNames(state, value) {
-        state.allCategoriesNames = value
-      },
-      setCategoriesObserved(state, value) {
-        state.categoriesObserved = value
-      },
-      setPostsRated(state, value) {
-        state.postsRated = value
-      },
-      setCurrentType(state, value) {
-        state.currentType = value
-      }
+    switchUserAuthenticated(state) {
+      state.userAuthenticated = !state.userAuthenticated;
+    },
+    switchShowMenu(state) {
+      state.showMenu = !state.showMenu;
+    },
+    switchShowCategories(state) {
+      state.showCategories = !state.showCategories;
+    },
+    switchShowPopular(state) {
+      state.showPopular = !state.showPopular;
+    },
+    setUserAuthenticated(state, value) {
+      state.userAuthenticated = value;
+    },
+    setUid(state, value) {
+      state.uid = value;
+    },
+    setName(state, value) {
+      state.name = value;
+    },
+    setSurname(state, value) {
+      state.surname = value;
+    },
+    setUsername(state, value) {
+      state.username = value;
+    },
+    setProfileImage(state, value) {
+      state.profileImage = value;
+    },
+    setGotUserInfo(state, value) {
+      state.gotUserInfo = value;
+    },
+    setGender(state, value) {
+      state.gender = value;
+    },
+    setBirthyear(state, value) {
+      state.birthyear = value;
+    },
+    setDescription(state, value) {
+      state.description = value;
+    },
+    setPeopleBlocked(state, value) {
+      state.peopleBlocked = value;
+    },
+    setPeopleFriends(state, value) {
+      state.peopleFriends = value;
+    },
+    setPeopleObserved(state, value) {
+      state.peopleObserved = value;
+    },
+    setGroupsBlocked(state, value) {
+      state.groupsBlocked = value;
+    },
+    setGroupsJoined(state, value) {
+      state.groupsJoined = value;
+    },
+    setGroupsObserved(state, value) {
+      state.GroupsObserved = value;
+    },
+    setPagesBlocked(state, value) {
+      state.pagesBlocked = value;
+    },
+    setPagesLiked(state, value) {
+      state.pagesLiked = value;
+    },
+    setPagesObserved(state, value) {
+      state.pagesObserved = value;
+    },
+    setAllCategories(state, value) {
+      state.allCategories = value;
+    },
+    setAllCategoriesNames(state, value) {
+      state.allCategoriesNames = value;
+    },
+    setCategoriesObserved(state, value) {
+      state.categoriesObserved = value;
+    },
+    setPostsRated(state, value) {
+      state.postsRated = value;
+    },
+    setCurrentType(state, value) {
+      state.currentType = value;
+    },
+    setUnreadNotificationsList(state, value) {
+      state.unreadNotificationsList = value;
+    },
   },
 
   getters: {
-    getUserAuthenticated (state) {
-      return state.userAuthenticated
+    getUserAuthenticated(state) {
+      return state.userAuthenticated;
     },
-    getShowMenu (state) {
-      return state.showMenu
+    getShowMenu(state) {
+      return state.showMenu;
     },
     getUid(state) {
-      return state.uid
+      return state.uid;
     },
     getName(state) {
-      return state.name
+      return state.name;
     },
     getSurname(state) {
-      return state.surname
+      return state.surname;
     },
     getUsername(state) {
-      return state.username
+      return state.username;
     },
     getProfileImage(state) {
-      return state.profileImage
+      return state.profileImage;
     },
     getGotUserInfo(state) {
-      return state.gotUserInfo
+      return state.gotUserInfo;
     },
     getGender(state) {
-      return state.gender
+      return state.gender;
     },
     getBirthyear(state) {
-      return state.birthyear
+      return state.birthyear;
     },
     getDescription(state) {
-      return state.description
+      return state.description;
     },
     getPeopleBlocked(state) {
-      return state.peopleBlocked
+      return state.peopleBlocked;
     },
     getPeopleFriends(state) {
-      return state.peopleFriends
+      return state.peopleFriends;
     },
     getPeopleObserved(state) {
-      return state.peopleObserved
+      return state.peopleObserved;
     },
     getGroupsBlocked(state) {
-      return state.groupsBlocked
+      return state.groupsBlocked;
     },
     getGroupsJoined(state) {
-      return state.groupsJoined
+      return state.groupsJoined;
     },
     getGroupsObserved(state) {
-      return state.groupsObserved
+      return state.groupsObserved;
     },
     getPagesBlocked(state) {
-      return state.pagesBlocked
+      return state.pagesBlocked;
     },
     getPagesLiked(state) {
-      return state.pagesLiked
+      return state.pagesLiked;
     },
     getPagesObserved(state) {
-      return state.pagesObserved
+      return state.pagesObserved;
     },
     getAllCategories(state) {
-      return state.allCategories
+      return state.allCategories;
     },
     getAllCategoriesNames(state) {
-      return state.allCategoriesNames
+      return state.allCategoriesNames;
     },
     getCategoriesObserved(state) {
-      return state.categoriesObserved
+      return state.categoriesObserved;
     },
     getPostsRated(state) {
-      return state.postsRated
+      return state.postsRated;
     },
     getCurrentType(state) {
-      return state.currentType
-    }
+      return state.currentType;
+    },
+    getUnreadNotificationsList(state) {
+      return state.unreadNotificationsList;
+    },
   },
 });
