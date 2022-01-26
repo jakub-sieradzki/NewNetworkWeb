@@ -1,5 +1,5 @@
 <template>
-  <div v-if="postsLoaded" class="m-auto flex flex-col gap-6" style="">
+  <div v-if="postsLoaded" class="m-auto flex flex-col gap-6 w-full" style="">
     <PostsList :postsData="posts" />
   </div>
 </template>

@@ -249,6 +249,7 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { computed, ref } from "vue";
+import { getApp } from '@firebase/app';
 
 export default {
   setup() {
@@ -277,7 +278,7 @@ export default {
       createUserWithEmailAndPassword(auth, formData.email, formData.password)
         .then((userCredential) => {
           // Signed in
-          const functions = getFunctions();
+          const functions = getFunctions(getApp(), "europe-west1");
           const userSignupSaveData = httpsCallable(functions, "userSignupSaveData");
           userSignupSaveData({
             uid: userCredential.user.uid,

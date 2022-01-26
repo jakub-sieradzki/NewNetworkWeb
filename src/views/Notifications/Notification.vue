@@ -5,7 +5,7 @@
       <p class="text-sm font-semibold">{{ notification.title }}</p>
       <p class="text-xs">{{ notification.content }}</p>
       <div class="flex font-semibold text-xs gap-1">
-        <p @click="markAsRead()" class="hover:bg-gray-200 dark:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Akceptuj</p>
+        <p v-if="notification.type == 'friend_request'" @click="acceptClick()" class="hover:bg-gray-200 dark:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Akceptuj</p>
         <p @click="markAsRead()" class="hover:bg-gray-200 dark:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer">Odrzuć</p>
       </div>
     </div>
@@ -14,6 +14,8 @@
 <script>
 import { getFirestore, doc, updateDoc } from "@firebase/firestore";
 import { getAuth } from "@firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getApp } from '@firebase/app';
 export default {
   props: ["notification", "index"],
   data() {
@@ -25,10 +27,22 @@ export default {
       const notifiRef = doc(db, "users", getAuth().currentUser.uid, "notifications", this.notification.id);
       updateDoc(notifiRef, {
         read: true,
+      }).then(() => {});
+      let notifiList = [...this.$store.getters.getUnreadNotificationsList];
+      notifiList.splice(this.index, 1);
+      this.$store.commit("setUnreadNotificationsList", notifiList);
+    },
+    acceptClick() {
+      this.markAsRead();
+      this.acceptFriend();
+    },
+    acceptFriend() {
+      const functions = getFunctions(getApp(), "europe-west1");
+      const acceptFriend = httpsCallable(functions, "acceptFriend");
+      acceptFriend({
+        acceptedUid: this.notification.userWhoRequestedUid,
       }).then(() => {
-        let notifiList = [...this.$store.getters.getUnreadNotificationsList];
-        notifiList.splice(this.index, 1);
-        this.$store.commit("setUnreadNotificationsList", notifiList);
+        console.log("accepted successfully");
       });
     },
   },

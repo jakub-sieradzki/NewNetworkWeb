@@ -69,6 +69,9 @@ export default {
           store.commit("setPeopleBlocked", doc.data().blocked);
           store.commit("setPeopleFriends", doc.data().friends);
           store.commit("setPeopleObserved", doc.data().observed);
+          store.commit("setFriendsRequests", doc.data().friends_requests);
+          store.commit("setUserFriendsRequests", doc.data().user_friends_requests);
+          store.commit("setBlockedBy", doc.data().blocked_by);
         } else if (doc.id == "posts") {
           store.commit("setPostsRated", doc.data().rated);
         }

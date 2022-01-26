@@ -21,6 +21,9 @@ export default createStore({
       peopleBlocked: [],
       peopleFriends: [],
       peopleObserved: [],
+      friendsRequests: [],
+      userFriendsRequests: [],
+      blockedBy: [],
 
       groupsBlocked: [],
       groupsJoined: [],
@@ -129,6 +132,15 @@ export default createStore({
     setUnreadNotificationsList(state, value) {
       state.unreadNotificationsList = value;
     },
+    setFriendsRequests(state, value) {
+      state.friendsRequests = value
+    },
+    setUserFriendsRequests(state, value) {
+      state.userFriendsRequests = value
+    },
+    setBlockedBy(state, value) {
+      state.blockedBy = value
+    },
   },
 
   getters: {
@@ -209,6 +221,15 @@ export default createStore({
     },
     getUnreadNotificationsList(state) {
       return state.unreadNotificationsList;
+    },
+    getFriendsRequests(state) {
+      return state.friendsRequests;
+    },
+    getUserFriendsRequests(state) {
+      return state.userFriendsRequests;
+    },
+    getBlockedBy(state) {
+      return state.blockedBy;
     },
   },
 });
