@@ -72,7 +72,7 @@
 </template>
 <script>
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { mapState, useStore } from "vuex";
 import { computed } from "vue";
 import { getAuth, signOut } from "firebase/auth";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
@@ -91,21 +91,7 @@ export default {
     };
   },
   setup() {
-    const router = useRouter();
     const store = useStore();
-
-    const name = computed(() => {
-      return store.getters.getName;
-    });
-    const surname = computed(() => {
-      return store.getters.getSurname;
-    });
-    const username = computed(() => {
-      return store.getters.getUsername;
-    });
-    const profileImage = computed(() => {
-      return store.getters.getProfileImage;
-    });
 
     const toggleShowMenu = () => {
       store.commit("switchShowMenu");
@@ -122,31 +108,32 @@ export default {
           console.log(error);
         });
     };
-    const editProfile = () => {
-      const store = useStore();
-      router.push("/user/" + username.value + "/posts");
-    };
 
-    return { toggleShowMenu, logout, editProfile, name, surname, username, profileImage };
+    return { toggleShowMenu, logout };
   },
   computed: {
-    unreadNotifi() {
-      return this.$store.getters.getUnreadNotificationsList;
-    },
+    ...mapState("user", ["name", "surname", "username", "profileImage"]),
+    ...mapState(["unreadNotificationsList"])
   },
   watch: {
     searchQuery: function (newQuery, oldQuery) {
       this.resultQuery(newQuery);
     },
-    unreadNotifi(newType, oldType) {
-      if (newType.length > 0) {
+    unreadNotificationsList(newList, oldList) {
+      if(newList != null) {
+      if (newList.length > 0) {
         this.unreadNotifications = true;
       } else {
         this.unreadNotifications = false;
       }
+      }
+
     },
   },
   methods: {
+    editProfile() {
+      this.$router.push("/user/" + this.username + "/posts");
+    },
     async resultQuery(s) {
       let queryArray = [];
       if (s.length > 2) {

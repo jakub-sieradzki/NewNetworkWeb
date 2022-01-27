@@ -12,33 +12,40 @@
   </div>
 </template>
 <script>
-import { getFirestore, collection, serverTimestamp, addDoc } from "firebase/firestore";
+import { mapState } from "vuex";
+import { sendComment, sendSubcomment } from "../../database/setData";
 export default {
   props: ["postId", "commentId", "usernameToRespond"],
   data() {
     return {};
   },
+  computed: {
+    ...mapState("user", ["uid", "username"]),
+  },
   methods: {
     async sendComment() {
-      let comment = this.$refs.commentSpan.innerHTML;
-      if (comment != "") {
-        const db = getFirestore();
-        let colRef = null;
+      let commentContent = this.$refs.commentSpan.innerHTML;
+      if (commentContent != "") {
         if (this.commentId != null) {
-          colRef = collection(db, "posts", this.postId, "comments", this.commentId, "subcomments");
+          let sent = await sendSubcomment(this.postId, this.commentId, {
+            content: commentContent,
+            username: this.username,
+            uid: this.uid,
+          });
+          if (sent) {
+            this.$refs.commentSpan.innerHTML = "";
+          }
         } else {
-          colRef = collection(db, "posts", this.postId, "comments");
+          let sent = await sendComment(this.postId, {
+            content: commentContent,
+            username: this.username,
+            uid: this.uid,
+          });
+
+          if (sent) {
+            this.$refs.commentSpan.innerHTML = "";
+          }
         }
-        await addDoc(colRef, {
-          content: comment,
-          username: this.$store.getters.getUsername,
-          uid: this.$store.getters.getUid,
-          createdTimestamp: serverTimestamp(),
-        }).then((snapshot) => {
-          console.log("snapshot", snapshot);
-          this.$refs.commentSpan.innerHTML = "";
-          console.log("comment sent");
-        });
       }
     },
   },

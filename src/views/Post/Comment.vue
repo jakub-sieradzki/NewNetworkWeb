@@ -16,7 +16,7 @@
       <p class="my-1">{{ com.content }}</p>
       <div class="flex justify-between mt-1" :class="{ 'mb-4': showRespondField }">
         <p @click="toggleRespondField" class="text-xs hover:underline cursor-pointer">Odpowiedz</p>
-        <p class="text-xs">{{ com.createdTimestamp }}</p>
+        <p class="text-xs">{{ commentLocalDate }}</p>
       </div>
       <SendComment v-if="showRespondField" :postId="postId" :commentId="originalComId" :usernameToRespond="com.username" />
     </div>
@@ -39,6 +39,7 @@
 import { getFirestore, collection, getDocs, query, limit, orderBy } from "firebase/firestore";
 import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
+import { getSubcomments, checkIfAnySubcomments } from "../../database/getData";
 export default {
   props: ["postId", "com", "originalComId"],
   components: {
@@ -51,6 +52,7 @@ export default {
       showMoreCommentsOption: false,
       showMoreCommentsBoolean: false,
       subcomments: [],
+      commentLocalDate: ""
     };
   },
   methods: {
@@ -59,16 +61,7 @@ export default {
     },
     async showMoreComments() {
       if (!this.showMoreCommentsBoolean) {
-        const db = getFirestore();
-        const colRef = collection(db, "posts", this.postId, "comments", this.originalComId, "subcomments");
-        const q = query(colRef, orderBy("createdTimestamp", "asc"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          let singleDoc = doc.data();
-          singleDoc.id = doc.id;
-          singleDoc.createdTimestamp = singleDoc.createdTimestamp.toDate().toLocaleString();
-          this.subcomments.push(singleDoc);
-        });
+        this.subcomments = await getSubcomments(this.postId, this.originalComId);
         this.showMoreCommentsBoolean = true;
       } else {
         this.subcomments = [];
@@ -77,12 +70,9 @@ export default {
     },
   },
   async mounted() {
-    const db = getFirestore();
-    const colRef = collection(db, "posts", this.postId, "comments", this.com.id, "subcomments");
-    const q = query(colRef, limit(1));
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.docs.length == 1) {
-      this.showMoreCommentsOption = true;
+    this.commentLocalDate = this.com.createdTimestamp.toDate().toLocaleString();
+    if(this.com.id == this.originalComId) {
+      this.showMoreCommentsOption = await checkIfAnySubcomments(this.postId, this.com.id);;
     }
   },
 };

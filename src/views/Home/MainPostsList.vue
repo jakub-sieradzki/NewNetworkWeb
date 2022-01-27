@@ -17,10 +17,8 @@
 <script>
 import Post from "../Post/Post.vue";
 import PostsList from "../Post/PostsList.vue";
-import { getFirestore, collection, setDoc, doc, getDocs, addDoc, document, query, where, orderBy } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ref, watch } from "vue";
-import { useStore } from "vuex";
+import { queryPostsForHomePage } from "../../database/getData";
+import { mapState } from 'vuex';
 export default {
   components: { Post, PostsList },
   data() {
@@ -30,16 +28,10 @@ export default {
     };
   },
   async mounted() {
-    if (this.$store.getters.getPeopleObserved.length != 0) {
-      const db = getFirestore();
-      const q = query(collection(db, "posts"), where("uid", "in", this.$store.getters.getPeopleObserved), orderBy("createdTimestamp", "desc"));
-      await getDocs(q).then((docs) => {
-        docs.forEach((doc) => {
-          let docData = doc.data();
-          docData.id = doc.id;
-          this.postsData.push(docData);
-        });
-      });
+    console.log(this.observed);
+    if (this.observed.length != 0) {
+      this.postsData = await queryPostsForHomePage(this.observed);
+      console.log(this.postsData);
     }
     this.loadPosts(this.$store.getters.getCategoriesObserved, this.$store.getters.getCurrentType);
 
@@ -69,6 +61,9 @@ export default {
     },
   },
   computed: {
+    ...mapState("userPeopleInfo", [
+      "observed"
+    ]),
     currentType() {
       return this.$store.getters.getCurrentType;
     },

@@ -3,10 +3,11 @@
 </template>
 <script>
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { mapMutations, mapState, useStore } from "vuex";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot, query, where } from "firebase/firestore";
+import { getFirestore, doc, collection, onSnapshot, query, where } from "firebase/firestore";
 import categories from "./data/categories";
+import { getUserData, getUserDetailsDoc } from "./database/getData";
 export default {
   name: "App",
   data() {
@@ -17,11 +18,10 @@ export default {
     const user = getAuth().currentUser;
     const router = useRouter();
     if (user) {
-      const db = getFirestore();
-      await this.getUser(user, db, store);
-      await this.getUserDetails(user, db, store);
-      //this.getUnreadNotifications(user, db, store);
-      this.listenToNotifications(user, db, store);
+      await this.getUser(user);
+      await this.getUserDetails(user, store);
+      this.listenToNotifications(user);
+
       router.push(document.location.pathname);
     } else {
       store.commit("setGotUserInfo", true);
@@ -30,52 +30,42 @@ export default {
     }
     console.log("created done");
   },
+  computed: {
+    ...mapState(["unreadNotificationsList"]),
+  },
   methods: {
-    async getUser(user, db, store) {
-      console.log("Logged in");
-      store.commit("setUid", user.uid);
-      const docRef = doc(db, "users", user.uid);
+    ...mapMutations("user", ["setUserInfo"]),
+    ...mapMutations("userDetails", ["setUserDetails"]),
+    ...mapMutations("userPeopleInfo", ["setPeopleInfo"]),
+    ...mapMutations("userGroupsInfo", ["setGroupsInfo"]),
+    ...mapMutations("userPagesInfo", ["setPagesInfo"]),
+    ...mapMutations(["setUnreadNotificationsList", "setPostsRated"]),
 
-      await getDoc(docRef)
-        .then((doc) => {
-          const data = doc.data();
-          store.commit("setName", data.name);
-          store.commit("setSurname", data.surname);
-          store.commit("setUsername", data.username);
-          store.commit("setProfileImage", data.profileImageUrl);
-          store.commit("setUserAuthenticated", true);
-          console.log("getting data1 done");
-        })
-        .catch((err) => {
-          console.log(err);
+    async getUser(user) {
+      console.log("Logged in");
+      let userData = await getUserData(user.uid);
+      if (userData) {
+        this.setUserInfo({
+          uid: user.uid,
+          username: userData.username,
+          name: userData.name,
+          surname: userData.surname,
+          profileImage: userData.profileImageUrl,
         });
+      } else {
+        console.log("error");
+      }
     },
-    async getUserDetails(user, db, store) {
-      const querySnapshot = await getDocs(collection(db, "users", user.uid, "details"));
-      querySnapshot.forEach((doc) => {
-        if (doc.id == "groups") {
-          store.commit("setGroupsBlocked", doc.data().blocked);
-          store.commit("setGroupsJoined", doc.data().joined);
-          store.commit("setGroupsObserved", doc.data().observed);
-        } else if (doc.id == "info") {
-          store.commit("setBirthyear", doc.data().birthyear);
-          store.commit("setDescription", doc.data().description);
-          store.commit("setGender", doc.data().gender);
-        } else if (doc.id == "pages") {
-          store.commit("setPagesBlocked", doc.data().blocked);
-          store.commit("setPagesLiked", doc.data().liked);
-          store.commit("setPagesObserved", doc.data().observed);
-        } else if (doc.id == "people") {
-          store.commit("setPeopleBlocked", doc.data().blocked);
-          store.commit("setPeopleFriends", doc.data().friends);
-          store.commit("setPeopleObserved", doc.data().observed);
-          store.commit("setFriendsRequests", doc.data().friends_requests);
-          store.commit("setUserFriendsRequests", doc.data().user_friends_requests);
-          store.commit("setBlockedBy", doc.data().blocked_by);
-        } else if (doc.id == "posts") {
-          store.commit("setPostsRated", doc.data().rated);
-        }
-      });
+    async getUserDetails(user, store) {
+      this.listenToPeopleChanges(user);
+      this.listenToGroupsChanges(user);
+      this.listenToPagesChanges(user);
+      this.listenToPostsRatedChanges(user);
+      this.setUserDetails(await getUserDetailsDoc(user.uid, "info"));
+
+      // let postsInfo = await getUserDetailsDoc(user.uid, "posts");
+      // this.setPostsRated(postsInfo.rated);
+
       this.loadAllCategories(store);
       store.commit("setGotUserInfo", true);
       console.log("getting data2 done");
@@ -98,44 +88,64 @@ export default {
       store.commit("setAllCategoriesNames", allCategoriesNames);
       store.commit("setCategoriesObserved", allCategories);
     },
-    async getUnreadNotifications(user, db, store) {
-      let allNotifications = [];
-      const querySnapshot = await getDocs(collection(db, "users", user.uid, "notifications"));
-      querySnapshot.forEach((doc) => {
-        allNotifications.push(doc.data());
-      });
-
-      store.commit("setUnreadNotificationsList", allNotifications);
-    },
-    listenToNotifications(user, db, store) {
+    listenToNotifications(user) {
       const q = query(collection(getFirestore(), "users", user.uid, "notifications"), where("read", "==", false));
       const unsubscribe = onSnapshot(
         q,
         (querySnapshot) => {
-          let notifiList = [];
+          let notifiList = [...this.unreadNotificationsList];
           querySnapshot.docChanges().forEach((change) => {
             if (change.type === "added") {
-              console.log("added notification!: ", change.doc.data());
               let singleNotifi = change.doc.data();
               singleNotifi["id"] = change.doc.id;
               notifiList.push(singleNotifi);
-              console.log("notifiList: ", notifiList);
+            } else if (change.type === "removed") {
+              let singleNotifi = change.doc.data();
+              singleNotifi["id"] = change.doc.id;
+              notifiList.splice(notifiList.indexOf(singleNotifi), 1);
             }
           });
-          let newNotifi;
-          if (store.getters.getUnreadNotificationsList != null) {
-            console.log("this if");
-            newNotifi = [...store.getters.getUnreadNotificationsList, ...notifiList];
-            console.log("newNotifi: ", newNotifi);
-          } else {
-            newNotifi = notifiList;
-          }
-          store.commit("setUnreadNotificationsList", new Array(...newNotifi));
+          this.setUnreadNotificationsList([...notifiList]);
+          console.log("unreadNotifi: ", this.unreadNotificationsList);
         },
         (error) => {
           console.log(error);
         }
       );
+    },
+    listenToPeopleChanges(user) {
+      const peopleDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "people"), (doc) => {
+        this.setPeopleInfo({
+          blocked: doc.data().blocked,
+          friends: doc.data().friends,
+          observed: doc.data().observed,
+          friendsRequests: doc.data().friends_requests,
+          userFriendsRequests: doc.data().user_friends_requests,
+          blockedBy: doc.data().blocked_by,
+        });
+        console.log("done getting people");
+      });
+    },
+
+    listenToGroupsChanges(user) {
+      const groupsDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "groups"), (doc) => {
+        this.setGroupsInfo(doc.data());
+        console.log("done getting groups");
+      });
+    },
+
+    listenToPagesChanges(user) {
+      const pagesDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "pages"), (doc) => {
+        this.setPagesInfo(doc.data());
+        console.log("done getting pages");
+      });
+    },
+
+    listenToPostsRatedChanges(user) {
+      const postsRatedUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "posts"), (doc) => {
+        this.setPostsRated(doc.data().rated);
+        console.log("done getting posts rated");
+      });
     },
   },
 };

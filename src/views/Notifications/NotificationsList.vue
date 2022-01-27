@@ -19,12 +19,12 @@
         <rect x="9" y="3" width="6" height="4" rx="2" />
         <path d="M9 14l2 2l4 -4" />
       </svg>
-      <p>Brak nowych<br>powiadomień</p>
+      <p>Brak nowych<br />powiadomień</p>
     </div>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import Notification from "./Notification.vue";
 export default {
   components: {
@@ -37,25 +37,20 @@ export default {
   },
   methods: {},
   computed: {
-    ...mapGetters({
-      allNotifications: "getUnreadNotificationsList",
+    ...mapState({
+      allNotifications: "unreadNotificationsList",
     }),
-    unreadNotifi() {
-      return this.$store.getters.getUnreadNotificationsList;
-    },
   },
   watch: {
-    unreadNotifi(newType, oldType) {
-      if (newType.length > 0) {
-        this.unreadNotifications = true;
-      } else {
-        this.unreadNotifications = false;
+    allNotifications(newList, oldList) {
+      if (newList != null) {
+        if (newList.length > 0) {
+          this.unreadNotifications = true;
+        } else {
+          this.unreadNotifications = false;
+        }
       }
     },
-  },
-  mounted() {
-    // this.allNotifications = this.$store.getters.getUnreadNotificationsList;
-    // console.log(this.allNotifications);
   },
 };
 </script>

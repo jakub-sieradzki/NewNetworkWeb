@@ -10,7 +10,7 @@
         </svg>
         <p class="text-sm">Usuń ze znajomych</p>
       </div>
-      <div v-else-if="userRequests.includes(uid)" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
+      <div v-else-if="userFriendsRequests.includes(uid)" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="7" r="4" />
@@ -18,7 +18,7 @@
         </svg>
         <p class="text-sm">Wysłano zaproszenie</p>
       </div>
-      <div v-else-if="requests.includes(uid)" @click="acceptFriend()" class="flex p-3 gap-2 bg-sky-500 text-white hover:bg-sky-600 transition">
+      <div v-else-if="friendsRequests.includes(uid)" @click="acceptFriend()" class="flex p-3 gap-2 bg-sky-500 text-white hover:bg-sky-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -84,7 +84,7 @@
 <script>
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from "@firebase/app";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   props: ["uid"],
   data() {
@@ -105,7 +105,7 @@ export default {
         console.log("send invitation successfully");
       });
 
-      this.$store.getters.getUserFriendsRequests.push(this.uid);
+      // this.$store.getters.getUserFriendsRequests.push(this.uid);
     },
     acceptFriend() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -116,8 +116,8 @@ export default {
         console.log("accepted successfully");
       });
 
-      this.$store.getters.getFriendsRequests.splice(this.$store.getters.getFriendsRequests.indexOf(this.uid), 1);
-      this.$store.getters.getPeopleFriends.push(this.uid);
+      // this.$store.getters.getFriendsRequests.splice(this.$store.getters.getFriendsRequests.indexOf(this.uid), 1);
+      // this.$store.getters.getPeopleFriends.push(this.uid);
     },
     removeFriend() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -128,7 +128,7 @@ export default {
         console.log("removed friend successfully");
       });
 
-      this.$store.getters.getPeopleFriends.splice(this.$store.getters.getPeopleFriends.indexOf(this.uid), 1);
+      // this.$store.getters.getPeopleFriends.splice(this.$store.getters.getPeopleFriends.indexOf(this.uid), 1);
     },
     observe() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -139,7 +139,7 @@ export default {
         console.log("observed person successfully");
       });
 
-      this.$store.getters.getPeopleObserved.push(this.uid);
+      // this.$store.getters.getPeopleObserved.push(this.uid);
     },
 
     removeObserve() {
@@ -151,7 +151,7 @@ export default {
         console.log("observed person removed successfully");
       });
 
-      this.$store.getters.getPeopleObserved.splice(this.$store.getters.getPeopleObserved.indexOf(this.uid), 1);
+      // this.$store.getters.getPeopleObserved.splice(this.$store.getters.getPeopleObserved.indexOf(this.uid), 1);
     },
     block() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -162,11 +162,11 @@ export default {
         console.log("blocked person successfully");
       });
 
-      this.$store.getters.getPeopleFriends.splice(this.$store.getters.getPeopleFriends.indexOf(this.uid), 1);
-      this.$store.getters.getPeopleObserved.splice(this.$store.getters.getPeopleObserved.indexOf(this.uid),1);
-      this.$store.getters.getFriendsRequests.splice(this.$store.getters.getFriendsRequests.indexOf(this.uid),1);
-      this.$store.getters.getUserFriendsRequests.splice(this.$store.getters.getUserFriendsRequests.indexOf(this.uid),1);
-      this.$store.getters.getPeopleBlocked.push(this.uid);
+      // this.$store.getters.getPeopleFriends.splice(this.$store.getters.getPeopleFriends.indexOf(this.uid), 1);
+      // this.$store.getters.getPeopleObserved.splice(this.$store.getters.getPeopleObserved.indexOf(this.uid),1);
+      // this.$store.getters.getFriendsRequests.splice(this.$store.getters.getFriendsRequests.indexOf(this.uid),1);
+      // this.$store.getters.getUserFriendsRequests.splice(this.$store.getters.getUserFriendsRequests.indexOf(this.uid),1);
+      // this.$store.getters.getPeopleBlocked.push(this.uid);
     },
 
     unblock() {
@@ -178,18 +178,19 @@ export default {
         console.log("blocked person successfully");
       });
 
-      this.$store.getters.getPeopleBlocked.splice(this.$store.getters.getPeopleBlocked.indexOf(this.uid),1);
+      // this.$store.getters.getPeopleBlocked.splice(this.$store.getters.getPeopleBlocked.indexOf(this.uid),1);
     },
   },
   mounted() {},
   computed: {
-    ...mapGetters({
-      blocked: "getPeopleBlocked",
-      friends: "getPeopleFriends",
-      observed: "getPeopleObserved",
-      requests: "getFriendsRequests",
-      userRequests: "getUserFriendsRequests",
-    }),
+    ...mapState("userPeopleInfo",[
+      "blocked",
+      "friends",
+      "observed",
+      "friendsRequests",
+      "userFriendsRequests",
+      "blockedBy"
+    ]),
   },
 };
 </script>

@@ -29,8 +29,8 @@
   </div>
 </template>
 <script>
-import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { ref as storageRef, getStorage, getDownloadURL } from "firebase/storage";
+import { getPost } from "../../database/getData";
 export default {
   props: ["postId"],
   data() {
@@ -42,15 +42,9 @@ export default {
   },
   async mounted() {
     const storage = getStorage();
-    const db = getFirestore();
 
     //Get post data
-    const docRef = doc(db, "posts", this.postId);
-    await getDoc(docRef).then((doc) => {
-      let docData = doc.data();
-      docData.id = doc.id;
-      this.post = docData;
-    });
+    this.post = await getPost(this.postId);
 
     const date = this.post.createdTimestamp.toDate();
     this.localDate = date.toLocaleString();

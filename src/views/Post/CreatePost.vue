@@ -117,19 +117,19 @@
                     </svg> -->
         </div>
         <div>
-          <button @click="sendPost" class="btn btn-sm normal-case font-normal dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">Opublikuj</button>
+          <button @click="send" class="btn btn-sm normal-case font-normal dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">Opublikuj</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { useStore } from "vuex";
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { mapState, useStore } from "vuex";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import CategoriesList from "../Categories/CategoriesList.vue";
 import categories from "../../data/categories";
+import { sendPost } from "../../database/setData";
 
 export default {
   props: ["shareId", "shareUid", "shareUsername", "shareContent"],
@@ -147,6 +147,9 @@ export default {
       selectedCategories: [],
       postType: "txt",
     };
+  },
+  computed: {
+    ...mapState("user", ["uid", "username", "name", "surname", "profileImage"]),
   },
   mounted() {
     this.categories = categories;
@@ -175,7 +178,7 @@ export default {
       this.$parent.createPost = false;
       // this.$store.commit('switchCreatePost')
     },
-    async sendPost() {
+    async send() {
       if (this.selectedCategories.length <= 0) {
         alert("Wybierz co najmniej jedną kategorię");
         return;
@@ -189,12 +192,11 @@ export default {
         let hashtag = array1[0];
         hashtag = hashtag.substring(1);
         hashtag = hashtag.toLowerCase();
-        
+
         hashtagsArray.push(hashtag);
       }
 
       console.log(hashtagsArray);
-      const store = this.$store;
       const storage = getStorage();
 
       let storageFilesNames = [];
@@ -216,35 +218,27 @@ export default {
       if (this.shareId) {
         sId = this.shareId;
       }
-      const db = getFirestore();
-      const colRef = collection(db, "posts");
 
-      await addDoc(colRef, {
-        uid: store.getters.getUid,
-        username: store.getters.getUsername,
-        name: store.getters.getName,
-        surname: store.getters.getSurname,
-        profileImage: store.getters.getProfileImage,
+      const send = await sendPost({
+        uid: this.uid,
+        username: this.username,
+        name: this.name,
+        surname: this.surname,
+        profileImage: this.profileImage,
         content: this.postContent.content,
-        createdTimestamp: serverTimestamp(),
         files: storageFilesNames,
         shareId: sId,
         categories: this.selectedCategories,
-        ratings: {
-          1: 0,
-          2: 0,
-          3: 0,
-          4: 0,
-          5: 0,
-          count: 0,
-        },
         type: this.postType,
         hashtags: hashtagsArray,
-      }).then(() => {
-        console.log("success");
-        this.$parent.createPost = false;
-        alert("Wysłano post");
       });
+
+      if (send) {
+        alert("Wysłano post");
+        this.$parent.createPost = false;
+      } else {
+        alert("Wystąpił błąd podczas wysyłania postu");
+      }
     },
     removeImage(u) {
       this.imagesURLs.splice(this.imagesURLs.indexOf(u), 1);

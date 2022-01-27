@@ -9,9 +9,9 @@
   <!-- End comments -->
 </template>
 <script>
-import { getFirestore, collection, getDocs, query, orderBy} from "firebase/firestore";
 import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
+import { getPostComments } from "../../database/getData"
 export default {
   props: ["postId"],
   components: {
@@ -27,16 +27,7 @@ export default {
 
   },
   async mounted() {
-    const db = getFirestore();
-    const colRef = collection(db, "posts", this.postId, "comments");
-    const q = query(colRef, orderBy("createdTimestamp", "desc"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      let singleDoc = doc.data();
-      singleDoc.id = doc.id;
-      singleDoc.createdTimestamp = singleDoc.createdTimestamp.toDate().toLocaleString();
-      this.comments.push(singleDoc);
-    });
+    this.comments = await getPostComments(this.postId);
   },
 };
 </script>

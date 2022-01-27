@@ -28,9 +28,6 @@ export default {
       updateDoc(notifiRef, {
         read: true,
       }).then(() => {});
-      let notifiList = [...this.$store.getters.getUnreadNotificationsList];
-      notifiList.splice(this.index, 1);
-      this.$store.commit("setUnreadNotificationsList", notifiList);
     },
     acceptClick() {
       this.markAsRead();

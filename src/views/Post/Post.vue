@@ -21,7 +21,7 @@
             <circle cx="12" cy="5" r="1" />
           </svg>
           <ul class="dropdown-content dark:bg-gray-800 border dark:border-gray-700 shadow mt-3 rounded-lg w-52 h-14" tabindex="0">
-            <li @click="deletePost()" class="flex items-center p-4 cursor-pointer">
+            <li @click="deletePostClick()" class="flex items-center p-4 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <line x1="4" y1="7" x2="20" y2="7" />
@@ -159,13 +159,14 @@ import { getFirestore, doc, deleteDoc, runTransaction, onSnapshot, updateDoc, in
 import { getAuth } from "firebase/auth";
 
 import categoriesData from "../../data/categories";
+import { deletePost } from "../../database/setData";
 export default {
   components: {
     CreatePost,
     Post,
     SharedPost,
     PostCategories,
-    PostContent
+    PostContent,
   },
   props: ["postData"],
   data() {
@@ -198,7 +199,7 @@ export default {
     setSelectedRating(value) {
       this.selectedRating = value;
     },
-    async deletePost() {
+    async deletePostClick() {
       const user = getAuth().currentUser;
       if (user.uid == this.postData.uid) {
         const storage = getStorage();
@@ -213,10 +214,13 @@ export default {
             });
         }
 
-        const db = getFirestore();
-        await deleteDoc(doc(db, "posts", this.postData.id)).then(() => {
+        let deleted = await deletePost(this.postData.id);
+        if (deleted) {
           alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
-        });
+        } else {
+          alert("Wystąpił błąd");
+        }
+
       } else {
         alert("To nie jest Twój post, więc nie możesz go usunąć :)");
       }

@@ -38,8 +38,9 @@
 </template>
 <script>
 import Post from "./Post.vue";
-import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { deletePost } from "../../database/setData";
+import { getPost } from "../../database/getData";
 export default {
   props: ["postData"],
   components: { Post },
@@ -52,23 +53,19 @@ export default {
     async deletePost() {
       const user = getAuth().currentUser;
       if (user.uid == this.postData.uid) {
-        const db = getFirestore();
-        await deleteDoc(doc(db, "posts", this.postData.id)).then(() => {
+        let deleted = await deletePost(this.postData.id);
+        if (deleted) {
           alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
-        });
+        } else {
+          alert("Wystąpił błąd");
+        }
       } else {
         alert("To nie jest Twój post, więc nie możesz go usunąć :)");
       }
     },
   },
   async mounted() {
-    const db = getFirestore();
-    const docRef = doc(db, "posts", this.postData.shareId);
-    await getDoc(docRef).then((doc) => {
-      let docData = doc.data();
-      docData.id = doc.id;
-      this.mainPostData = docData;
-    });
+    this.mainPostData = await getPost(this.postData.shareId);
   },
 };
 </script>

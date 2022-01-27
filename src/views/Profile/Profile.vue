@@ -9,7 +9,7 @@
           <p class="text-center text-2xl font-bold mt-5">{{ name }} {{ surname }}</p>
           <p class="text-center text-sm mt-4 px-5 text-gray-500 dark:text-gray-400"></p>
           <div class="flex justify-center my-3">
-            <ProfileActions v-if="!blocked" :uid="uid" />
+            <ProfileActions v-if="!blockedByUser" :uid="uid" />
             <p v-else class="text-lg p-5 font-semibold text-center">Zostałeś zablokowany przez tego użytkownika</p>
           </div>
         </div>
@@ -22,7 +22,7 @@
             <router-link to="friends" class="tab tab-bordered flex-grow">Znajomi</router-link>
             <router-link to="info" class="tab tab-bordered flex-grow">Informacje</router-link>
           </div>
-          <div v-if="!blocked && !blockedBySelf" class="md:overflow-y-scroll custom-scrollbar h-5/6 px-5">
+          <div v-if="!ifBlockedByUser && !ifBlockedBySelf" class="md:overflow-y-scroll custom-scrollbar h-5/6 px-5">
             <router-view name="profileContent" class="h-full w-full"></router-view>
           </div>
         </div>
@@ -33,13 +33,10 @@
 <script>
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { useStore } from "vuex";
-import { getFirestore, collection, setDoc, doc, getDocs, updateDoc, addDoc, document, query, where, arrayUnion, arrayRemove } from "firebase/firestore";
-import { useRouter } from "vue-router";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { getApp } from "@firebase/app";
+import { mapState, useStore } from "vuex";
 import ProfileActions from "./ProfileActions.vue";
-import { mapGetters } from "vuex";
+import { getUserDataOnUsername } from "../../database/getData";
+import { updateProfileImageUrl } from "../../database/setData";
 export default {
   components: {
     ProfileActions,
@@ -52,18 +49,18 @@ export default {
       profileImageUrl: null,
       username: null,
       uid: null,
-      blocked: true,
-      blockedBySelf: true,
+      ifBlockedByUser: true,
+      ifBlockedBySelf: true,
     };
   },
 
   methods: {
-    loadProfilePhoto() {
+    async loadProfilePhoto() {
       const storage = getStorage();
       const img = this.$refs.profileImg;
-      if (!this.blocked) {
+      if (!this.blockedByUser) {
         if (this.profileImageUrl) {
-          getDownloadURL(ref(storage, this.profileImageUrl))
+          await getDownloadURL(ref(storage, this.profileImageUrl))
             .then((url) => {
               // Or inserted into an <img> element
               img.setAttribute("src", url);
@@ -79,50 +76,34 @@ export default {
       }
     },
     async getUserInfo() {
-      const db = getFirestore();
-      const q = query(collection(db, "users"), where("username", "==", this.$route.params.username));
-      await getDocs(q).then((docs) => {
-        docs.forEach((doc) => {
-          let userDoc = doc.data();
-          this.uid = doc.id;
-          this.name = userDoc.name;
-          this.surname = userDoc.surname;
-          this.username = userDoc.username;
-          this.description = userDoc.description;
-          this.profileImageUrl = userDoc.profileImageUrl;
-        });
-      });
+      const userData = await getUserDataOnUsername(this.$route.params.username);
+      this.uid = userData.id;
+      this.name = userData.name;
+      this.surname = userData.surname;
+      this.username = userData.username;
+      this.description = userData.description;
+      this.profileImageUrl = userData.profileImageUrl;
     },
   },
   computed: {
-    ...mapGetters({
-      peopleBlocked: "getPeopleBlocked",
-      blockedBy: "getBlockedBy",
-    }),
+    ...mapState("userPeopleInfo", ["blocked", "blockedBy"]),
   },
   async updated() {
     if (this.username != this.$route.params.username) {
       await this.getUserInfo();
-      this.blocked = this.blockedBy.includes(this.uid);
-      this.blockedBySelf = this.peopleBlocked.includes(this.uid);
-      console.log("isBlockedBySelf? ", this.blockedBySelf);
-      console.log("isBlocked? ", this.blocked);
-      console.log("updated");
-      
+      this.ifBlockedByUser = this.blockedBy.includes(this.uid);
+      this.ifBlockedBySelf = this.blocked.includes(this.uid);
+
       this.loadProfilePhoto();
-      if (this.blocked) {
-        console.log("user blocked");
-        return;
-      }
     }
   },
   async mounted() {
     console.log("mounted started");
     await this.getUserInfo();
-    this.blocked = this.blockedBy.includes(this.uid);
-    this.blockedBySelf = this.peopleBlocked.includes(this.uid);
+    this.ifBlockedByUser = this.blockedBy.includes(this.uid);
+    this.ifBlockedBySelf = this.blocked.includes(this.uid);
 
-    if (this.blocked) {
+    if (this.ifBlockedByUser) {
       console.log("user blocked");
       return;
     }
@@ -138,17 +119,7 @@ export default {
         console.log("Uploaded a blob or file!");
         console.log(snapshot.metadata.fullPath);
         console.log(getAuth().currentUser.uid);
-        const db = getFirestore();
-        const docRef = doc(db, "users", getAuth().currentUser.uid);
-        setDoc(
-          docRef,
-          {
-            profileImageUrl: snapshot.metadata.fullPath,
-          },
-          { merge: true }
-        ).then(() => {
-          console.log("success");
-        });
+        updateProfileImageUrl(getAuth().currentUser.uid, snapshot.metadata.fullPath);
       });
 
       console.log(selectedFile);

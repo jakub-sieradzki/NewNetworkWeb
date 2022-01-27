@@ -54,30 +54,24 @@ import { getFirestore, doc, getDoc, getDocs, collection } from "firebase/firesto
 import { useStore } from "vuex";
 
 export default {
-  setup() {
-    console.log("Login loaded");
-    const router = useRouter();
-    const store = useStore();
-
-    let formData = {
-      email: "",
-      password: "",
+  data() {
+    return {
+      formData: {
+        email: "",
+        password: "",
+      },
     };
-
-    const register = () => {
-      router.push("/register");
-    };
-
-    const login = () => {
-      const auth = getAuth();
-
-      signInWithEmailAndPassword(auth, formData.email, formData.password)
+  },
+  methods: {
+    register() {
+      this.$router.push("/register");
+    },
+    async login() {
+      await signInWithEmailAndPassword(getAuth(), formData.email, formData.password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          const db = getFirestore();
           store.commit("setUid", user.uid);
-          const docRef = doc(db, "users", user.uid);
 
           getDoc(docRef)
             .then((doc) => {
@@ -108,6 +102,15 @@ export default {
           console.log(errorCode);
           console.log(errorMessage);
         });
+    },
+  },
+  setup() {
+    console.log("Login loaded");
+    const router = useRouter();
+    const store = useStore();
+
+    const login = () => {
+      const auth = getAuth();
     };
     console.log("Login fully loaded");
     return { formData, login, register };

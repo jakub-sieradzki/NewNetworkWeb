@@ -4,8 +4,8 @@
   </div>
 </template>
 <script>
-import { getFirestore, collection, setDoc, getDoc, doc, getDocs, updateDoc, addDoc, document, query, where, arrayUnion, arrayRemove } from "firebase/firestore";
 import Post from "./Post.vue";
+import { getPost } from "../../database/getData";
 export default {
   components: { Post },
   data() {
@@ -14,17 +14,12 @@ export default {
     };
   },
   async mounted() {
-    const db = getFirestore();
     console.log("postID: ", this.$route.params.postId);
-    const docRef = doc(db, "posts", this.$route.params.postId);
-    const docSnap = await getDoc(docRef);
+    let postData = await getPost(this.$route.params.postId);
 
-    if (docSnap.exists()) {
-      let docData = docSnap.data();
-      docData.id = docSnap.id;
-      this.post = docData;
+    if (postData) {
+      this.post = postData;
     } else {
-      // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   },
