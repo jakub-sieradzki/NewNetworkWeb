@@ -124,7 +124,7 @@
   </div>
 </template>
 <script>
-import { mapState, useStore } from "vuex";
+import { mapState } from "vuex";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import CategoriesList from "../Categories/CategoriesList.vue";
@@ -176,7 +176,6 @@ export default {
     },
     closeCreatePost() {
       this.$parent.createPost = false;
-      // this.$store.commit('switchCreatePost')
     },
     async send() {
       if (this.selectedCategories.length <= 0) {

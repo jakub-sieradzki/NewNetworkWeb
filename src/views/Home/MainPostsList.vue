@@ -18,7 +18,7 @@
 import Post from "../Post/Post.vue";
 import PostsList from "../Post/PostsList.vue";
 import { queryPostsForHomePage } from "../../database/getData";
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 export default {
   components: { Post, PostsList },
   data() {
@@ -27,30 +27,33 @@ export default {
       posts: [],
     };
   },
+  computed: {
+    ...mapState("userPeopleInfo", ["observed"]),
+    ...mapState(["currentType", "categoriesObserved"]),
+  },
+  watch: {
+    currentType(newValue, oldValue) {
+      this.loadPosts();
+    },
+    categoriesObserved(newValue, oldValue) {
+      this.loadPosts();
+    }
+  },
   async mounted() {
     console.log(this.observed);
     if (this.observed.length != 0) {
       this.postsData = await queryPostsForHomePage(this.observed);
       console.log(this.postsData);
     }
-    this.loadPosts(this.$store.getters.getCategoriesObserved, this.$store.getters.getCurrentType);
-
-    this.$store.watch(
-      (state, getters) => {
-        return getters.getCategoriesObserved;
-      },
-      (newValue, oldValue) => {
-        this.loadPosts(newValue, this.$store.getters.getCurrentType);
-      }
-    );
+    this.loadPosts();
   },
   methods: {
-    loadPosts(observedCategories, type) {
+    loadPosts() {
       let filteredPosts = [];
       for (let postNumber in this.postsData) {
         if (this.postsData[postNumber].categories) {
-          if (this.postsData[postNumber].categories.some((r) => observedCategories.includes(r))) {
-            if (type == "all" || this.postsData[postNumber].type == type) {
+          if (this.postsData[postNumber].categories.some((r) => this.categoriesObserved.includes(r))) {
+            if (this.currentType == "all" || this.postsData[postNumber].type == this.currentType) {
               filteredPosts.push(this.postsData[postNumber]);
             }
           }
@@ -58,19 +61,6 @@ export default {
       }
 
       this.posts = filteredPosts;
-    },
-  },
-  computed: {
-    ...mapState("userPeopleInfo", [
-      "observed"
-    ]),
-    currentType() {
-      return this.$store.getters.getCurrentType;
-    },
-  },
-  watch: {
-    currentType(newType, oldType) {
-      this.loadPosts(this.$store.getters.getCategoriesObserved, newType);
     },
   },
 };

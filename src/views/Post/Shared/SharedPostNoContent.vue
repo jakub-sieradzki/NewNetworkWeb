@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col dark:border-gray-800 rounded-lg shadow-inner bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40">
+  <div class="flex flex-col dark:border-gray-800 rounded-lg shadow-inner bg-shite dark:bg-gray-900">
     <div class="flex justify-between px-4 py-3">
       <div class="flex items-center pl-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -37,10 +37,10 @@
   </div>
 </template>
 <script>
-import Post from "./Post.vue";
+import Post from "../Post.vue";
 import { getAuth } from "firebase/auth";
-import { deletePost } from "../../database/setData";
-import { getPost } from "../../database/getData";
+import { deletePost } from "../../../database/setData";
+import { getPost } from "../../../database/getData";
 export default {
   props: ["postData"],
   components: { Post },

@@ -88,7 +88,6 @@ async function checkIfAnySubcomments(postId, commentId) {
   const q = query(collection(getFirestore(), "posts", postId, "comments", commentId, "subcomments"), limit(1));
   await getDocs(q)
     .then((docs) => {
-      console.log(docs.empty);
       check = !docs.empty;
     })
     .catch((err) => {
@@ -124,4 +123,29 @@ async function getPost(postId) {
   return post;
 }
 
-export { queryPostsForHomePage, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost };
+async function getPostsByUsername(username) {
+  let docsPosts = [];
+  const q = query(collection(getFirestore(), "posts"), where("username", "==", username, orderBy("createdTimestamp", "desc")));
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      let docData = doc.data();
+      docData.id = doc.id;
+      docsPosts.push(docData);
+    });
+  });
+
+  return docsPosts;
+}
+
+async function searchUsername(s) {
+  let queryArray = [];
+  const q = query(collection(getFirestore(), "users"), where("username", ">=", s), where("username", "<=", s + "\uf8ff"));
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      queryArray.push(doc.data());
+    });
+  });
+  return queryArray;
+}
+
+export { queryPostsForHomePage, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername };

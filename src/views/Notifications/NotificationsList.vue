@@ -9,7 +9,7 @@
       </svg>
     </div>
 
-    <div v-if="unreadNotifications" class="flex flex-col">
+    <div v-if="allNotifications.length > 0" class="flex flex-col">
       <Notification v-for="(value, key) in allNotifications" :key="key" :notification="value" :index="key" />
     </div>
     <div v-else class="flex flex-col text-gray-500 text-center items-center h-full justify-center gap-4">
@@ -31,9 +31,7 @@ export default {
     Notification,
   },
   data() {
-    return {
-      unreadNotifications: false,
-    };
+    return {};
   },
   methods: {},
   computed: {
@@ -41,16 +39,6 @@ export default {
       allNotifications: "unreadNotificationsList",
     }),
   },
-  watch: {
-    allNotifications(newList, oldList) {
-      if (newList != null) {
-        if (newList.length > 0) {
-          this.unreadNotifications = true;
-        } else {
-          this.unreadNotifications = false;
-        }
-      }
-    },
-  },
+  mounted() {},
 };
 </script>

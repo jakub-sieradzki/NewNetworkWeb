@@ -8,7 +8,7 @@
 
     <!--End Categories-->
     <!--Posts Section-->
-    <MainPostsList v-if="allLoaded"/>
+    <MainPostsList v-if="allLoaded" />
     <!--End Post Section-->
     <!--Popular-->
     <Popular />
@@ -50,7 +50,7 @@ import Categories from "./Categories.vue";
 import MainPostsList from "./MainPostsList.vue";
 import Popular from "./Popular.vue";
 import CreatePost from "../Post/CreatePost.vue";
-import { useStore } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   components: {
@@ -73,28 +73,29 @@ export default {
     console.log("before");
     next((vm) => {
       if (to.params.id == "text") {
-        vm.$store.commit("setCurrentType", "txt");
+        vm.setCurrentType("txt");
       } else if (to.params.id == "images") {
-        vm.$store.commit("setCurrentType", "img");
+        vm.setCurrentType("img");
       } else {
-        vm.$store.commit("setCurrentType", "all");
+        vm.setCurrentType("all");
       }
       vm.allLoaded = true;
     });
   },
   beforeRouteUpdate(to, from, next) {
-    if (to.params.id == "text") {
-      this.$store.commit("setCurrentType", "txt");
-    } else if (to.params.id == "images") {
-      this.$store.commit("setCurrentType", "img");
-    } else {
-      this.$store.commit("setCurrentType", "all");
-    }
+      if (to.params.id == "text") {
+        this.setCurrentType("txt");
+      } else if (to.params.id == "images") {
+        this.setCurrentType("img");
+      } else {
+        this.setCurrentType("all");
+      }
     this.allLoaded = true;
 
     next();
   },
   methods: {
+    ...mapMutations(["setCurrentType"]),
     showCreatePost() {
       this.createPost = true;
     },

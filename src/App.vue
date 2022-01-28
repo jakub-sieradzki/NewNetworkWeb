@@ -3,8 +3,8 @@
 </template>
 <script>
 import { useRouter } from "vue-router";
-import { mapMutations, mapState, useStore } from "vuex";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { mapMutations, mapState } from "vuex";
+import { getAuth } from "firebase/auth";
 import { getFirestore, doc, collection, onSnapshot, query, where } from "firebase/firestore";
 import categories from "./data/categories";
 import { getUserData, getUserDetailsDoc } from "./database/getData";
@@ -20,11 +20,9 @@ export default {
     if (user) {
       await this.getUser(user);
       await this.getUserDetails(user, store);
-      this.listenToNotifications(user);
-
       router.push(document.location.pathname);
     } else {
-      store.commit("setGotUserInfo", true);
+      this.setGotUserInfo(true);
       console.log("Not logged in");
       router.push("/login");
     }
@@ -39,7 +37,7 @@ export default {
     ...mapMutations("userPeopleInfo", ["setPeopleInfo"]),
     ...mapMutations("userGroupsInfo", ["setGroupsInfo"]),
     ...mapMutations("userPagesInfo", ["setPagesInfo"]),
-    ...mapMutations(["setUnreadNotificationsList", "setPostsRated"]),
+    ...mapMutations(["setUnreadNotificationsList", "setPostsRated", "setGotUserInfo"]),
 
     async getUser(user) {
       console.log("Logged in");
@@ -61,13 +59,11 @@ export default {
       this.listenToGroupsChanges(user);
       this.listenToPagesChanges(user);
       this.listenToPostsRatedChanges(user);
+      this.listenToNotifications(user);
       this.setUserDetails(await getUserDetailsDoc(user.uid, "info"));
 
-      // let postsInfo = await getUserDetailsDoc(user.uid, "posts");
-      // this.setPostsRated(postsInfo.rated);
-
       this.loadAllCategories(store);
-      store.commit("setGotUserInfo", true);
+      this.setGotUserInfo(true);
       console.log("getting data2 done");
     },
     loadAllCategories(store) {
@@ -93,18 +89,13 @@ export default {
       const unsubscribe = onSnapshot(
         q,
         (querySnapshot) => {
-          let notifiList = [...this.unreadNotificationsList];
-          querySnapshot.docChanges().forEach((change) => {
-            if (change.type === "added") {
-              let singleNotifi = change.doc.data();
-              singleNotifi["id"] = change.doc.id;
-              notifiList.push(singleNotifi);
-            } else if (change.type === "removed") {
-              let singleNotifi = change.doc.data();
-              singleNotifi["id"] = change.doc.id;
-              notifiList.splice(notifiList.indexOf(singleNotifi), 1);
-            }
+          let notifiList = [];
+          querySnapshot.forEach((doc) => {
+            let singleNotifi = doc.data();
+            singleNotifi["id"] = doc.id;
+            notifiList.push(singleNotifi);
           });
+          console.log("done getting notifications");
           this.setUnreadNotificationsList([...notifiList]);
           console.log("unreadNotifi: ", this.unreadNotificationsList);
         },

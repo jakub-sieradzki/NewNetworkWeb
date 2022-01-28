@@ -19,6 +19,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 import categories from "../../data/categories";
 import Category from "../Categories/Category.vue";
 export default {
@@ -28,10 +29,12 @@ export default {
   },
   data() {
     return {
-      allCategories: [],
       selectedCategories: [],
       selectAllCategories: false,
     };
+  },
+  computed: {
+    ...mapState(["allCategories"])
   },
   methods: {
     // switching categories logic
@@ -80,7 +83,6 @@ export default {
     },
   },
   mounted() {
-    this.allCategories = this.$store.getters.getAllCategories;
     if (this.allSelected) {
       this.loadAllCategories();
     } else {

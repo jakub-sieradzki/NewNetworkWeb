@@ -13,7 +13,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { sendComment, sendSubcomment } from "../../database/setData";
+import { sendComment, sendSubcomment } from "@/database/setData";
 export default {
   props: ["postId", "commentId", "usernameToRespond"],
   data() {

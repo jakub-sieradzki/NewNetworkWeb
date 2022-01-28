@@ -54,7 +54,7 @@
     <!-- Info -->
     <div class="h-auto w-full flex mt-4 justify-between">
       <!--Categories list-->
-      <div class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 bg-slate-200 bg-opacity-60 hover:bg-slate-200 dark:bg-slate-800 hover:dark:bg-slate-700 hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
+      <div class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 hover:bg-slate-200 hover:dark:bg-slate-700 hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
         <svg xmlns="http://www.w3.org/2000/svg" :class="{ 'rotate-45': showCategories }" class="stroke-current w-5 h-5 transition duration-300" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M3 12l3 3l3 -3l-3 -3z" />
@@ -143,29 +143,30 @@
       </div>
     </div>
     <!--End Actions-->
-    <PostCategories v-if="showComments" :postId="this.postData.id" />
+    <PostComments v-if="showComments" :postId="this.postData.id" />
   </div>
   <!-- End Post -->
 </template>
 <script>
 import CreatePost from "./CreatePost.vue";
 import Post from "./Post.vue";
-import PostCategories from "./PostComments.vue";
-import SharedPost from "./SharedPost.vue";
+import PostComments from "./Comments/PostComments.vue";
+import SharedPost from "./Shared/SharedPost.vue";
 import PostContent from "./PostContent.vue";
 
 import { ref as storageRef, getStorage, getDownloadURL, deleteObject } from "firebase/storage";
-import { getFirestore, doc, deleteDoc, runTransaction, onSnapshot, updateDoc, increment, deleteField } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 import categoriesData from "../../data/categories";
-import { deletePost } from "../../database/setData";
+import { deletePost, addPostReaction, removePostReaction, updatePostReaction } from "../../database/setData";
+import { getPostsByHashtag } from "@/database/getData";
+import { mapState } from "vuex";
 export default {
   components: {
     CreatePost,
     Post,
     SharedPost,
-    PostCategories,
+    PostComments,
     PostContent,
   },
   props: ["postData"],
@@ -183,7 +184,22 @@ export default {
       averageRatingInt: 0,
     };
   },
+  computed: {
+    ...mapState(["postsRated"]),
+  },
+  watch: {
+    postsRated(newRated, oldRated) {
+      this.updateRating(newRated);
+    },
+  },
   methods: {
+    updateRating(userRated) {
+      if (Object.keys(userRated).includes(this.postData.id)) {
+        this.selectedRating = userRated[this.postData.id];
+      } else {
+        this.selectedRating = 0;
+      }
+    },
     showProfile() {
       this.$router.push("/user/" + this.postData.username + "/posts");
     },
@@ -220,7 +236,6 @@ export default {
         } else {
           alert("Wystąpił błąd");
         }
-
       } else {
         alert("To nie jest Twój post, więc nie możesz go usunąć :)");
       }
@@ -240,155 +255,33 @@ export default {
     async mainReactClick() {
       clearTimeout(this.showReactionsTimeout);
       this.showReactions = false;
-      const db = getFirestore();
-      const postRef = doc(db, "posts", this.postData.id);
-      const userPostsRatedRef = doc(db, "users", getAuth().currentUser.uid, "details", "posts");
-      const ratedPostFieldName = "rated." + this.postData.id;
       let postsRated = this.copyObject(this.$store.getters.getPostsRated);
 
-      // if user already gave rating we removing rating
       if (Object.keys(postsRated).includes(this.postData.id)) {
-        try {
-          await runTransaction(getFirestore(), async (transaction) => {
-            //removing info about rating from user's history of rated posts
-            transaction.update(userPostsRatedRef, {
-              [ratedPostFieldName]: deleteField(),
-            });
-            // decrement rating which user previously gave
-            transaction.update(postRef, {
-              ["ratings." + postsRated[this.postData.id]]: increment(-1),
-              ["ratings.count"]: increment(-1),
-            });
-          });
-
-          // removing info about rating from internal list of rated posts
-          delete postsRated[this.postData.id];
-          // update internal list of rated posts
-          this.$store.commit("setPostsRated", postsRated);
-          this.setSelectedRating(0);
-        } catch (e) {
-          console.log(e);
-        }
-        // else if user didn't give rating we are giving it
+        // if user already gave rating we removing rating
+        await removePostReaction(getAuth().currentUser.uid, this.postData.id, postsRated[this.postData.id]);
       } else {
-        try {
-          this.setSelectedRating(5);
-          await runTransaction(getFirestore(), async (transaction) => {
-            // updating users' history of rated posts
-            transaction.update(userPostsRatedRef, {
-              [ratedPostFieldName]: 5,
-            });
-            //updating rating for post: increment '5' rate and counter
-            transaction.update(postRef, {
-              "ratings.5": increment(1),
-              ["ratings.count"]: increment(1),
-            });
-          });
-
-          // adding info about rating to internal list of rated posts
-          postsRated[this.postData.id] = 5;
-          // update internal list of rated posts
-          this.$store.commit("setPostsRated", postsRated);
-        } catch (e) {
-          this.setSelectedRating(0);
-          console.log(e);
-        }
+        // else if user didn't give rating we are giving it
+        await addPostReaction(getAuth().currentUser.uid, this.postData.id, 5);
       }
     },
     async reactClick(value) {
-      const db = getFirestore();
-      const postRef = doc(db, "posts", this.postData.id);
-      const userPostsRatedRef = doc(db, "users", getAuth().currentUser.uid, "details", "posts");
-      const ratedPostFieldName = "rated." + this.postData.id;
       let postsRated = this.copyObject(this.$store.getters.getPostsRated);
 
-      // if user already gave rating
       if (Object.keys(postsRated).includes(this.postData.id)) {
-        // if user clicked the same rate, we remove rating
+        // if user already gave rating
         if (postsRated[this.postData.id] == value) {
-          try {
-            await runTransaction(getFirestore(), async (transaction) => {
-              //removing info about rating from user's history of rated posts
-              transaction.update(userPostsRatedRef, {
-                [ratedPostFieldName]: deleteField(),
-              });
-              // decrement rating which user previously gave
-              transaction.update(postRef, {
-                ["ratings." + postsRated[this.postData.id]]: increment(-1),
-                ["ratings.count"]: increment(-1),
-              });
-            });
-
-            // removing info about rating from internal list of rated posts
-            delete postsRated[this.postData.id];
-            // update internal list of rated posts
-            this.$store.commit("setPostsRated", postsRated);
-
-            this.selectedRating = 0;
-          } catch (e) {
-            console.log(e);
-          }
+          // if user clicked the same rate, we remove rating
+          await removePostReaction(getAuth().currentUser.uid, this.postData.id, postsRated[this.postData.id]);
+        } else {
+          // if user clicked another rate, we have to remove old rating and save new rating
+          await updatePostReaction(getAuth().currentUser.uid, this.postData.id, value, postsRated[this.postData.id]);
         }
-        // if user clicked another rate, we have to remove old rating and save new rating
-        else {
-          try {
-            await runTransaction(getFirestore(), async (transaction) => {
-              // updating users' history of rated posts
-              transaction.update(userPostsRatedRef, {
-                [ratedPostFieldName]: value,
-              });
-              // updating rating for post: decrement old value, increment new value; count field remains the same
-              transaction.update(postRef, {
-                ["ratings." + postsRated[this.postData.id]]: increment(-1),
-                ["ratings." + value]: increment(1),
-              });
-            });
-
-            // updating info about rating in internal list of rated posts
-            postsRated[this.postData.id] = value;
-            // update internal list of rated posts
-            this.$store.commit("setPostsRated", postsRated);
-
-            this.selectedRating = value;
-          } catch (e) {
-            console.log(e);
-          }
-        }
-        // else if user didn't give rating
       } else {
-        try {
-          await runTransaction(getFirestore(), async (transaction) => {
-            // updating users' history of rated posts
-            transaction.update(userPostsRatedRef, {
-              [ratedPostFieldName]: value,
-            });
-
-            //updating rating for post: increment specific rate and counter
-            transaction.update(postRef, {
-              ["ratings." + value]: increment(1),
-              ["ratings.count"]: increment(1),
-            });
-          });
-
-          // updating info about rating in internal list of rated posts
-          postsRated[this.postData.id] = value;
-          // update internal list of rated posts
-          this.$store.commit("setPostsRated", postsRated);
-
-          this.selectedRating = value;
-        } catch (e) {
-          console.log(e);
-        }
+        // else if user didn't give rating
+        await addPostReaction(getAuth().currentUser.uid, this.postData.id, value);
       }
       this.showReactions = false;
-    },
-    copyObject(mainObject) {
-      let objectCopy = {};
-      let key;
-      for (key in mainObject) {
-        objectCopy[key] = mainObject[key];
-      }
-      return objectCopy;
     },
     rateButtonTouchStart() {
       console.log("touch start");
@@ -401,6 +294,14 @@ export default {
     },
     navToHashtag() {
       console.log("Test");
+    },
+    copyObject(mainObject) {
+      let objectCopy = {};
+      let key;
+      for (key in mainObject) {
+        objectCopy[key] = mainObject[key];
+      }
+      return objectCopy;
     },
   },
   async mounted() {
@@ -433,6 +334,9 @@ export default {
       }
     }
 
+    // set post rating
+    this.updateRating(this.postsRated);
+
     //Get post categories and its' names
     if (this.postData.categories) {
       for (let catIndex in categoriesData) {
@@ -448,12 +352,6 @@ export default {
           }
         }
       }
-    }
-
-    // Check if post is rated by user
-    let userRated = this.$store.getters.getPostsRated;
-    if (Object.keys(userRated).includes(this.postData.id)) {
-      this.selectedRating = userRated[this.postData.id];
     }
 
     // Get average rating

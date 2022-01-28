@@ -1,4 +1,4 @@
-import { getFirestore, collection, setDoc, doc, getDoc, getDocs, addDoc, document, query, where, orderBy, serverTimestamp, deleteDoc, runTransaction } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, getDoc, getDocs, addDoc, document, query, where, orderBy, serverTimestamp, deleteDoc, runTransaction, deleteField, increment } from "firebase/firestore";
 
 function updateProfileImageUrl(uid, url) {
   setDoc(
@@ -80,4 +80,71 @@ async function sendSubcomment(postId, commentId, data) {
   return sent;
 }
 
-export { updateProfileImageUrl, sendPost, deletePost, sendComment, sendSubcomment };
+async function addPostReaction(uid, postId, rating) {
+  try {
+    await runTransaction(getFirestore(), async (transaction) => {
+      // updating users' history of rated posts
+      transaction.update(doc(getFirestore(), "users", uid, "details", "posts"), {
+        ["rated." + postId]: rating,
+      });
+      //updating rating for post
+      transaction.update(doc(getFirestore(), "posts", postId), {
+        ["ratings." + rating]: increment(1),
+        ["ratings.count"]: increment(1),
+      });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function removePostReaction(uid, postId, rating) {
+  try {
+    await runTransaction(getFirestore(), async (transaction) => {
+      // updating users' history of rated posts
+      transaction.update(doc(getFirestore(), "users", uid, "details", "posts"), {
+        ["rated." + postId]: deleteField(),
+      });
+      //updating rating for post
+      transaction.update(doc(getFirestore(), "posts", postId), {
+        ["ratings." + rating]: increment(-1),
+        ["ratings.count"]: increment(-1),
+      });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function updatePostReaction(uid, postId, rating, ratingToRemove) {
+  try {
+    await runTransaction(getFirestore(), async (transaction) => {
+      // updating users' history of rated posts
+      transaction.update(doc(getFirestore(), "users", uid, "details", "posts"), {
+        ["rated." + postId]: rating,
+      });
+      //updating rating for post
+      transaction.update(doc(getFirestore(), "posts", postId), {
+        ["ratings." + ratingToRemove]: increment(-1),
+        ["ratings." + rating]: increment(1),
+      });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function markNotificationAsRead(uid, notificationId) {
+  const notifiRef = doc(getFirestore(), "users", uid, "notifications", notificationId);
+  updateDoc(notifiRef, {
+    read: true,
+  })
+    .then(() => {
+      console.log("sent update notifi");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export { updateProfileImageUrl, sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead };

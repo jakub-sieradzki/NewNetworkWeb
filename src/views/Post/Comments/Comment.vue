@@ -36,10 +36,9 @@
   </div>
 </template>
 <script>
-import { getFirestore, collection, getDocs, query, limit, orderBy } from "firebase/firestore";
 import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
-import { getSubcomments, checkIfAnySubcomments } from "../../database/getData";
+import { getSubcomments, checkIfAnySubcomments } from "@/database/getData"
 export default {
   props: ["postId", "com", "originalComId"],
   components: {

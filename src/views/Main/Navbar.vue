@@ -21,7 +21,7 @@
       </div>
       <div class="flex h-10 self-center absolute top-0 right-0">
         <div class="indicator mr-2">
-          <div :class="{ 'indicator-item badge w-3 h-3 p-0 m-1.5 bg-red-600 border-red-600': unreadNotifications }"></div>
+          <div :class="{ 'indicator-item badge w-3 h-3 p-0 m-1.5 bg-red-600 border-red-600': unreadNotificationsList.length > 0 }"></div>
           <div class="dropdown dropdown-end p-0">
             <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" class="p-2 w-10 h-10 stroke-current rounded-full cursor-pointer border bg-gray-200 border-gray-300 dark:bg-gray-700 dark:border-gray-900" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -71,13 +71,11 @@
   </header>
 </template>
 <script>
-import { useRouter } from "vue-router";
-import { mapState, useStore } from "vuex";
-import { computed } from "vue";
+import { mapMutations, mapState } from "vuex";
 import { getAuth, signOut } from "firebase/auth";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { getFirestore, query, where, getDocs, collection } from "firebase/firestore";
 import NotificationsList from "../Notifications/NotificationsList.vue";
+import { searchUsername } from "@/database/getData";
 
 export default {
   components: {
@@ -87,19 +85,21 @@ export default {
     return {
       searchQuery: "",
       searchResult: [],
-      unreadNotifications: false,
     };
   },
-  setup() {
-    const store = useStore();
-
-    const toggleShowMenu = () => {
-      store.commit("switchShowMenu");
-    };
-
-    const logout = () => {
-      const auth = getAuth();
-      signOut(auth)
+  computed: {
+    ...mapState("user", ["name", "surname", "username", "profileImage"]),
+    ...mapState(["unreadNotificationsList"]),
+  },
+  watch: {
+    searchQuery: function (newQuery, oldQuery) {
+      this.resultQuery(newQuery);
+    },
+  },
+  methods: {
+    ...mapMutations(["switchShowMenu"]),
+    async logout() {
+      await signOut(getAuth())
         .then(() => {
           //router.push('login').catch( e => {console.log(e)});
           window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
@@ -107,45 +107,16 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-    };
-
-    return { toggleShowMenu, logout };
-  },
-  computed: {
-    ...mapState("user", ["name", "surname", "username", "profileImage"]),
-    ...mapState(["unreadNotificationsList"])
-  },
-  watch: {
-    searchQuery: function (newQuery, oldQuery) {
-      this.resultQuery(newQuery);
     },
-    unreadNotificationsList(newList, oldList) {
-      if(newList != null) {
-      if (newList.length > 0) {
-        this.unreadNotifications = true;
-      } else {
-        this.unreadNotifications = false;
-      }
-      }
-
+    toggleShowMenu() {
+      this.switchShowMenu();
     },
-  },
-  methods: {
     editProfile() {
       this.$router.push("/user/" + this.username + "/posts");
     },
     async resultQuery(s) {
-      let queryArray = [];
       if (s.length > 2) {
-        const db = getFirestore();
-        console.log(s);
-        const q = query(collection(db, "users"), where("username", ">=", s), where("username", "<=", s + "\uf8ff"));
-        await getDocs(q).then((docs) => {
-          docs.forEach((doc) => {
-            queryArray.push(doc.data());
-          });
-          this.searchResult = queryArray;
-        });
+        this.searchResult = await searchUsername(s);
       } else {
         this.searchResult = [];
       }
@@ -155,8 +126,8 @@ export default {
     },
   },
   mounted() {
+    console.log("unread notifi navbar: ", this.unreadNotificationsList);
     const storage = getStorage();
-    console.log("profileImage from navbar: " + this.profileImage);
     const img = this.$refs.profileImg;
     const imgDetails = this.$refs.profileImgDetails;
     if (this.profileImage) {

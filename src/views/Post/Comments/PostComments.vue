@@ -11,7 +11,7 @@
 <script>
 import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
-import { getPostComments } from "../../database/getData"
+import { getPostComments } from "@/database/getData"
 export default {
   props: ["postId"],
   components: {

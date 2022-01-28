@@ -13,19 +13,10 @@
 import Navbar from "./Navbar.vue";
 import Navpanel from "./Navpanel.vue";
 
-import { computed } from "vue";
-import { useStore } from "vuex";
-
 export default {
   components: {
     Navbar,
     Navpanel,
-  },
-
-  name: "Main",
-
-  setup() {
-    return {};
   },
 };
 </script>

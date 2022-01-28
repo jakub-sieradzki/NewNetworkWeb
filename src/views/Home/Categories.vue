@@ -32,7 +32,7 @@
 </template>
 <script>
 import CreatePost from "../Post/CreatePost.vue";
-import { useStore } from "vuex";
+import { mapMutations } from "vuex";
 import categories from "../../data/categories";
 import CategoriesList from "../Categories/CategoriesList.vue";
 
@@ -51,6 +51,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setCategoriesObserved"]),
     showCreatePost() {
       this.createPost = true;
     },
@@ -70,7 +71,7 @@ export default {
       for(let category of iterator) {
         selected.push(category);
       }
-      this.$store.commit("setCategoriesObserved", selected);
+      this.setCategoriesObserved(selected);
     }
   },
   mounted() {

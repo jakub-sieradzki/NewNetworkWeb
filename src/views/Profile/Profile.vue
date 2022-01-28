@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="md:border dark:border-gray-700 md:shadow-lg md:overflow-hidden h-full md:my-10 md:mx-5 lg:mx-20 xl:mx-30 3xl:mx-40 flex flex-col md:dark:bg-gray-900 md:rounded-lg md:flex-row gap-0">
-      <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-2/6">
+      <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-5/12">
         <img class="h-40 w-full object-cover shadow-md" src="/img/wallpaper.jpg" alt="ProfileBackground" />
         <input type="file" id="imageFile" ref="imageFile" accept="image/*" style="display: none" />
         <img onclick="document.getElementById('imageFile').click();" ref="profileImg" class="cursor-pointer m-auto -mt-20 h-40 w-40 rounded-full shadow-xl" src="images/profile.png" alt="ProfilePhoto" />
@@ -9,12 +9,12 @@
           <p class="text-center text-2xl font-bold mt-5">{{ name }} {{ surname }}</p>
           <p class="text-center text-sm mt-4 px-5 text-gray-500 dark:text-gray-400"></p>
           <div class="flex justify-center my-3">
-            <ProfileActions v-if="!blockedByUser" :uid="uid" />
+            <ProfileActions v-if="!ifBlockedByUser" :uid="uid" />
             <p v-else class="text-lg p-5 font-semibold text-center">Zostałeś zablokowany przez tego użytkownika</p>
           </div>
         </div>
       </div>
-      <div class="md:overflow-y-hidden md:w-4/6">
+      <div class="md:overflow-y-hidden w-full">
         <div class="overflow-hidden h-full md:mt-10 2xl:px-32 md:px-5">
           <div class="tabs border-white flex-grow flex-nowrap w-full pb-5 overflow-x-auto">
             <router-link to="posts" class="tab tab-bordered flex-grow tab-active">Posty</router-link>
@@ -33,7 +33,7 @@
 <script>
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { mapState, useStore } from "vuex";
+import { mapState } from "vuex";
 import ProfileActions from "./ProfileActions.vue";
 import { getUserDataOnUsername } from "../../database/getData";
 import { updateProfileImageUrl } from "../../database/setData";

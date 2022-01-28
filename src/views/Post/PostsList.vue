@@ -9,8 +9,8 @@
 </template>
 <script>
 import Post from "./Post.vue";
-import SharedPost from "./SharedPost.vue";
-import SharedPostNoContent from "./SharedPostNoContent.vue";
+import SharedPost from "./Shared/SharedPost.vue";
+import SharedPostNoContent from "./Shared/SharedPostNoContent.vue";
 export default {
   props: ["postsData"],
   components: {

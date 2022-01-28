@@ -12,22 +12,19 @@
   </div>
 </template>
 <script>
-import { getFirestore, doc, updateDoc } from "@firebase/firestore";
 import { getAuth } from "@firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from '@firebase/app';
+import { markNotificationAsRead } from '@/database/setData';
 export default {
   props: ["notification", "index"],
   data() {
     return {};
   },
   methods: {
-    markAsRead() {
-      const db = getFirestore();
-      const notifiRef = doc(db, "users", getAuth().currentUser.uid, "notifications", this.notification.id);
-      updateDoc(notifiRef, {
-        read: true,
-      }).then(() => {});
+    async markAsRead() {
+      console.log("notification: ", this.notification);
+      await markNotificationAsRead(getAuth().currentUser.uid, this.notification.id);
     },
     acceptClick() {
       this.markAsRead();

@@ -107,23 +107,18 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
   data() {
     return {};
   },
   methods: {
     navTo(value) {
-      //store.commit('switchShowMenu')
       this.$router.push("/home/" + value);
     },
   },
   computed: {
-    currentType() {
-      return this.$store.getters.getCurrentType;
-    },
-    showMenu() {
-      return this.$store.getters.getShowMenu;
-    },
+    ...mapState(["currentType", "showMenu"]),
   },
 };
 </script>

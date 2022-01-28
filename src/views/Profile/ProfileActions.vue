@@ -104,8 +104,6 @@ export default {
       }).then(() => {
         console.log("send invitation successfully");
       });
-
-      // this.$store.getters.getUserFriendsRequests.push(this.uid);
     },
     acceptFriend() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -115,9 +113,6 @@ export default {
       }).then(() => {
         console.log("accepted successfully");
       });
-
-      // this.$store.getters.getFriendsRequests.splice(this.$store.getters.getFriendsRequests.indexOf(this.uid), 1);
-      // this.$store.getters.getPeopleFriends.push(this.uid);
     },
     removeFriend() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -127,8 +122,6 @@ export default {
       }).then(() => {
         console.log("removed friend successfully");
       });
-
-      // this.$store.getters.getPeopleFriends.splice(this.$store.getters.getPeopleFriends.indexOf(this.uid), 1);
     },
     observe() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -138,8 +131,6 @@ export default {
       }).then(() => {
         console.log("observed person successfully");
       });
-
-      // this.$store.getters.getPeopleObserved.push(this.uid);
     },
 
     removeObserve() {
@@ -150,8 +141,6 @@ export default {
       }).then(() => {
         console.log("observed person removed successfully");
       });
-
-      // this.$store.getters.getPeopleObserved.splice(this.$store.getters.getPeopleObserved.indexOf(this.uid), 1);
     },
     block() {
       const functions = getFunctions(getApp(), "europe-west1");
@@ -161,12 +150,6 @@ export default {
       }).then(() => {
         console.log("blocked person successfully");
       });
-
-      // this.$store.getters.getPeopleFriends.splice(this.$store.getters.getPeopleFriends.indexOf(this.uid), 1);
-      // this.$store.getters.getPeopleObserved.splice(this.$store.getters.getPeopleObserved.indexOf(this.uid),1);
-      // this.$store.getters.getFriendsRequests.splice(this.$store.getters.getFriendsRequests.indexOf(this.uid),1);
-      // this.$store.getters.getUserFriendsRequests.splice(this.$store.getters.getUserFriendsRequests.indexOf(this.uid),1);
-      // this.$store.getters.getPeopleBlocked.push(this.uid);
     },
 
     unblock() {
@@ -177,11 +160,8 @@ export default {
       }).then(() => {
         console.log("blocked person successfully");
       });
-
-      // this.$store.getters.getPeopleBlocked.splice(this.$store.getters.getPeopleBlocked.indexOf(this.uid),1);
     },
   },
-  mounted() {},
   computed: {
     ...mapState("userPeopleInfo",[
       "blocked",

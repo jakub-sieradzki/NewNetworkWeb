@@ -30,7 +30,7 @@
 </template>
 <script>
 import { ref as storageRef, getStorage, getDownloadURL } from "firebase/storage";
-import { getPost } from "../../database/getData";
+import { getPost } from "../../../database/getData";
 export default {
   props: ["postId"],
   data() {

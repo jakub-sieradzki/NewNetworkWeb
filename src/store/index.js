@@ -27,7 +27,7 @@ export default createStore({
 
       unreadNotificationsList: [],
 
-      postsRated: null,
+      postsRated: {},
       currentType: null,
     };
   },

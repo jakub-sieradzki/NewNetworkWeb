@@ -4,8 +4,8 @@
   </div>
 </template>
 <script>
-import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import PostsList from "../Post/PostsList.vue";
+import { getPostsByUsername } from "../../database/getData";
 
 export default {
   components: { PostsList },
@@ -15,42 +15,20 @@ export default {
       posts: [],
     };
   },
-  beforeRouteEnter(to, from, next) {
-    const db = getFirestore();
+  async beforeRouteEnter(to, from, next) {
     console.log(to.params.username);
-    const q = query(collection(db, "posts"), where("username", "==", to.params.username, orderBy("createdTimestamp", "desc")));
-    getDocs(q).then((docs) => {
-      let docsPosts = [];
-      docs.forEach((doc) => {
-        let docData = doc.data();
-        docData.id = doc.id;
-        docsPosts.push(docData);
-      });
-
-      next((vm) => {
-        vm.posts = docsPosts;
-        vm.postsLoaded = true;
-      });
+    let docsPosts = await getPostsByUsername(to.params.username);
+    next((vm) => {
+      vm.posts = docsPosts;
+      vm.postsLoaded = true;
     });
   },
-  beforeRouteUpdate(to, from, next) {
-    const db = getFirestore();
+  async beforeRouteUpdate(to, from, next) {
     console.log(to.params.username);
-    const q = query(collection(db, "posts"), where("username", "==", to.params.username, orderBy("createdTimestamp", "desc")));
-    getDocs(q).then((docs) => {
-      let docsPosts = [];
-      docs.forEach((doc) => {
-        let docData = doc.data();
-        docData.id = doc.id;
-        docsPosts.push(docData);
-      });
+    this.posts = await getPostsByUsername(to.params.username);
+    this.postsLoaded = true;
 
-      this.posts = docsPosts;
-      this.postsLoaded = true;
-      
-      next();
-    });
+    next();
   },
-  mounted() {},
 };
 </script>

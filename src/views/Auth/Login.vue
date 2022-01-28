@@ -1,7 +1,7 @@
 <template>
   <body class="dark:bg-gray-800">
-    <div class="bg-cover bg-center bg-no-repeat" style="background-image: url(/img/wallpaper.jpg)">
-      <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm dark:bg-gray-800 bg-opacity-75 custom-scrollbar">
+    <div class="bg-cover bg-center bg-no-repeat" style="background-image: url('/img/wallpaper.jpg')">
+      <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm dark:bg-gray-800 dark:bg-opacity-75 bg-opacity-75 custom-scrollbar">
         <header class="h-16 w-full flex flex-shrink-0 justify-center md:justify-start">
           <p class="text-2xl self-end md:pl-20 md:text-left">New Network</p>
         </header>
@@ -15,21 +15,13 @@
               <p class="text-xl font-bold mb-5">Logowanie</p>
               <div class="flex flex-col">
                 <input class="input input-bordered focus:shadow-none mb-2 dark:bg-gray-900" type="email" name="email" v-model="formData.email" placeholder="Adres e-mail" />
-                <input v-on:keyup.enter="login" class="input input-bordered focus:shadow-none mb-2 dark:bg-gray-900" type="password" name="password" v-model="formData.password" placeholder="Hasło" />
-                <div class="flex gap-2 flex-col lg:flex-row justify-between flex-shrink-0 items-center mt-1 mb-5">
-                  <a class="text-sm hover:underline px-4 pb-1 lg:pb-0 w-full lg:w-1/2" href="">Przywróć hasło</a>
-                  <div class="px-3 py-1 card flex-shrink-0 rounded-lg border border-gray-300 dark:border-gray-700 w-full lg:w-1/2 self-end transition hover:bg-gray-200 dark:hover:bg-gray-700">
-                    <div class="form-control">
-                      <label class="cursor-pointer label">
-                        <span class="label-text pr-3">Zapamiętaj mnie</span>
-                        <input type="checkbox" checked="checked" class="checkbox" />
-                      </label>
-                    </div>
-                  </div>
+                <input v-on:keyup.enter="login" class="input input-bordered focus:shadow-none dark:bg-gray-900" type="password" name="password" v-model="formData.password" placeholder="Hasło" />
+                <div class="flex justify-end flex-shrink-0 mt-3 mb-4">
+                  <a class="text-xs text-gray-300 hover:underline" href="">Przywróć hasło</a>
                 </div>
                 <button @click="login" class="h-10 bg-green-500 hover:bg-green-600 transition-all rounded-lg text-white shadow-lg" type="submit">Zaloguj się</button>
               </div>
-              <div class="w-full h-px mt-6 mb-4 bg-gray-300 dark:bg-gray-700"></div>
+              <div class="w-full h-px mt-4 mb-4 bg-gray-300 dark:bg-gray-700"></div>
               <p class="text-sm mb-4">Pierwszy raz na naszej platformie?</p>
               <a class="w-full"><button @click="register" class="w-full h-10 bg-blue-500 hover:bg-blue-600 transition-all rounded-lg text-white shadow-lg">Załóż konto</button></a>
             </div>
@@ -48,10 +40,7 @@
   </body>
 </template>
 <script>
-import { useRouter } from "vue-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, getDoc, getDocs, collection } from "firebase/firestore";
-import { useStore } from "vuex";
 
 export default {
   data() {
@@ -67,34 +56,9 @@ export default {
       this.$router.push("/register");
     },
     async login() {
-      await signInWithEmailAndPassword(getAuth(), formData.email, formData.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          store.commit("setUid", user.uid);
-
-          getDoc(docRef)
-            .then((doc) => {
-              const data = doc.data();
-              console.log("downloaded data");
-              console.log(doc.data());
-              store.commit("setName", data.name);
-              store.commit("setSurname", data.surname);
-              store.commit("setUsername", data.username);
-              store.commit("setProfileImage", data.profileImageUrl);
-              store.commit("setUserAuthenticated", true);
-              try {
-                //router.push("home").catch(e => {console.log(e)});
-                //window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
-                window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
-                //return;
-              } catch (e) {
-                console.log(e);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+      await signInWithEmailAndPassword(getAuth(), this.formData.email, this.formData.password)
+        .then(async (userCredential) => {
+          window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -103,17 +67,6 @@ export default {
           console.log(errorMessage);
         });
     },
-  },
-  setup() {
-    console.log("Login loaded");
-    const router = useRouter();
-    const store = useStore();
-
-    const login = () => {
-      const auth = getAuth();
-    };
-    console.log("Login fully loaded");
-    return { formData, login, register };
   },
 };
 </script>

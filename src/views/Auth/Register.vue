@@ -1,7 +1,7 @@
 <template>
   <div class="lg:absolute lg:flex lg:flex-col lg:h-screen lg:w-screen m-auto">
     <div class="bg-cover bg-center bg-no-repeat" style="background-image: url('/img/wallpaper.jpg')">
-      <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm bg-gray-500 dark:bg-gray-700 bg-opacity-75 custom-scrollbar">
+      <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm bg-gray-500 dark:bg-gray-700 dark:bg-opacity-75 bg-opacity-75 custom-scrollbar">
         <header class="relative flex justify-between w-full h-12 lg:h-16 mt-6 mb-3">
           <p class="self-end ml-7 lg:ml-20 text-2xl text-white">New Network</p>
           <p class="self-end mr-5 lg:mr-14 text-2xl text-white">Rejestracja</p>
@@ -248,45 +248,45 @@
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { computed, ref } from "vue";
-import { getApp } from '@firebase/app';
+import { getApp } from "@firebase/app";
+import { userSignupSaveData } from "@/firebase-functions/functions";
 
 export default {
-  setup() {
-    let formData = {
-      email: "",
-      password: "",
-      password_confirmation: "",
-      name: "",
-      surname: "",
-      username: "",
-      gender: "",
-      birthyear: null,
+  data() {
+    return {
+      formData: {
+        email: "",
+        password: "",
+        password_confirmation: "",
+        name: "",
+        surname: "",
+        username: "",
+        gender: "",
+        birthyear: null,
+      },
+      registering: false,
     };
-
-    let registering = ref(false);
-
-    const register = () => {
-      formData.gender = parseInt(formData.gender);
-      if (formData.email == "" || formData.password == "" || formData.name == "" || formData.surname == "" || formData.username == "" || formData.gender == null || formData.birthyear == null) {
+  },
+  methods: {
+    async register() {
+      this.formData.gender = parseInt(this.formData.gender);
+      if (this.formData.email == "" || this.formData.password == "" || this.formData.name == "" || this.formData.surname == "" || this.formData.username == "" || this.formData.gender == null || this.formData.birthyear == null) {
         alert("Uzupełnij wszystkie pola");
         return;
       }
       const auth = getAuth();
-      registering.value = true;
+      this.registering = true;
 
-      createUserWithEmailAndPassword(auth, formData.email, formData.password)
-        .then((userCredential) => {
+      await createUserWithEmailAndPassword(auth, this.formData.email, this.formData.password)
+        .then(async (userCredential) => {
           // Signed in
-          const functions = getFunctions(getApp(), "europe-west1");
-          const userSignupSaveData = httpsCallable(functions, "userSignupSaveData");
-          userSignupSaveData({
+          await userSignupSaveData({
             uid: userCredential.user.uid,
-            name: formData.name,
-            surname: formData.surname,
-            username: formData.username,
-            gender: formData.gender,
-            birthyear: formData.birthyear,
+            name: this.formData.name,
+            surname: this.formData.surname,
+            username: this.formData.username,
+            gender: this.formData.gender,
+            birthyear: this.formData.birthyear,
           }).then(() => {
             window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
           });
@@ -298,8 +298,7 @@ export default {
           console.log(errorMessage);
           // ..
         });
-    };
-    return { formData, register, registering };
+    },
   },
 };
 </script>
