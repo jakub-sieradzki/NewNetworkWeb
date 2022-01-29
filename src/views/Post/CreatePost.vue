@@ -125,11 +125,11 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import CategoriesList from "../Categories/CategoriesList.vue";
 import categories from "../../data/categories";
 import { sendPost } from "../../database/setData";
+import { uploadPostImages } from "@/firebase-storage/modifyFiles";
 
 export default {
   props: ["shareId", "shareUid", "shareUsername", "shareContent"],
@@ -196,9 +196,9 @@ export default {
       }
 
       console.log(hashtagsArray);
-      const storage = getStorage();
 
       let storageFilesNames = [];
+      let blobs = [];
 
       for (let i = 0; i < this.imagesURLs.length; i++) {
         let url = this.imagesURLs[i];
@@ -206,12 +206,12 @@ export default {
         let blob = await fetch(this.imagesURLs[i]).then((r) => r.blob());
         let fileType = blob.type.slice(blob.type.indexOf("/") + 1);
         let storageFileName = fileName + "." + fileType;
-        let storageRef = ref(storage, getAuth().currentUser.uid + "/" + storageFileName);
-        await uploadBytes(storageRef, blob).then((snapshot) => {
-          console.log(i, ": ", snapshot);
-          storageFilesNames.push(storageFileName);
-        });
+        
+        blobs.push(blob);
+        storageFilesNames.push(storageFileName);
       }
+
+      await uploadPostImages(getAuth().currentUser.uid, storageFilesNames, blobs);
 
       let sId = "";
       if (this.shareId) {

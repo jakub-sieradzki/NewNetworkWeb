@@ -247,8 +247,6 @@
 </template>
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { getApp } from "@firebase/app";
 import { userSignupSaveData } from "@/firebase-functions/functions";
 
 export default {

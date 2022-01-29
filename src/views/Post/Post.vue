@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="flex gap-4 flex-shrink-0 items-center">
-        <img class="w-12 rounded-md bg-slate-200 dark:bg-slate-800 p-2" :src="'/img/f' + averageRatingInt + '.svg'" alt="rating" />
+        <img v-if="averageRatingInt != 0" class="w-12 rounded-md bg-slate-200 dark:bg-slate-800 p-2" :src="'/img/f' + averageRatingInt + '.svg'" alt="rating" />
         <div class="dropdown dropdown-end">
           <svg xmlns="http://www.w3.org/2000/svg" tabindex="0" class="post__header__actions-button" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -154,13 +154,15 @@ import PostComments from "./Comments/PostComments.vue";
 import SharedPost from "./Shared/SharedPost.vue";
 import PostContent from "./PostContent.vue";
 
-import { ref as storageRef, getStorage, getDownloadURL, deleteObject } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
-import categoriesData from "../../data/categories";
 import { deletePost, addPostReaction, removePostReaction, updatePostReaction } from "../../database/setData";
-import { getPostsByHashtag } from "@/database/getData";
 import { mapState } from "vuex";
+
+import { getPostFullCategoriesList } from "@/helpers/categories";
+import { getPostAverageRating } from "@/helpers/postRating";
+import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { removePostImages } from '@/firebase-storage/modifyFiles';
 export default {
   components: {
     CreatePost,
@@ -218,18 +220,7 @@ export default {
     async deletePostClick() {
       const user = getAuth().currentUser;
       if (user.uid == this.postData.uid) {
-        const storage = getStorage();
-        for (var i = 0; i < this.postData.files.length; i++) {
-          const fileRef = storageRef(storage, user.uid + "/" + this.postData.files[i]);
-          await deleteObject(fileRef)
-            .then(() => {
-              console.log("Photo: " + this.postData.files[i] + " removed successfully");
-            })
-            .catch((error) => {
-              console.log("Error removing photo: " + this.postData.files[i] + ": ", error);
-            });
-        }
-
+        await removePostImages(user.uid, this.postData.files);
         let deleted = await deletePost(this.postData.id);
         if (deleted) {
           alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
@@ -305,8 +296,6 @@ export default {
     },
   },
   async mounted() {
-    const storage = getStorage();
-
     // Convert date
     const date = this.postData.createdTimestamp.toDate();
     this.localDate = date.toLocaleString();
@@ -314,63 +303,24 @@ export default {
     // Get profile image
     const img = this.$refs.profileImg;
     if (this.postData.profileImage) {
-      getDownloadURL(storageRef(storage, this.postData.profileImage))
-        .then((url) => {
-          img.setAttribute("src", url);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let url = await getProfileImageUrl(this.postData.profileImage);
+      img.setAttribute("src", url);
     } else {
       img.setAttribute("src", "/img/avatar.png");
     }
 
     // Get post images
     if (this.postData.files) {
-      for (let i = 0; i < this.postData.files.length; i++) {
-        getDownloadURL(storageRef(storage, this.postData.uid + "/" + this.postData.files[i])).then((url) => {
-          this.imagesUrls.push(url);
-        });
-      }
+      this.imagesUrls = await getPostImagesUrls(this.postData.uid, this.postData.files);
     }
-
     // set post rating
     this.updateRating(this.postsRated);
 
-    //Get post categories and its' names
-    if (this.postData.categories) {
-      for (let catIndex in categoriesData) {
-        if (this.postData.categories.includes(categoriesData[catIndex].id)) {
-          this.categoriesList[categoriesData[catIndex].id] = categoriesData[catIndex];
-        }
-
-        if (categoriesData[catIndex].subcategories) {
-          for (let subCatIndex in categoriesData[catIndex].subcategories) {
-            if (this.postData.categories.includes(categoriesData[catIndex].subcategories[subCatIndex].id)) {
-              this.categoriesList[categoriesData[catIndex].subcategories[subCatIndex].id] = categoriesData[catIndex].subcategories[subCatIndex];
-            }
-          }
-        }
-      }
-    }
+    //get categories
+    this.categoriesList = getPostFullCategoriesList(this.postData.categories);
 
     // Get average rating
-    let ratings = this.postData.ratings;
-    let rate = (1 * ratings[1] + 2 * ratings[2] + 3 * ratings[3] + 4 * ratings[4] + 5 * ratings[5]) / ratings["count"];
-
-    if (rate >= 1.0 && rate <= 1.99) {
-      this.averageRatingInt = 1;
-    } else if (rate >= 2.0 && rate <= 2.99) {
-      this.averageRatingInt = 2;
-    } else if (rate >= 3.0 && rate <= 3.99) {
-      this.averageRatingInt = 3;
-    } else if (rate >= 4.0 && rate <= 4.49) {
-      this.averageRatingInt = 4;
-    } else if (rate >= 4.5) {
-      this.averageRatingInt = 5;
-    } else {
-      this.averageRatingInt = 1;
-    }
+    this.averageRatingInt = getPostAverageRating(this.postData.ratings);
 
     // Set touch event listeners
     const rateBtn = this.$refs.rateButton;

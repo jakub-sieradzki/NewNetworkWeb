@@ -31,12 +31,13 @@
   </div>
 </template>
 <script>
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { mapState } from "vuex";
 import ProfileActions from "./ProfileActions.vue";
-import { getUserDataOnUsername } from "../../database/getData";
-import { updateProfileImageUrl } from "../../database/setData";
+import { getUserDataOnUsername } from "@/database/getData";
+import { updateProfileImageUrl } from "@/database/setData";
+import { getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { uploadProfileImage } from "@/firebase-storage/modifyFiles";
 export default {
   components: {
     ProfileActions,
@@ -56,18 +57,11 @@ export default {
 
   methods: {
     async loadProfilePhoto() {
-      const storage = getStorage();
       const img = this.$refs.profileImg;
       if (!this.blockedByUser) {
         if (this.profileImageUrl) {
-          await getDownloadURL(ref(storage, this.profileImageUrl))
-            .then((url) => {
-              // Or inserted into an <img> element
-              img.setAttribute("src", url);
-            })
-            .catch((error) => {
-              // Handle any errors
-            });
+          let url = await getProfileImageUrl(this.profileImageUrl);
+          img.setAttribute("src", url);
         } else {
           img.setAttribute("src", "/img/avatar.png");
         }
@@ -111,17 +105,10 @@ export default {
     this.loadProfilePhoto();
 
     const fileInput = this.$refs.imageFile;
-    fileInput.onchange = () => {
+    fileInput.onchange = async () => {
       const selectedFile = fileInput.files[0];
-      const storage = getStorage();
-      const storageRef = ref(storage, getAuth().currentUser.uid + "/profileImage" + selectedFile.name.substring(selectedFile.name.lastIndexOf(".")));
-      uploadBytes(storageRef, selectedFile).then((snapshot) => {
-        console.log("Uploaded a blob or file!");
-        console.log(snapshot.metadata.fullPath);
-        console.log(getAuth().currentUser.uid);
-        updateProfileImageUrl(getAuth().currentUser.uid, snapshot.metadata.fullPath);
-      });
-
+      let snapshot = await uploadProfileImage(getAuth().currentUser.uid, selectedFile);
+      updateProfileImageUrl(getAuth().currentUser.uid, snapshot.metadata.fullPath);
       console.log(selectedFile);
     };
   },

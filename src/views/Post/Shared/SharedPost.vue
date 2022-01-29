@@ -29,8 +29,8 @@
   </div>
 </template>
 <script>
-import { ref as storageRef, getStorage, getDownloadURL } from "firebase/storage";
-import { getPost } from "../../../database/getData";
+import { getPost } from "@/database/getData";
+import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
 export default {
   props: ["postId"],
   data() {
@@ -41,8 +41,6 @@ export default {
     };
   },
   async mounted() {
-    const storage = getStorage();
-
     //Get post data
     this.post = await getPost(this.postId);
 
@@ -52,24 +50,15 @@ export default {
     //Get profile image
     const img = this.$refs.profileImg;
     if (this.post.profileImage) {
-      getDownloadURL(storageRef(storage, this.post.profileImage))
-        .then((url) => {
-          img.setAttribute("src", url);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let url = await getProfileImageUrl(this.post.profileImage);
+      img.setAttribute("src", url);
     } else {
       img.setAttribute("src", "/img/avatar.png");
     }
 
     //Get post images
     if (this.post.files) {
-      for (let i = 0; i < this.post.files.length; i++) {
-        getDownloadURL(storageRef(storage, this.post.uid + "/" + this.post.files[i])).then((url) => {
-          this.imagesUrls.push(url);
-        });
-      }
+      this.imagesUrls = await getPostImagesUrls(this.post.uid, this.post.files);
     }
   },
 };

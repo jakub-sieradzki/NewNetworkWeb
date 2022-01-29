@@ -1,4 +1,4 @@
-import { getFirestore, collection, setDoc, doc, getDoc, getDocs, addDoc, document, query, where, orderBy, serverTimestamp, deleteDoc, runTransaction, deleteField, increment } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, getDoc, getDocs, addDoc, document, query, where, orderBy, updateDoc, serverTimestamp, deleteDoc, runTransaction, deleteField, increment } from "firebase/firestore";
 
 function updateProfileImageUrl(uid, url) {
   setDoc(

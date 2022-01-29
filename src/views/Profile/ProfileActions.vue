@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer">
     <div class="flex">
-      <div v-if="friends.includes(uid)" @click="removeFriend()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 hover:bg-gray-200/50 dark:hover:bg-gray-700/40 transition">
+      <div v-if="friends.includes(uid)" @click="removeFriendClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 hover:bg-gray-200/50 dark:hover:bg-gray-700/40 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -18,7 +18,7 @@
         </svg>
         <p class="text-sm">Wysłano zaproszenie</p>
       </div>
-      <div v-else-if="friendsRequests.includes(uid)" @click="acceptFriend()" class="flex p-3 gap-2 bg-sky-500 text-white hover:bg-sky-600 transition">
+      <div v-else-if="friendsRequests.includes(uid)" @click="acceptFriendClick()" class="flex p-3 gap-2 bg-sky-500 text-white hover:bg-sky-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -35,7 +35,7 @@
         </svg>
         <p class="text-sm">Odblokuj użytkownika</p>
       </div>
-      <div v-else @click="addFriend()" class="flex p-3 gap-2 bg-emerald-500 text-white hover:bg-emerald-600 transition">
+      <div v-else @click="addFriendClick()" class="flex p-3 gap-2 bg-emerald-500 text-white hover:bg-emerald-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -82,9 +82,8 @@
   </div>
 </template>
 <script>
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { getApp } from "@firebase/app";
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
+import { requestFriend, acceptFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson } from "@/firebase-functions/functions";
 export default {
   props: ["uid"],
   data() {
@@ -96,81 +95,30 @@ export default {
     toggleShowProfileOptions() {
       this.showProfileOptions = !this.showProfileOptions;
     },
-    addFriend() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const requestFriend = httpsCallable(functions, "requestFriend");
-      requestFriend({
-        requestedUid: this.uid,
-      }).then(() => {
-        console.log("send invitation successfully");
-      });
+    async addFriendClick() {
+      await requestFriend(this.uid);
     },
-    acceptFriend() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const acceptFriend = httpsCallable(functions, "acceptFriend");
-      acceptFriend({
-        acceptedUid: this.uid,
-      }).then(() => {
-        console.log("accepted successfully");
-      });
+    async acceptFriendClick() {
+      await acceptFriend(this.uid);
     },
-    removeFriend() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const requestFriend = httpsCallable(functions, "removeFriend");
-      requestFriend({
-        friendToRemoveUid: this.uid,
-      }).then(() => {
-        console.log("removed friend successfully");
-      });
+    async removeFriendClick() {
+      await removeFriend(this.uid);
     },
-    observe() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const requestFriend = httpsCallable(functions, "observePerson");
-      requestFriend({
-        observeUid: this.uid,
-      }).then(() => {
-        console.log("observed person successfully");
-      });
+    async observe() {
+      await observePerson(this.uid);
     },
-
-    removeObserve() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const requestFriend = httpsCallable(functions, "removeObservedPerson");
-      requestFriend({
-        observeUid: this.uid,
-      }).then(() => {
-        console.log("observed person removed successfully");
-      });
+    async removeObserve() {
+      await removeObservedPerson(this.uid);
     },
-    block() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const requestFriend = httpsCallable(functions, "blockPerson");
-      requestFriend({
-        requestedUid: this.uid,
-      }).then(() => {
-        console.log("blocked person successfully");
-      });
+    async block() {
+      await blockPerson(this.uid);
     },
-
-    unblock() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const requestFriend = httpsCallable(functions, "unblockPerson");
-      requestFriend({
-        requestedUid: this.uid,
-      }).then(() => {
-        console.log("blocked person successfully");
-      });
+    async unblock() {
+      await unblockPerson(this.uid);
     },
   },
   computed: {
-    ...mapState("userPeopleInfo",[
-      "blocked",
-      "friends",
-      "observed",
-      "friendsRequests",
-      "userFriendsRequests",
-      "blockedBy"
-    ]),
+    ...mapState("userPeopleInfo", ["blocked", "friends", "observed", "friendsRequests", "userFriendsRequests", "blockedBy"]),
   },
 };
 </script>

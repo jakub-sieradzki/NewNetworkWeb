@@ -13,9 +13,8 @@
 </template>
 <script>
 import { getAuth } from "@firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { getApp } from '@firebase/app';
 import { markNotificationAsRead } from '@/database/setData';
+import { acceptFriend } from "@/firebase-functions/functions"
 export default {
   props: ["notification", "index"],
   data() {
@@ -28,16 +27,10 @@ export default {
     },
     acceptClick() {
       this.markAsRead();
-      this.acceptFriend();
+      this.accept();
     },
-    acceptFriend() {
-      const functions = getFunctions(getApp(), "europe-west1");
-      const acceptFriend = httpsCallable(functions, "acceptFriend");
-      acceptFriend({
-        acceptedUid: this.notification.userWhoRequestedUid,
-      }).then(() => {
-        console.log("accepted successfully");
-      });
+    accept() {
+      acceptFriend(this.notification.userWhoRequestedUid);
     },
   },
   mounted() {},

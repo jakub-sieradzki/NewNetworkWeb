@@ -73,9 +73,9 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import { getAuth, signOut } from "firebase/auth";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import NotificationsList from "../Notifications/NotificationsList.vue";
 import { searchUsername } from "@/database/getData";
+import { getProfileImageUrl } from "@/firebase-storage/getFiles";
 
 export default {
   components: {
@@ -125,21 +125,14 @@ export default {
       this.$router.push("/user/" + username + "/posts");
     },
   },
-  mounted() {
+  async mounted() {
     console.log("unread notifi navbar: ", this.unreadNotificationsList);
-    const storage = getStorage();
     const img = this.$refs.profileImg;
     const imgDetails = this.$refs.profileImgDetails;
     if (this.profileImage) {
-      getDownloadURL(ref(storage, this.profileImage))
-        .then((url) => {
-          // Or inserted into an <img> element
-          img.setAttribute("src", url);
-          imgDetails.setAttribute("src", url);
-        })
-        .catch((error) => {
-          // Handle any errors
-        });
+      let url = await getProfileImageUrl(this.profileImage);
+      img.setAttribute("src", url);
+      imgDetails.setAttribute("src", url);
     } else {
       img.setAttribute("src", "/img/avatar.png");
       imgDetails.setAttribute("src", "/img/avatar.png");
