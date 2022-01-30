@@ -44,7 +44,7 @@ import { mapState } from "vuex";
 import ProfileActions from "./ProfileActions.vue";
 import EditProfile from "./EditProfile.vue";
 import { getUserDataOnUsername } from "@/database/getData";
-import { getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { getProfileImageUrl, getProfileBackgroundUrl } from "@/firebase-storage/getFiles";
 export default {
   components: {
     ProfileActions,
@@ -74,8 +74,8 @@ export default {
         img.setAttribute("src", this.currentUserProfileImage);
       } else {
         if (!this.blockedByUser) {
-          if (this.profileImageUrl) {
-            let url = await getProfileImageUrl(this.uid);
+          let url = await getProfileImageUrl(this.uid);
+          if (url != null) {
             img.setAttribute("src", url);
           } else {
             img.setAttribute("src", "/img/avatar.png");
@@ -91,8 +91,8 @@ export default {
         img.setAttribute("src", this.currentUserProfileBackground);
       } else {
         if (!this.blockedByUser) {
-          if (this.profileImageUrl) {
-            let url = await getProfileBackgroundUrl(this.uid);
+          let url = await getProfileBackgroundUrl(this.uid);
+          if (url != null) {
             img.setAttribute("src", url);
           } else {
             img.setAttribute("src", "/img/wallpaper.jpg");
