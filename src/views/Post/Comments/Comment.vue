@@ -2,8 +2,8 @@
   <div class="flex flex-col">
     <div class="flex flex-col border dark:border-gray-700 px-5 pt-3 pb-4 rounded-lg">
       <div class="flex justify-between items-center">
-        <div @click="this.$router.push('/user/' + com.username + '/posts')" class="flex cursor-pointer hover:underline gap-1 h-7 items-center">
-          <img class="h-5 w-5" src="/img/avatar.png" alt="avatar" />
+        <div @click="this.$router.push('/user/' + com.username + '/posts')" class="flex cursor-pointer hover:underline gap-2 h-7 items-center">
+          <img ref="profileImage" class="h-5 w-5 rounded-full" src="/img/avatar.png" alt="avatar" />
           <p class="text-sm">@{{ com.username }}</p>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-current cursor-pointer" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -39,6 +39,9 @@
 import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
 import { getSubcomments, checkIfAnySubcomments } from "@/database/getData"
+import { getAuth } from '@firebase/auth';
+import { mapState } from 'vuex';
+import { getProfileImageUrl } from '@/firebase-storage/getFiles';
 export default {
   props: ["postId", "com", "originalComId"],
   components: {
@@ -53,6 +56,11 @@ export default {
       subcomments: [],
       commentLocalDate: ""
     };
+  },
+  computed: {
+    ...mapState("user", {
+      currentUserProfileImage: "profileImage"  
+    })
   },
   methods: {
     toggleRespondField() {
@@ -72,6 +80,18 @@ export default {
     this.commentLocalDate = this.com.createdTimestamp.toDate().toLocaleString();
     if(this.com.id == this.originalComId) {
       this.showMoreCommentsOption = await checkIfAnySubcomments(this.postId, this.com.id);;
+    }
+
+    const img = this.$refs.profileImage;
+    if(this.com.uid == getAuth().currentUser.uid) {
+      img.setAttribute("src", this.currentUserProfileImage);
+    } else {
+      let url = await getProfileImageUrl(this.com.uid);
+      if(url != null) {
+        img.setAttribute("src", url);
+      } else {
+        img.setAttribute("src", "/img/avatar.png");
+      }
     }
   },
 };

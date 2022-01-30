@@ -1,4 +1,5 @@
 import { getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
+import { getProfileImagesList, getProfileBackgroundsList } from "./getFiles";
 
 async function uploadPostImages(uid, storageFilesNames, blobs) {
   for (let i = 0; i < blobs.length; i++) {
@@ -20,10 +21,18 @@ async function removePostImages(uid, filesNames) {
   }
 }
 
-async function uploadProfileImage(uid, file) {
+async function removeAllProfileImages(uid) {
+  let filesFullPath = await getProfileImagesList(uid);
+  for (let i = 0; i < filesFullPath.length; i++) {
+    await deleteObject(ref(getStorage(), filesFullPath[i])).then(() => {
+      console.log("Deleted all old profile images successfully");
+    });
+  }
+}
+
+async function uploadProfileImage(uid, blob, fileName) {
   let snap = null;
-  const fileExtension = file.name.substring(file.name.lastIndexOf("."));
-  await uploadBytes(ref(getStorage(), uid + "/profileImage" + fileExtension), file).then((snapshot) => {
+  await uploadBytes(ref(getStorage(), uid + "/profileImage/" + fileName), blob).then((snapshot) => {
     console.log("Uploaded profile image");
     snap = snapshot;
   });
@@ -31,4 +40,23 @@ async function uploadProfileImage(uid, file) {
   return snap;
 }
 
-export { uploadPostImages, removePostImages, uploadProfileImage };
+async function removeAllProfileBackgrounds(uid) {
+  let filesFullPath = await getProfileBackgroundsList(uid);
+  for (let i = 0; i < filesFullPath.length; i++) {
+    await deleteObject(ref(getStorage(), filesFullPath[i])).then(() => {
+      console.log("Deleted all old profile backgrounds successfully");
+    });
+  }
+}
+
+async function uploadProfileBackground(uid, blob, fileName) {
+  let snap = null;
+  await uploadBytes(ref(getStorage(), uid + "/profileBackground/" + fileName), blob).then((snapshot) => {
+    console.log("Uploaded profile background");
+    snap = snapshot;
+  });
+
+  return snap;
+}
+
+export { uploadPostImages, removePostImages, removeAllProfileImages, uploadProfileImage, removeAllProfileBackgrounds, uploadProfileBackground };

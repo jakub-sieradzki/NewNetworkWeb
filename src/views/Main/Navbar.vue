@@ -36,12 +36,12 @@
 
         <div class="dropdown dropdown-end">
           <div tabindex="0" class="flex items-center cursor-pointer w-auto bg-gray-200 border dark:bg-gray-700 dark:border-gray-900 border-gray-300 rounded-full overflow-hidden">
-            <img ref="profileImg" class="w-10 h-10 rounded-full" alt="profile" />
+            <img :src="profileImage" class="w-10 h-10 rounded-full" alt="profile" />
             <p class="pl-3 pr-5 hidden md:block">{{ name }}</p>
           </div>
           <div tabindex="0" class="mt-3 p-4 pb-3 shadow-xl menu dropdown-content bg-gray-100 dark:bg-gray-800 rounded-lg w-64 flex flex-col border dark:border-gray-900">
             <div class="flex items-center gap-4 mb-4">
-              <img ref="profileImgDetails" class="w-14 h-14 rounded-full" alt="profile" />
+              <img :src="profileImage" class="w-14 h-14 rounded-full" alt="profile" />
               <div class="leading-5 overflow-x-hidden">
                 <p class="">{{ name }} {{ surname }}</p>
                 <p class="text-gray-500 text-sm truncate">@{{ username }}</p>
@@ -75,7 +75,6 @@ import { mapMutations, mapState } from "vuex";
 import { getAuth, signOut } from "firebase/auth";
 import NotificationsList from "../Notifications/NotificationsList.vue";
 import { searchUsername } from "@/database/getData";
-import { getProfileImageUrl } from "@/firebase-storage/getFiles";
 
 export default {
   components: {
@@ -127,16 +126,16 @@ export default {
   },
   async mounted() {
     console.log("unread notifi navbar: ", this.unreadNotificationsList);
-    const img = this.$refs.profileImg;
-    const imgDetails = this.$refs.profileImgDetails;
-    if (this.profileImage) {
-      let url = await getProfileImageUrl(this.profileImage);
-      img.setAttribute("src", url);
-      imgDetails.setAttribute("src", url);
-    } else {
-      img.setAttribute("src", "/img/avatar.png");
-      imgDetails.setAttribute("src", "/img/avatar.png");
-    }
+    // const img = this.$refs.profileImg;
+    // const imgDetails = this.$refs.profileImgDetails;
+    // if (this.profileImage) {
+    //   let url = await getProfileImageUrl(getAuth().currentUser.uid);
+    //   img.setAttribute("src", url);
+    //   imgDetails.setAttribute("src", url);
+    // } else {
+    //   img.setAttribute("src", "/img/avatar.png");
+    //   imgDetails.setAttribute("src", "/img/avatar.png");
+    // }
   },
 };
 </script>

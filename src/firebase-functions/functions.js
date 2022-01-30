@@ -1,7 +1,6 @@
 import { getApp } from "firebase/app";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
-
 async function userSignupSaveData(data) {
   const functions = getFunctions(getApp(), "europe-west1");
   const userSignupSaveData = httpsCallable(functions, "userSignupSaveData");
@@ -13,7 +12,7 @@ async function userSignupSaveData(data) {
     gender: data.gender,
     birthyear: data.birthyear,
   }).catch((err) => {
-      console.log(err);
+    console.log(err);
   });
 }
 
@@ -49,42 +48,53 @@ async function removeFriend(uid) {
 
 async function observePerson(uid) {
   const functions = getFunctions(getApp(), "europe-west1");
-  const observePerson = httpsCallable(functions, "observePerson");
-  await observePerson({
+  const observeUser = httpsCallable(functions, "observeUser");
+  await observeUser({
     observeUid: uid,
   }).then(() => {
-    console.log("observed person successfully");
+    console.log("observed user successfully");
   });
 }
 
 async function removeObservedPerson(uid) {
   const functions = getFunctions(getApp(), "europe-west1");
-  const removeObservedPerson = httpsCallable(functions, "removeObservedPerson");
-  removeObservedPerson({
+  const removeObservedUser = httpsCallable(functions, "removeObservedUser");
+  removeObservedUser({
     observeUid: uid,
   }).then(() => {
-    console.log("observed person removed successfully");
+    console.log("observed user removed successfully");
   });
 }
 
 async function blockPerson(uid) {
   const functions = getFunctions(getApp(), "europe-west1");
-  const blockPerson = httpsCallable(functions, "blockPerson");
-  blockPerson({
+  const blockUser = httpsCallable(functions, "blockUser");
+  await blockUser({
     requestedUid: uid,
   }).then(() => {
-    console.log("blocked person successfully");
+    console.log("blocked user successfully");
   });
 }
 
 async function unblockPerson(uid) {
   const functions = getFunctions(getApp(), "europe-west1");
-  const unblockPerson = httpsCallable(functions, "unblockPerson");
-  unblockPerson({
+  const unblockUser = httpsCallable(functions, "unblockUser");
+  await unblockUser({
     requestedUid: uid,
   }).then(() => {
-    console.log("blocked person successfully");
+    console.log("unblocked user successfully");
   });
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson }
+async function updateNameAndSurname(newName, newSurname) {
+  const functions = getFunctions(getApp(), "europe-west1");
+  const updateNameAndSurname = httpsCallable(functions, "updateNameAndSurname");
+  await updateNameAndSurname({
+    name: newName,
+    surname: newSurname
+  }).then(() => {
+    console.log("updated user successfully");
+  });
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname };

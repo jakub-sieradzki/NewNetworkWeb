@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 left-0 w-screen h-screen bg-gray-500 dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-70 z-20 sm:backdrop-filter sm:backdrop-blur-sm">
+  <div class="fixed top-0 left-0 w-screen h-screen bg-gray-500 dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-70 z-20 sm:backdrop-blur-sm">
     <div class="bg-gray-100 dark:bg-gray-900 h-full sm:h-96 sm:rounded-xl m-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:shadow-2xl w-full px-6 py-5 flex flex-col" style="max-width: 750px">
       <div class="flex justify-between items-center">
         <p>Nowy post</p>
@@ -223,7 +223,6 @@ export default {
         username: this.username,
         name: this.name,
         surname: this.surname,
-        profileImage: this.profileImage,
         content: this.postContent.content,
         files: storageFilesNames,
         shareId: sId,

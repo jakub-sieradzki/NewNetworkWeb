@@ -8,6 +8,8 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, doc, collection, onSnapshot, query, where } from "firebase/firestore";
 import categories from "./data/categories";
 import { getUserData, getUserDetailsDoc } from "./database/getData";
+import { getProfileBackgroundUrl, getProfileImageUrl } from "./firebase-storage/getFiles";
+import { updateNameAndSurname } from './firebase-functions/functions';
 export default {
   name: "App",
   data() {
@@ -43,12 +45,32 @@ export default {
       console.log("Logged in");
       let userData = await getUserData(user.uid);
       if (userData) {
+        let profileImageStorageUrl = await getProfileImageUrl(user.uid);
+        let profileImageUrl = null;
+        if (profileImageStorageUrl != null) {
+          let blob = await fetch(profileImageStorageUrl).then((r) => r.blob());
+          profileImageUrl = URL.createObjectURL(blob);
+        } else {
+          profileImageUrl = "/img/avatar.png";
+        }
+
+        let profileBackgroundStorageUrl = await getProfileBackgroundUrl(user.uid);
+        let profileBackgroundUrl = null;
+        if (profileBackgroundStorageUrl != null) {
+          let blob = await fetch(profileBackgroundStorageUrl).then((r) => r.blob());
+          profileBackgroundUrl = URL.createObjectURL(blob);
+        } else {
+          profileBackgroundUrl = "/img/wallpaper.jpg";
+        }
+
         this.setUserInfo({
           uid: user.uid,
           username: userData.username,
           name: userData.name,
           surname: userData.surname,
-          profileImage: userData.profileImageUrl,
+          profileImage: profileImageUrl,
+          profileBackground: profileBackgroundUrl,
+          description: userData.description,
         });
       } else {
         console.log("error");

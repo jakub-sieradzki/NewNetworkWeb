@@ -4,6 +4,8 @@ const state = () => ({
     name: "",
     surname: "",
     profileImage: "",
+    profileBackground: "",
+    description: "",
 })
 
 const mutations = {
@@ -22,13 +24,21 @@ const mutations = {
     setProfileImage(state, value) {
         state.profileImage = value
     },
+    setProfileBackground(state, value) {
+        state.profileBackground = value
+    },
+    setDescription(state, value) {
+        state.description = value
+    },
     setUserInfo(state, values) {
         state.uid = values.uid
         state.username = values.username
         state.name = values.name
         state.surname = values.surname
         state.profileImage = values.profileImage
-    }
+        state.profileBackground = values.profileBackground
+        state.description = values.description
+    },
 }
 
 export default {

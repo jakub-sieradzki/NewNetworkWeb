@@ -1,17 +1,5 @@
 import { getFirestore, collection, setDoc, doc, getDoc, getDocs, addDoc, document, query, where, orderBy, updateDoc, serverTimestamp, deleteDoc, runTransaction, deleteField, increment } from "firebase/firestore";
 
-function updateProfileImageUrl(uid, url) {
-  setDoc(
-    doc(getFirestore(), "users", uid),
-    {
-      profileImageUrl: url,
-    },
-    { merge: true }
-  ).then(() => {
-    console.log("success");
-  });
-}
-
 async function sendPost(data) {
   let sent = false;
   await addDoc(collection(getFirestore(), "posts"), {
@@ -19,7 +7,6 @@ async function sendPost(data) {
     username: data.username,
     name: data.name,
     surname: data.surname,
-    profileImage: data.profileImage,
     content: data.content,
     createdTimestamp: serverTimestamp(),
     files: data.files,
@@ -147,4 +134,15 @@ async function markNotificationAsRead(uid, notificationId) {
     });
 }
 
-export { updateProfileImageUrl, sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead };
+async function updateUserDescription(uid, newDescription) {
+  const userRef = doc(getFirestore(), "users", uid);
+  await updateDoc(userRef, {
+    description: newDescription
+  }).then(() => {
+    console.log("Updated description successfully");
+  }).catch((err) => {
+    console.log(err);
+  });
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription };

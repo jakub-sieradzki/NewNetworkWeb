@@ -50,7 +50,7 @@ export default {
     //Get profile image
     const img = this.$refs.profileImg;
     if (this.post.profileImage) {
-      let url = await getProfileImageUrl(this.post.profileImage);
+      let url = await getProfileImageUrl(this.post.uid);
       img.setAttribute("src", url);
     } else {
       img.setAttribute("src", "/img/avatar.png");

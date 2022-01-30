@@ -162,7 +162,7 @@ import { mapState } from "vuex";
 import { getPostFullCategoriesList } from "@/helpers/categories";
 import { getPostAverageRating } from "@/helpers/postRating";
 import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
-import { removePostImages } from '@/firebase-storage/modifyFiles';
+import { removePostImages } from "@/firebase-storage/modifyFiles";
 export default {
   components: {
     CreatePost,
@@ -188,6 +188,9 @@ export default {
   },
   computed: {
     ...mapState(["postsRated"]),
+    ...mapState("user", {
+      currentUserProfileImage: "profileImage",
+    }),
   },
   watch: {
     postsRated(newRated, oldRated) {
@@ -302,11 +305,16 @@ export default {
 
     // Get profile image
     const img = this.$refs.profileImg;
-    if (this.postData.profileImage) {
-      let url = await getProfileImageUrl(this.postData.profileImage);
-      img.setAttribute("src", url);
+
+    if (this.postData.uid == getAuth().currentUser.uid) {
+      img.setAttribute("src", this.currentUserProfileImage);
     } else {
-      img.setAttribute("src", "/img/avatar.png");
+      let url = await getProfileImageUrl(this.postData.uid);
+      if (url != null) {
+        img.setAttribute("src", url);
+      } else {
+        img.setAttribute("src", "/img/avatar.png");
+      }
     }
 
     // Get post images

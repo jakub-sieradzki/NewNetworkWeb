@@ -27,6 +27,9 @@
       @apply bg-gray-400 dark:bg-gray-600
   }
 
+.cropImageButton {
+    @apply flex items-center h-9 w-9 stroke-current bg-gray-200 dark:bg-gray-800 rounded-md cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700/70 dark:text-white transition
+}
 .postLinkStyle {
     @apply text-blue-500 hover:underline cursor-pointer
 }

@@ -9,6 +9,9 @@ module.exports = {
       width: {
         'lg-login': '450px',
       },
+      height: {
+        'lg-editProfile': '700px;',
+      },
       flexGrow: {
         '2': 2,
         '3': 3,

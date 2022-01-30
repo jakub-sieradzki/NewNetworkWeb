@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center">
-    <img src="/img/avatar.png" class="w-8 h-8 mr-3" alt="avatar" />
+    <img :src="profileImage" class="w-9 h-9 mr-3 rounded-full" alt="avatar" />
     <span ref="commentSpan" onfocus="" class="mr-2 h-full max-h-32 py-2 px-4 text-sm bg-gray-100 dark:bg-gray-800 shadow-inner focus:outline-0 rounded-md flex-grow flex-shrink overflow-y-auto customCommentSpan" role="textbox" contenteditable></span>
     <div class="cursor-pointer h-6 w-6 ml-1 mr-2 flex-shrink-0">
       <svg @click="sendComment()" xmlns="http://www.w3.org/2000/svg" class="h-full w-full stroke-current rotate-45 hover:rotate-0 transition duration-300 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -20,7 +20,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState("user", ["uid", "username"]),
+    ...mapState("user", ["uid", "username", "profileImage"]),
   },
   methods: {
     async sendComment() {
