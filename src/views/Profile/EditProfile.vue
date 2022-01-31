@@ -167,10 +167,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("user", ["name", "surname", "profileImage", "profileBackground", "description"]),
+    ...mapState("user", ["name", "surname", "profileImage", "description"]),
   },
   methods: {
-    ...mapMutations("user", ["setName", "setSurname", "setDescription", "setProfileImage", "setProfileBackground"]),
+    ...mapMutations("user", ["setName", "setSurname", "setDescription", "setProfileImage"]),
     closeEditProfile() {
       this.$parent.editProfileMode = false;
     },
@@ -255,7 +255,7 @@ export default {
         await removeAllProfileBackgrounds(getAuth().currentUser.uid);
         await uploadProfileBackground(getAuth().currentUser.uid, blobProfileBackground, profileBackgroundName);
 
-        this.setProfileBackground(this.readyBackgroundImageUrl);
+        this.$parent.profileBackground = this.readyBackgroundImageUrl;
       }
 
       if (this.uDescription != this.description) {
@@ -280,7 +280,7 @@ export default {
     this.uDescription = this.description;
 
     this.readyProfileImageUrl = this.profileImage;
-    this.readyBackgroundImageUrl = this.profileBackground;
+    this.readyBackgroundImageUrl = this.$parent.profileBackground;
   },
 };
 </script>

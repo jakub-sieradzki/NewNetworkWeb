@@ -13,18 +13,20 @@
           <circle cx="12" cy="5" r="1" />
         </svg>
       </div>
-      <p class="my-1">{{ com.content }}</p>
+      <p class="my-1" v-html="content"></p>
       <div class="flex justify-between mt-1" :class="{ 'mb-4': showRespondField }">
         <p @click="toggleRespondField" class="text-xs hover:underline cursor-pointer">Odpowiedz</p>
-        <p class="text-xs">{{ commentLocalDate }}</p>
+        <div :data-tip="commentFullDate" class="tooltip">
+          <p class="text-xs">{{ commentTime }}</p>
+        </div>
       </div>
       <SendComment v-if="showRespondField" :postId="postId" :commentId="originalComId" :usernameToRespond="com.username" />
     </div>
-    <div v-if="showMoreCommentsOption" class="flex justify-end flex-grow-0 mt-1" :class="{ 'mb-2' : showMoreCommentsBoolean}">
+    <div v-if="showMoreCommentsOption" class="flex justify-end flex-grow-0 mt-1" :class="{ 'mb-2': showMoreCommentsBoolean }">
       <div @click="showMoreComments" class="flex gap-1 justify-end items-center px-2 py-1 cursor-pointer">
         <p v-if="showMoreCommentsBoolean" class="text-xs">Ukryj odpowiedzi</p>
         <p v-else class="text-xs">Pokaż odpowiedzi</p>
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-3 h-3 transition duration-300" :class="{'rotate-180' : showMoreCommentsBoolean}" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-3 h-3 transition duration-300" :class="{ 'rotate-180': showMoreCommentsBoolean }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <polyline points="6 9 12 15 18 9" />
         </svg>
@@ -38,10 +40,12 @@
 <script>
 import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
-import { getSubcomments, checkIfAnySubcomments } from "@/database/getData"
-import { getAuth } from '@firebase/auth';
-import { mapState } from 'vuex';
-import { getProfileImageUrl } from '@/firebase-storage/getFiles';
+import { getSubcomments, checkIfAnySubcomments } from "@/database/getData";
+import { getAuth } from "@firebase/auth";
+import { mapState } from "vuex";
+import { getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { getLinkifyText } from "@/helpers/textHelpers";
+import { DateTime } from 'luxon';
 export default {
   props: ["postId", "com", "originalComId"],
   components: {
@@ -54,13 +58,15 @@ export default {
       showMoreCommentsOption: false,
       showMoreCommentsBoolean: false,
       subcomments: [],
-      commentLocalDate: ""
+      commentTime: "",
+      commentFullDate: "",
+      content: "",
     };
   },
   computed: {
     ...mapState("user", {
-      currentUserProfileImage: "profileImage"  
-    })
+      currentUserProfileImage: "profileImage",
+    }),
   },
   methods: {
     toggleRespondField() {
@@ -77,17 +83,23 @@ export default {
     },
   },
   async mounted() {
-    this.commentLocalDate = this.com.createdTimestamp.toDate().toLocaleString();
-    if(this.com.id == this.originalComId) {
-      this.showMoreCommentsOption = await checkIfAnySubcomments(this.postId, this.com.id);;
+    this.content = getLinkifyText(this.com.content);
+    
+    // Convert time
+    const date = this.com.createdTimestamp.toDate();
+    this.commentFullDate = date.toLocaleString();
+    this.commentTime = DateTime.fromJSDate(date).toRelative();
+
+    if (this.com.id == this.originalComId) {
+      this.showMoreCommentsOption = await checkIfAnySubcomments(this.postId, this.com.id);
     }
 
     const img = this.$refs.profileImage;
-    if(this.com.uid == getAuth().currentUser.uid) {
+    if (this.com.uid == getAuth().currentUser.uid) {
       img.setAttribute("src", this.currentUserProfileImage);
     } else {
       let url = await getProfileImageUrl(this.com.uid);
-      if(url != null) {
+      if (url != null) {
         img.setAttribute("src", url);
       } else {
         img.setAttribute("src", "/img/avatar.png");

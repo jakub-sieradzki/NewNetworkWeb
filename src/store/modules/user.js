@@ -4,7 +4,6 @@ const state = () => ({
     name: "",
     surname: "",
     profileImage: "",
-    profileBackground: "",
     description: "",
 })
 
@@ -24,9 +23,6 @@ const mutations = {
     setProfileImage(state, value) {
         state.profileImage = value
     },
-    setProfileBackground(state, value) {
-        state.profileBackground = value
-    },
     setDescription(state, value) {
         state.description = value
     },
@@ -36,7 +32,6 @@ const mutations = {
         state.name = values.name
         state.surname = values.surname
         state.profileImage = values.profileImage
-        state.profileBackground = values.profileBackground
         state.description = values.description
     },
 }

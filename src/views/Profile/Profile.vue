@@ -3,7 +3,7 @@
   <div class="flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="md:border dark:border-gray-700 md:shadow-lg md:overflow-hidden h-full md:my-10 md:mx-5 lg:mx-20 xl:mx-30 3xl:mx-40 flex flex-col md:dark:bg-gray-900 md:rounded-lg md:flex-row gap-0">
       <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-5/12">
-        <img ref="profileBackgroundImg" class="h-40 w-full object-cover shadow-md" src="/img/wallpaper.jpg" alt="ProfileBackground" />
+        <img ref="profileBackgroundImg" :src="profileBackground" class="h-40 w-full object-cover shadow-md" alt="ProfileBackground" />
         <img ref="profileImg" class="m-auto -mt-20 h-40 w-40 rounded-full shadow-xl" src="images/profile.png" alt="ProfilePhoto" />
         <div class="flex flex-col">
           <p class="text-center text-2xl font-bold mt-5">{{ name }} {{ surname }}</p>
@@ -45,6 +45,7 @@ import ProfileActions from "./ProfileActions.vue";
 import EditProfile from "./EditProfile.vue";
 import { getUserDataOnUsername } from "@/database/getData";
 import { getProfileImageUrl, getProfileBackgroundUrl } from "@/firebase-storage/getFiles";
+import { getBlobFromURL } from "@/helpers/blobFunctions";
 export default {
   components: {
     ProfileActions,
@@ -61,6 +62,7 @@ export default {
       ifBlockedByUser: true,
       ifBlockedBySelf: true,
       editProfileMode: false,
+      profileBackground: "",
     };
   },
 
@@ -88,17 +90,23 @@ export default {
     async loadProfileBackground() {
       const img = this.$refs.profileBackgroundImg;
       if (this.selfProfile) {
-        img.setAttribute("src", this.currentUserProfileBackground);
+        let url = await getProfileBackgroundUrl(this.uid);
+        if (url != null) {
+          let blob = await getBlobFromURL(url);
+          this.profileBackground = URL.createObjectURL(blob);
+        } else {
+          this.profileBackground = "/img/wallpaper.jpg";
+        }
       } else {
         if (!this.blockedByUser) {
           let url = await getProfileBackgroundUrl(this.uid);
           if (url != null) {
-            img.setAttribute("src", url);
+            this.profileBackground = url;
           } else {
-            img.setAttribute("src", "/img/wallpaper.jpg");
+            this.profileBackground = "/img/wallpaper.jpg";
           }
         } else {
-          img.setAttribute("src", "");
+          this.profileBackground = "";
         }
       }
     },

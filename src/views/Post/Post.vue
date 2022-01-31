@@ -43,7 +43,7 @@
     <!-- Content -->
     <div>
       <div class="post__content select-ghost">
-        <PostContent :postContent="this.postData.content" :postHashtags="this.postData.hashtags" />
+        <p v-html="linkifyPostContent"></p>
       </div>
       <div v-if="imagesUrls.length != 0" class="flex flex-shrink-0 overflow-x-auto custom-scrollbar rounded-lg mb-4">
         <img class="w-full" v-for="url in imagesUrls" :key="url" :src="url" alt="img" />
@@ -64,7 +64,9 @@
         </svg>
         <p>Kategorie</p>
       </div>
-      <p class="self-center text-gray-400 text-sm flex-shrink truncate justify-center">{{ localDate }}</p>
+      <div :data-tip="postFullDateAdded" class="tooltip">
+        <p class="self-center text-gray-400 text-sm flex-shrink truncate justify-center">{{ postTimeAdded }}</p>
+      </div>
     </div>
     <div v-if="showCategories" class="flex flex-wrap gap-2 mt-4">
       <div v-for="cat in categoriesList" :key="cat.id" :class="cat.background" class="px-4 py-2 rounded-2xl">
@@ -163,6 +165,10 @@ import { getPostFullCategoriesList } from "@/helpers/categories";
 import { getPostAverageRating } from "@/helpers/postRating";
 import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
 import { removePostImages } from "@/firebase-storage/modifyFiles";
+import { getLinkifyText } from "@/helpers/textHelpers";
+
+import { DateTime } from "luxon";
+
 export default {
   components: {
     CreatePost,
@@ -176,7 +182,8 @@ export default {
     return {
       showCategories: false,
       showComments: false,
-      localDate: "",
+      postTimeAdded: "",
+      postFullDateAdded: "",
       imagesUrls: [],
       createPost: false,
       categoriesList: {},
@@ -184,6 +191,7 @@ export default {
       showReactionsTimeout: null,
       selectedRating: 0,
       averageRatingInt: 0,
+      linkifyPostContent: "",
     };
   },
   computed: {
@@ -299,9 +307,11 @@ export default {
     },
   },
   async mounted() {
+    
     // Convert date
     const date = this.postData.createdTimestamp.toDate();
-    this.localDate = date.toLocaleString();
+    this.postFullDateAdded = date.toLocaleString();
+    this.postTimeAdded = DateTime.fromJSDate(date).toRelative();
 
     // Get profile image
     const img = this.$refs.profileImg;
@@ -316,6 +326,9 @@ export default {
         img.setAttribute("src", "/img/avatar.png");
       }
     }
+
+    //get linkify post content
+    this.linkifyPostContent = getLinkifyText(this.postData.content);
 
     // Get post images
     if (this.postData.files) {

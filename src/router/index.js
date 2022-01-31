@@ -82,10 +82,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log("before: ", to, "from: ", from);
+
+
   if (store.getters.getGotUserInfo) {
     if (to.path == "/" || to.path == "/home") {
       next("/home/all");
     } else {
+      if(to.fullPath == from.fullPath) {
+        router.back(-2);
+      }
       next();
     }
   }

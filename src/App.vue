@@ -9,7 +9,7 @@ import { getFirestore, doc, collection, onSnapshot, query, where } from "firebas
 import categories from "./data/categories";
 import { getUserData, getUserDetailsDoc } from "./database/getData";
 import { getProfileBackgroundUrl, getProfileImageUrl } from "./firebase-storage/getFiles";
-import { updateNameAndSurname } from './firebase-functions/functions';
+import { updateNameAndSurname } from "./firebase-functions/functions";
 export default {
   name: "App",
   data() {
@@ -54,22 +54,12 @@ export default {
           profileImageUrl = "/img/avatar.png";
         }
 
-        let profileBackgroundStorageUrl = await getProfileBackgroundUrl(user.uid);
-        let profileBackgroundUrl = null;
-        if (profileBackgroundStorageUrl != null) {
-          let blob = await fetch(profileBackgroundStorageUrl).then((r) => r.blob());
-          profileBackgroundUrl = URL.createObjectURL(blob);
-        } else {
-          profileBackgroundUrl = "/img/wallpaper.jpg";
-        }
-
         this.setUserInfo({
           uid: user.uid,
           username: userData.username,
           name: userData.name,
           surname: userData.surname,
           profileImage: profileImageUrl,
-          profileBackground: profileBackgroundUrl,
           description: userData.description,
         });
       } else {

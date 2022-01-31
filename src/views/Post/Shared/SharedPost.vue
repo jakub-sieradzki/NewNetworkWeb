@@ -2,7 +2,7 @@
   <div class="post max-w-7xl cursor-pointer" @click="this.$router.push('/post/' + this.postId)">
     <!-- Header -->
     <div class="post__header">
-      <div @click="showProfile()" class="mr-10 w-auto min-w-0 max-w-full flex overflow-hidden">
+      <div class="mr-10 w-auto min-w-0 max-w-full flex overflow-hidden">
         <img ref="profileImg" class="post__header__user-info__profile-picture rounded-full" alt="photo" />
         <div class="overflow-hidden">
           <p class="post__header__user-info__user-name">{{ post.name }} {{ post.surname }}</p>
@@ -31,6 +31,9 @@
 <script>
 import { getPost } from "@/database/getData";
 import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { getAuth } from '@firebase/auth';
+import { mapState } from 'vuex';
+import { DateTime } from 'luxon';
 export default {
   props: ["postId"],
   data() {
@@ -40,20 +43,29 @@ export default {
       localDate: "",
     };
   },
+  computed: {
+    ...mapState("user", {
+      currentUserProfileImage: "profileImage",
+    }),
+  },
   async mounted() {
     //Get post data
     this.post = await getPost(this.postId);
 
-    const date = this.post.createdTimestamp.toDate();
-    this.localDate = date.toLocaleString();
+    // Get time
+    this.localDate = DateTime.fromJSDate(this.post.createdTimestamp.toDate()).toRelative();
 
     //Get profile image
     const img = this.$refs.profileImg;
-    if (this.post.profileImage) {
-      let url = await getProfileImageUrl(this.post.uid);
-      img.setAttribute("src", url);
+    if (this.post.uid == getAuth().currentUser.uid) {
+      img.setAttribute("src", this.currentUserProfileImage);
     } else {
-      img.setAttribute("src", "/img/avatar.png");
+      let url = await getProfileImageUrl(this.post.uid);
+      if (url != null) {
+        img.setAttribute("src", url);
+      } else {
+        img.setAttribute("src", "/img/avatar.png");
+      }
     }
 
     //Get post images
