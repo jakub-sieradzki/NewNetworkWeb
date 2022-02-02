@@ -17,7 +17,7 @@
 <script>
 import Post from "../Post/Post.vue";
 import PostsList from "../Post/PostsList.vue";
-import { queryPostsForHomePage } from "../../database/getData";
+import { getAllPostsByUids, getPublicPostsByUids } from "../../database/getData";
 import { mapState } from "vuex";
 export default {
   components: { Post, PostsList },
@@ -28,7 +28,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("userPeopleInfo", ["observed"]),
+    ...mapState("userPeopleInfo", ["observed", "friends"]),
     ...mapState(["currentType", "categoriesObserved"]),
   },
   watch: {
@@ -37,17 +37,36 @@ export default {
     },
     categoriesObserved(newValue, oldValue) {
       this.loadPosts();
-    }
+    },
   },
   async mounted() {
-    console.log(this.observed);
     if (this.observed.length != 0) {
-      this.postsData = await queryPostsForHomePage(this.observed);
+      let friendsPosts = await getAllPostsByUids(this.getAllObservedFriends());
+      let otherPosts = await getPublicPostsByUids(this.getOnlyObservedUsers());
+      this.postsData.push(...friendsPosts);
+      this.postsData.push(...otherPosts);
       console.log(this.postsData);
     }
     this.loadPosts();
   },
   methods: {
+    getAllObservedFriends() {
+      let observedFriends = [];
+      for (let i = 0; i < this.observed.length; i++) {
+        if (this.friends.includes(this.observed[i])) {
+          observedFriends.push(this.observed[i]);
+        }
+      }
+      console.log("observed friends: ", observedFriends);
+      return observedFriends;
+    },
+    getOnlyObservedUsers() {
+      console.log("observed: ", this.observed);
+      console.log("friends: ", this.friends);
+      let onlyObserved = this.observed.filter((el) => !this.friends.includes(el));
+      console.log("only observed: ", onlyObserved);
+      return onlyObserved;
+    },
     loadPosts() {
       let filteredPosts = [];
       for (let postNumber in this.postsData) {

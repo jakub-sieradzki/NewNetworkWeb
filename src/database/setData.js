@@ -22,6 +22,7 @@ async function sendPost(data) {
     },
     type: data.type,
     hashtags: data.hashtags,
+    visibility: data.visibility,
   }).then(() => {
     sent = true;
     console.log("success");

@@ -71,6 +71,7 @@ export default {
       this.listenToGroupsChanges(user);
       this.listenToPagesChanges(user);
       this.listenToPostsRatedChanges(user);
+      this.listenToCommentsRatedChanges(user);
       this.listenToNotifications(user);
       this.setUserDetails(await getUserDetailsDoc(user.uid, "info"));
 
@@ -151,7 +152,7 @@ export default {
       });
     },
 
-    listenToPostsRatedChanges(user) {
+    listenToCommentsRatedChanges(user) {
       const commentsRatedUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "comments"), (doc) => {
         this.setCommentsRated(doc.data().rated);
         console.log("done getting comments rated");

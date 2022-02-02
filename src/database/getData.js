@@ -1,19 +1,40 @@
 import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 
-async function queryPostsForHomePage(uids) {
+async function getAllPostsByUids(uids) {
   let postsData = [];
-  const q = query(collection(getFirestore(), "posts"), where("uid", "in", uids), orderBy("createdTimestamp", "desc"));
-  await getDocs(q)
-    .then((docs) => {
-      docs.forEach((doc) => {
-        let postData = doc.data();
-        postData.id = doc.id;
-        postsData.push(postData);
+  if (uids.length > 0) {
+    const q = query(collection(getFirestore(), "posts"), where("uid", "in", uids), orderBy("createdTimestamp", "desc"));
+    await getDocs(q)
+      .then((docs) => {
+        docs.forEach((doc) => {
+          let postData = doc.data();
+          postData.id = doc.id;
+          postsData.push(postData);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }
+  return postsData;
+}
+
+async function getPublicPostsByUids(uids) {
+  let postsData = [];
+  if (uids.length > 0) {
+    const q = query(collection(getFirestore(), "posts"), where("uid", "in", uids), where("visibility", "==", "public"), orderBy("createdTimestamp", "desc"));
+    await getDocs(q)
+      .then((docs) => {
+        docs.forEach((doc) => {
+          let postData = doc.data();
+          postData.id = doc.id;
+          postsData.push(postData);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return postsData;
 }
 
@@ -148,4 +169,4 @@ async function searchUsername(s) {
   return queryArray;
 }
 
-export { queryPostsForHomePage, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername };
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername };

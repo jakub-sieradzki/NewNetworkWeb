@@ -31,7 +31,7 @@
             <router-link to="info" class="tab tab-bordered flex-grow">Informacje</router-link>
           </div>
           <div v-if="!ifBlockedByUser && !ifBlockedBySelf" class="md:overflow-y-scroll custom-scrollbar h-5/6 px-5">
-            <router-view name="profileContent" class="h-full w-full"></router-view>
+            <router-view :uid="this.uid" name="profileContent" class="h-full w-full"></router-view>
           </div>
         </div>
       </div>

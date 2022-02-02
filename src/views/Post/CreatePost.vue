@@ -24,11 +24,12 @@
           </div>
           <div class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
-              <p>Publiczne</p>
+              <p v-if="postVisibility == 'public'">Publiczne</p>
+              <p v-else-if="postVisibility == 'friends'">Znajomi</p>
             </div>
-            <div class="w-32 dropdown-content mt-2 p-2 bg-gray-100 dark:bg-gray-800 dark:border-gray-600 border rounded-md shadow-xl">
-              <p class="text-sm p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition rounded-md mb-1 cursor-pointer">Publiczne</p>
-              <p class="text-sm p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition rounded-md mt-1 cursor-pointer">Znajomi</p>
+            <div tabindex="0" class="w-32 dropdown-content mt-2 p-2 bg-gray-100 dark:bg-gray-800 dark:border-gray-600 border rounded-md shadow-xl">
+              <p @click="changeVisibility('public')" class="text-sm p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition rounded-md mb-1 cursor-pointer">Publiczne</p>
+              <p @click="changeVisibility('friends')" class="text-sm p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition rounded-md mt-1 cursor-pointer">Znajomi</p>
             </div>
           </div>
           <div class="dropdown">
@@ -146,6 +147,7 @@ export default {
       categories: {},
       selectedCategories: [],
       postType: "txt",
+      postVisibility: "public",
     };
   },
   computed: {
@@ -176,6 +178,9 @@ export default {
     },
     closeCreatePost() {
       this.$parent.createPost = false;
+    },
+    changeVisibility(value) {
+      this.postVisibility = value;
     },
     async send() {
       if (this.selectedCategories.length <= 0) {
@@ -229,6 +234,7 @@ export default {
         categories: this.selectedCategories,
         type: this.postType,
         hashtags: hashtagsArray,
+        visibility: this.postVisibility,
       });
 
       if (send) {

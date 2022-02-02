@@ -52,7 +52,7 @@
     <!-- End Content -->
     <SharedPost v-if="postData.shareId" :postId="postData.shareId" />
     <!-- Info -->
-    <div class="h-auto w-full flex mt-4 justify-between">
+    <div class="h-auto w-full flex mt-4 justify-between items-center">
       <!--Categories list-->
       <div class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 hover:bg-slate-200 hover:dark:bg-slate-700 hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
         <svg xmlns="http://www.w3.org/2000/svg" :class="{ 'rotate-45': showCategories }" class="stroke-current w-5 h-5 transition duration-300" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -64,8 +64,29 @@
         </svg>
         <p>Kategorie</p>
       </div>
-      <div :data-tip="postFullDateAdded" class="tooltip">
-        <p class="self-center text-gray-400 text-sm flex-shrink truncate justify-center">{{ postTimeAdded }}</p>
+      <div class="flex text-gray-400 gap-1.5 items-center">
+        <svg v-if="postData.visibility == 'public'" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <circle cx="12" cy="12" r="9" />
+          <line x1="3.6" y1="9" x2="20.4" y2="9" />
+          <line x1="3.6" y1="15" x2="20.4" y2="15" />
+          <path d="M11.5 3a17 17 0 0 0 0 18" />
+          <path d="M12.5 3a17 17 0 0 1 0 18" />
+        </svg>
+        <svg v-else-if="postData.visibility == 'friends'" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <circle cx="7" cy="5" r="2" />
+          <path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" />
+          <circle cx="17" cy="5" r="2" />
+          <path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current fill-gray-400 w-2 h-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <circle cx="12" cy="12" r="4" />
+        </svg>
+        <div :data-tip="postFullDateAdded" class="tooltip">
+          <p class="self-center text-sm flex-shrink truncate justify-center">{{ postTimeAdded }}</p>
+        </div>
       </div>
     </div>
     <div v-if="showCategories" class="flex flex-wrap gap-2 mt-4">
@@ -307,7 +328,6 @@ export default {
     },
   },
   async mounted() {
-    
     // Convert date
     const date = this.postData.createdTimestamp.toDate();
     this.postFullDateAdded = date.toLocaleString();
