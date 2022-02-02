@@ -1,4 +1,4 @@
-import { getFirestore, collection, setDoc, doc, getDoc, getDocs, addDoc, document, query, where, orderBy, updateDoc, serverTimestamp, deleteDoc, runTransaction, deleteField, increment } from "firebase/firestore";
+import { getFirestore, collection, doc, addDoc, writeBatch, updateDoc, serverTimestamp, deleteDoc, runTransaction, deleteField, increment } from "firebase/firestore";
 
 async function sendPost(data) {
   let sent = false;
@@ -46,6 +46,11 @@ async function sendComment(postId, data) {
     username: data.username,
     uid: data.uid,
     createdTimestamp: serverTimestamp(),
+    ratings: {
+      upvotes: 0,
+      downvotes: 0,
+      sum: 0,
+    },
   }).then(() => {
     sent = true;
   });
@@ -60,6 +65,11 @@ async function sendSubcomment(postId, commentId, data) {
     username: data.username,
     uid: data.uid,
     createdTimestamp: serverTimestamp(),
+    ratings: {
+      upvotes: 0,
+      downvotes: 0,
+      sum: 0,
+    },
   }).then(() => {
     sent = true;
   });
@@ -137,12 +147,178 @@ async function markNotificationAsRead(uid, notificationId) {
 async function updateUserDescription(uid, newDescription) {
   const userRef = doc(getFirestore(), "users", uid);
   await updateDoc(userRef, {
-    description: newDescription
-  }).then(() => {
-    console.log("Updated description successfully");
-  }).catch((err) => {
-    console.log(err);
-  });
+    description: newDescription,
+  })
+    .then(() => {
+      console.log("Updated description successfully");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription };
+async function addCommentReaction(uid, postId, commentId, subcommentId, value) {
+  const userComRef = doc(getFirestore(), "users", uid, "details", "comments");
+  const comRef = doc(getFirestore(), "posts", postId, "comments", commentId);
+
+  const batch = writeBatch(getFirestore());
+
+  if (subcommentId == commentId) {
+    batch.update(userComRef, {
+      ["rated." + postId + "-" + commentId]: value,
+    });
+    if (value == 1) {
+      batch.update(comRef, {
+        ["ratings.upvotes"]: increment(1),
+        ["ratings.sum"]: increment(1),
+      });
+    } else {
+      batch.update(comRef, {
+        ["ratings.downvotes"]: increment(1),
+        ["ratings.sum"]: increment(-1),
+      });
+    }
+  } else {
+    batch.update(userComRef, {
+      ["rated." + postId + "-" + commentId + "-" + subcommentId]: value,
+    });
+    const subcomRef = doc(getFirestore(), "posts", postId, "comments", commentId, "subcomments", subcommentId);
+    if (value == 1) {
+      batch.update(subcomRef, {
+        ["ratings.upvotes"]: increment(1),
+        ["ratings.sum"]: increment(1),
+      });
+    } else {
+      batch.update(subcomRef, {
+        ["ratings.downvotes"]: increment(1),
+        ["ratings.sum"]: increment(-1),
+      });
+    }
+  }
+
+  let result;
+  await batch
+    .commit()
+    .then(() => {
+      console.log("added comment reaction successfully");
+      result = true;
+    })
+    .catch((err) => {
+      console.log("Error adding comment reaction: ", err);
+      result = false;
+    });
+
+  return result;
+}
+
+async function updateCommentReaction(uid, postId, commentId, subcommentId, value) {
+  const userComRef = doc(getFirestore(), "users", uid, "details", "comments");
+  const comRef = doc(getFirestore(), "posts", postId, "comments", commentId);
+
+  const batch = writeBatch(getFirestore());
+
+  if (subcommentId == commentId) {
+    batch.update(userComRef, {
+      ["rated." + postId + "-" + commentId]: value,
+    });
+    if (value == 1) {
+      batch.update(comRef, {
+        ["ratings.upvotes"]: increment(1),
+        ["ratings.downvotes"]: increment(-1),
+        ["ratings.sum"]: increment(2),
+      });
+    } else {
+      batch.update(comRef, {
+        ["ratings.upvotes"]: increment(-1),
+        ["ratings.downvotes"]: increment(1),
+        ["ratings.sum"]: increment(-2),
+      });
+    }
+  } else {
+    batch.update(userComRef, {
+      ["rated." + postId + "-" + commentId + "-" + subcommentId]: value,
+    });
+    const subcomRef = doc(getFirestore(), "posts", postId, "comments", commentId, "subcomments", subcommentId);
+    if (value == 1) {
+      batch.update(subcomRef, {
+        ["ratings.upvotes"]: increment(1),
+        ["ratings.downvotes"]: increment(-1),
+        ["ratings.sum"]: increment(2),
+      });
+    } else {
+      batch.update(subcomRef, {
+        ["ratings.upvotes"]: increment(-1),
+        ["ratings.downvotes"]: increment(1),
+        ["ratings.sum"]: increment(-2),
+      });
+    }
+  }
+
+  let result;
+  await batch
+    .commit()
+    .then(() => {
+      console.log("updated comment reaction successfully");
+      result = true;
+    })
+    .catch((err) => {
+      console.log("Error updating comment reaction: ", err);
+      result = false;
+    });
+  return result;
+}
+
+async function removeCommentReaction(uid, postId, commentId, subcommentId, value) {
+  const userComRef = doc(getFirestore(), "users", uid, "details", "comments");
+  const comRef = doc(getFirestore(), "posts", postId, "comments", commentId);
+
+  const batch = writeBatch(getFirestore());
+
+  if (subcommentId == commentId) {
+    batch.update(userComRef, {
+      ["rated." + postId + "-" + commentId]: deleteField(),
+    });
+    if (value == 1) {
+      batch.update(comRef, {
+        ["ratings.upvotes"]: increment(-1),
+        ["ratings.sum"]: increment(-1),
+      });
+    } else {
+      batch.update(comRef, {
+        ["ratings.downvotes"]: increment(-1),
+        ["ratings.sum"]: increment(1),
+      });
+    }
+  } else {
+    batch.update(userComRef, {
+      ["rated." + postId + "-" + commentId + "-" + subcommentId]: deleteField(),
+    });
+    const subcomRef = doc(getFirestore(), "posts", postId, "comments", commentId, "subcomments", subcommentId);
+    if (value == 1) {
+      batch.update(subcomRef, {
+        ["ratings.upvotes"]: increment(-1),
+        ["ratings.sum"]: increment(-1),
+      });
+    } else {
+      batch.update(subcomRef, {
+        ["ratings.downvote"]: increment(-1),
+        ["ratings.sum"]: increment(1),
+      });
+    }
+  }
+  let result;
+  await batch
+    .commit()
+    .then(() => {
+      console.log("remove comment reaction successfully");
+      result = true;
+    })
+    .catch((err) => {
+      console.log("Error removing comment reaction: ", err);
+      result = false;
+    });
+
+  return result;
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction };

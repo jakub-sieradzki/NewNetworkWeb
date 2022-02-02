@@ -39,7 +39,7 @@ export default {
     ...mapMutations("userPeopleInfo", ["setPeopleInfo"]),
     ...mapMutations("userGroupsInfo", ["setGroupsInfo"]),
     ...mapMutations("userPagesInfo", ["setPagesInfo"]),
-    ...mapMutations(["setUnreadNotificationsList", "setPostsRated", "setGotUserInfo"]),
+    ...mapMutations(["setUnreadNotificationsList", "setPostsRated", "setGotUserInfo", "setCommentsRated"]),
 
     async getUser(user) {
       console.log("Logged in");
@@ -148,6 +148,13 @@ export default {
       const postsRatedUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "posts"), (doc) => {
         this.setPostsRated(doc.data().rated);
         console.log("done getting posts rated");
+      });
+    },
+
+    listenToPostsRatedChanges(user) {
+      const commentsRatedUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "comments"), (doc) => {
+        this.setCommentsRated(doc.data().rated);
+        console.log("done getting comments rated");
       });
     },
   },

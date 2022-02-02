@@ -28,6 +28,7 @@ export default createStore({
       unreadNotificationsList: [],
 
       postsRated: {},
+      commentsRated: {},
       currentType: null,
     };
   },
@@ -68,6 +69,9 @@ export default createStore({
     setUnreadNotificationsList(state, value) {
       state.unreadNotificationsList = value;
     },
+    setCommentsRated(state, value) {
+      state.commentsRated = value;
+    }
   },
 
   getters: {
