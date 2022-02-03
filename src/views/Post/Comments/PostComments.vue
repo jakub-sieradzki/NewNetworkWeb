@@ -12,9 +12,9 @@
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </div>
-        <div tabindex="0" class="dropdown-content min-w-full shadow-lg mt-1.5 border dark:border-gray-800 bg-gray-100/50 dark:bg-gray-800/50 p-2 rounded-md text-sm backdrop-blur flex flex-col gap-1">
-          <p @click="changeSorting('latest')" class="px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najnowsze</p>
-          <p @click="changeSorting('best')" class="px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najlepsze</p>
+        <div tabindex="0" class="dropdownStyle">
+          <p @click="changeSorting('latest')" class="dropdownItemStyle">Najnowsze</p>
+          <p @click="changeSorting('best')" class="dropdownItemStyle">Najlepsze</p>
         </div>
       </div>
     </div>

@@ -6,30 +6,45 @@
           <img ref="profileImage" class="h-5 w-5 rounded-full" src="/img/avatar.png" alt="avatar" />
           <p class="text-sm">@{{ com.username }}</p>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-current cursor-pointer" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <circle cx="12" cy="12" r="1" />
-          <circle cx="12" cy="19" r="1" />
-          <circle cx="12" cy="5" r="1" />
-        </svg>
+        <div class="dropdown dropdown-end">
+          <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-current cursor-pointer" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="12" cy="19" r="1" />
+            <circle cx="12" cy="5" r="1" />
+          </svg>
+          <div tabindex="0" class="dropdownStyle w-48">
+            <div @click="deleteCommentClick" class="dropdownItemStyle flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <line x1="4" y1="7" x2="20" y2="7" />
+                <line x1="10" y1="11" x2="10" y2="17" />
+                <line x1="14" y1="11" x2="14" y2="17" />
+                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+              </svg>
+              <p class="pl-3">Usuń komentarz</p>
+            </div>
+          </div>
+        </div>
       </div>
       <p class="my-2" v-html="content"></p>
       <div class="flex justify-between items-center mt-1 gap-3" :class="{ 'mb-4': showRespondField }">
         <div class="flex gap-4 items-center">
-          <div class="flex items-center gap-3 border dark:border-gray-800 rounded-full p-1 px-3">
-              <svg @click="changeRating(1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-green-500': selectedRating == 1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="18" y1="11" x2="12" y2="5" />
-                <line x1="6" y1="11" x2="12" y2="5" />
-              </svg>
-              <p class="text-sm font-semibold" :class="{ 'text-green-500': selectedRating == 1, 'text-red-500': selectedRating == -1 }">{{ com.ratings.sum }}</p>
-              <svg @click="changeRating(-1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-red-500': selectedRating == -1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="18" y1="13" x2="12" y2="19" />
-                <line x1="6" y1="13" x2="12" y2="19" />
-              </svg>
+          <div class="flex items-center gap-3 border dark:border-gray-800 rounded-2xl p-1 px-3">
+            <svg @click="changeRating(1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-green-500': selectedRating == 1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="18" y1="11" x2="12" y2="5" />
+              <line x1="6" y1="11" x2="12" y2="5" />
+            </svg>
+            <p class="text-sm font-semibold" :class="{ 'text-green-500': selectedRating == 1, 'text-red-500': selectedRating == -1 }">{{ com.ratings.sum }}</p>
+            <svg @click="changeRating(-1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-red-500': selectedRating == -1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="18" y1="13" x2="12" y2="19" />
+              <line x1="6" y1="13" x2="12" y2="19" />
+            </svg>
           </div>
           <p @click="toggleRespondField" class="text-xs hover:underline cursor-pointer">Odpowiedz</p>
         </div>
@@ -63,7 +78,7 @@ import { mapState } from "vuex";
 import { getProfileImageUrl } from "@/firebase-storage/getFiles";
 import { getLinkifyText } from "@/helpers/textHelpers";
 import { DateTime } from "luxon";
-import { addCommentReaction, removeCommentReaction, updateCommentReaction } from "@/database/setData";
+import { addCommentReaction, deleteComment, removeCommentReaction, updateCommentReaction } from "@/database/setData";
 export default {
   props: ["postId", "com", "originalComId"],
   components: {
@@ -101,9 +116,9 @@ export default {
     async showMoreComments() {
       if (!this.showMoreCommentsBoolean) {
         let subcoms = await getSubcomments(this.postId, this.originalComId);
-        if(this.$parent.sort == "latest") {
+        if (this.$parent.sort == "latest") {
           subcoms.sort((a, b) => b.createdTimestamp.toDate().getTime() - a.createdTimestamp.toDate().getTime());
-        } else if(this.$parent.sort == "best") {
+        } else if (this.$parent.sort == "best") {
           subcoms.sort((a, b) => b.ratings["sum"] - a.ratings["sum"] || b.createdTimestamp.toDate().getTime() - a.createdTimestamp.toDate().getTime());
         }
         this.subcomments = subcoms;
@@ -146,6 +161,18 @@ export default {
         } else {
           this.selectedRating = 0;
         }
+      }
+    },
+    async deleteCommentClick() {
+      if (this.com.uid == getAuth().currentUser.uid) {
+        let result = await deleteComment(this.postId, this.originalComId, this.com.id);
+        if (result) {
+          alert("Komentarz pomyślnie usunięty. Odśwież sekcję komentarzy aby zobaczyć zmiany");
+        } else {
+          alert("Wystąpił problem z usuwaniem komentarza");
+        }
+      } else {
+        alert("Możesz usuwać tylko swoje komentarze");
       }
     },
   },

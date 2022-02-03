@@ -322,4 +322,19 @@ async function removeCommentReaction(uid, postId, commentId, subcommentId, value
   return result;
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction };
+async function deleteComment(postId, commentId, subcommentId) {
+  let deleted = false;
+  if(commentId == subcommentId) {
+    await deleteDoc(doc(getFirestore(), "posts", postId, "comments", commentId)).then(() => {
+      deleted = true;
+    });
+  } else {
+    await deleteDoc(doc(getFirestore(), "posts", postId, "comments", commentId, "subcomments", subcommentId)).then(() => {
+      deleted = true;
+    });
+  }
+
+  return deleted;
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment };

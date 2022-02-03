@@ -29,6 +29,8 @@ export default {
       } else {
         docsPosts = await getPublicPostsByUids([this.uid]);
       }
+
+      docsPosts.sort((a, b) => b.createdTimestamp.toDate().getTime() - a.createdTimestamp.toDate().getTime());
       this.lastUid = this.uid;
       this.posts = docsPosts;
       this.postsLoaded = true;

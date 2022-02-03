@@ -117,3 +117,11 @@
 .popular__list-item__number {
   @apply text-3xl p-2 self-center border border-l-0 rounded-r-md text-center;
 }
+
+.dropdownStyle {
+  @apply dropdown-content min-w-full shadow-lg mt-1.5 border dark:border-gray-800 bg-gray-100/50 dark:bg-gray-800/50 p-2 rounded-md text-sm backdrop-blur flex flex-col gap-1
+}
+
+.dropdownItemStyle {
+  @apply text-sm px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition;
+}
