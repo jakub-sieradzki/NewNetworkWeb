@@ -100,7 +100,13 @@ export default {
     },
     async showMoreComments() {
       if (!this.showMoreCommentsBoolean) {
-        this.subcomments = await getSubcomments(this.postId, this.originalComId);
+        let subcoms = await getSubcomments(this.postId, this.originalComId);
+        if(this.$parent.sort == "latest") {
+          subcoms.sort((a, b) => b.createdTimestamp.toDate().getTime() - a.createdTimestamp.toDate().getTime());
+        } else if(this.$parent.sort == "best") {
+          subcoms.sort((a, b) => b.ratings["sum"] - a.ratings["sum"] || b.createdTimestamp.toDate().getTime() - a.createdTimestamp.toDate().getTime());
+        }
+        this.subcomments = subcoms;
         this.showMoreCommentsBoolean = true;
       } else {
         this.subcomments = [];
