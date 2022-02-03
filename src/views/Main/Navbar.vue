@@ -9,7 +9,7 @@
           <line x1="4" y1="18" x2="20" y2="18" />
         </svg>
       </div>
-      <p class="font-main text-xl absolute top-1/2 left-11 xl:left-0 transform -translate-y-1/2">New Network<span class="text-xs text-gray-400 ml-1">v.0.10.0</span></p>
+      <p class="font-main text-xl absolute top-1/2 left-11 xl:left-0 transform -translate-y-1/2">New Network<span class="text-xs text-gray-400 ml-1">v.0.10.1</span></p>
       <div class="dropdown hidden md:block absolute left-1/2 transform -translate-x-1/2">
         <input tabindex="0" placeholder="Szukaj" v-model="searchQuery" class="md:w-80 lg:w-96 h-10 focus:outline-none p-4 rounded-full border border-gray-300 bg-gray-200 dark:bg-gray-700 dark:border-gray-900 focus:border-blue-500" />
         <ul tabindex="0" class="z-10 p-2 shadow menu dropdown-content bg-base-100 rounded-box md:w-80 lg:w-96">
