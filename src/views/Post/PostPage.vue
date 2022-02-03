@@ -6,6 +6,7 @@
 <script>
 import Post from "./Post.vue";
 import { getPost } from "../../database/getData";
+import { mapState } from 'vuex';
 export default {
   components: { Post },
   data() {
@@ -13,11 +14,17 @@ export default {
       post: [],
     };
   },
+  computed: {
+    ...mapState("userPeopleInfo", ["friends"]),
+  },
   async mounted() {
     console.log("postID: ", this.$route.params.postId);
     let postData = await getPost(this.$route.params.postId);
 
     if (postData) {
+      if(postData.visibility == "friends" && !this.friends.includes(postData.uid)) {
+        return;
+      }
       this.post = postData;
     } else {
       console.log("No such document!");

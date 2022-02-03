@@ -121,7 +121,7 @@ async function checkIfAnySubcomments(postId, commentId) {
 
 async function getPostsByHashtag(hashtag) {
   let postsData = [];
-  const q = query(collection(getFirestore(), "posts"), where("hashtags", "array-contains", hashtag), orderBy("createdTimestamp", "desc"));
+  const q = query(collection(getFirestore(), "posts"), where("hashtags", "array-contains", hashtag), where("visibility", "==", "public"), orderBy("createdTimestamp", "desc"));
   await getDocs(q).then((docs) => {
     docs.forEach((doc) => {
       let docData = doc.data();
