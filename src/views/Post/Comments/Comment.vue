@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div class="flex flex-col border dark:border-gray-700 px-5 pt-3 pb-2 rounded-lg">
       <div class="flex justify-between items-center">
-        <div @click="this.$router.push('/user/' + com.username + '/posts')" class="flex cursor-pointer hover:underline gap-2 h-7 items-center">
+        <div @click="this.$router.push('/user/' + com.username + '/posts')" class="flex cursor-pointer lg:hover:underline gap-2 h-7 items-center">
           <img ref="profileImage" class="h-5 w-5 rounded-full" src="/img/avatar.png" alt="avatar" />
           <p class="text-sm">@{{ com.username }}</p>
         </div>
@@ -32,21 +32,21 @@
       <div class="flex justify-between items-center mt-1 gap-3" :class="{ 'mb-4': showRespondField }">
         <div class="flex gap-4 items-center">
           <div class="flex items-center gap-3 border dark:border-gray-800 rounded-2xl p-1 px-3">
-            <svg @click="changeRating(1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-green-500': selectedRating == 1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg @click="changeRating(1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-green-500': selectedRating == 1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="18" y1="11" x2="12" y2="5" />
               <line x1="6" y1="11" x2="12" y2="5" />
             </svg>
             <p class="text-sm font-semibold" :class="{ 'text-green-500': selectedRating == 1, 'text-red-500': selectedRating == -1 }">{{ com.ratings.sum }}</p>
-            <svg @click="changeRating(-1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-red-500': selectedRating == -1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg @click="changeRating(-1)" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 p-1 rounded-full lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 transition cursor-pointer" :class="{ 'text-red-500': selectedRating == -1 }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="18" y1="13" x2="12" y2="19" />
               <line x1="6" y1="13" x2="12" y2="19" />
             </svg>
           </div>
-          <p @click="toggleRespondField" class="text-xs hover:underline cursor-pointer">Odpowiedz</p>
+          <p @click="toggleRespondField" class="text-xs lg:hover:underline cursor-pointer">Odpowiedz</p>
         </div>
         <div :data-tip="commentFullDate" class="tooltip">
           <p class="text-xs">{{ commentTime }}</p>

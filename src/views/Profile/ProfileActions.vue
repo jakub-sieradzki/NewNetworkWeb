@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer">
     <div class="flex">
-      <div v-if="friends.includes(uid)" @click="removeFriendClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 hover:bg-gray-200/50 dark:hover:bg-gray-700/40 transition">
+      <div v-if="friends.includes(uid)" @click="removeFriendClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -18,7 +18,7 @@
         </svg>
         <p class="text-sm">Wysłano zaproszenie</p>
       </div>
-      <div v-else-if="friendsRequests.includes(uid)" @click="acceptFriendClick()" class="flex p-3 gap-2 bg-sky-500 text-white hover:bg-sky-600 transition">
+      <div v-else-if="friendsRequests.includes(uid)" @click="acceptFriendClick()" class="flex p-3 gap-2 bg-sky-500 text-white lg:hover:bg-sky-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -27,7 +27,7 @@
         </svg>
         <p class="text-sm">Zaakceptuj zaproszenie</p>
       </div>
-      <div v-else-if="blocked.includes(uid)" @click="unblock()" class="flex p-3 gap-2 bg-red-500 text-white hover:bg-red-600 transition">
+      <div v-else-if="blocked.includes(uid)" @click="unblock()" class="flex p-3 gap-2 bg-red-500 text-white lg:hover:bg-red-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="7" r="4" />
@@ -35,7 +35,7 @@
         </svg>
         <p class="text-sm">Odblokuj użytkownika</p>
       </div>
-      <div v-else @click="addFriendClick()" class="flex p-3 gap-2 bg-emerald-500 text-white hover:bg-emerald-600 transition">
+      <div v-else @click="addFriendClick()" class="flex p-3 gap-2 bg-emerald-500 text-white lg:hover:bg-emerald-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -44,7 +44,7 @@
         </svg>
         <p class="text-sm">Dodaj do znajomych</p>
       </div>
-      <div v-if="!blocked.includes(uid)" @click="toggleShowProfileOptions()" class="flex dark:bg-gray-800 bg-gray-300/60 p-3 self-start hover:bg-gray-300/30 hover:dark:bg-gray-700 transition">
+      <div v-if="!blocked.includes(uid)" @click="toggleShowProfileOptions()" class="flex dark:bg-gray-800 bg-gray-300/60 p-3 self-start lg:hover:bg-gray-300/30 lg:hover:dark:bg-gray-700 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5 transition duration-300" :class="{ 'rotate-180': showProfileOptions }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <polyline points="6 9 12 15 18 9" />
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div v-if="showProfileOptions && !blocked.includes(uid)" class="flex flex-col">
-      <div v-if="observed.includes(uid)" @click="removeObserve()" class="flex p-3 gap-2 hover:bg-gray-200/70 hover:dark:bg-gray-800/90 transition">
+      <div v-if="observed.includes(uid)" @click="removeObserve()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <line x1="3" y1="3" x2="21" y2="21" />
@@ -61,7 +61,7 @@
         </svg>
         <p class="text-sm">Przestań obserwować</p>
       </div>
-      <div v-else @click="observe()" class="flex p-3 gap-2 hover:bg-gray-200/70 hover:dark:bg-gray-800/90 transition">
+      <div v-else @click="observe()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="12" r="2" />
@@ -69,7 +69,7 @@
         </svg>
         <p class="text-sm">Obserwuj</p>
       </div>
-      <div @click="block()" class="flex p-3 gap-2 hover:bg-gray-200/70 hover:dark:bg-gray-800/90 transition">
+      <div @click="block()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65" />

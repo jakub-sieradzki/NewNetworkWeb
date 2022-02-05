@@ -9,7 +9,7 @@
 
 /* width */
 ::-webkit-scrollbar {
-  @apply w-2;
+  @apply w-2 hidden lg:block;
 }
 
 /* Track */
@@ -28,14 +28,14 @@
 }
 
 .contentLinks {
-    @apply text-blue-500 hover:underline
+    @apply text-blue-500 lg:hover:underline
 }
 
 .cropImageButton {
-  @apply flex items-center h-9 w-9 stroke-current bg-gray-200 dark:bg-gray-800 rounded-md cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700/70 dark:text-white transition;
+  @apply flex items-center h-9 w-9 stroke-current bg-gray-200 dark:bg-gray-800 rounded-md cursor-pointer lg:hover:bg-gray-300 dark:lg:hover:bg-gray-700/70 dark:text-white transition;
 }
 .postLinkStyle {
-  @apply text-blue-500 hover:underline cursor-pointer;
+  @apply text-blue-500 lg:hover:underline cursor-pointer;
 }
 .customCommentSpan[contenteditable]:empty::before {
   content: "Twój komentarz...";
@@ -43,7 +43,7 @@
   cursor: text;
 }
 .main-menu__element {
-  @apply h-12 p-2 flex w-auto cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-md transition-all;
+  @apply h-12 p-2 flex w-auto cursor-pointer lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 rounded-r-md transition-all;
 }
 
 .main-menu__element__icon {
@@ -79,7 +79,7 @@
 }
 
 .post__content__link {
-  @apply text-blue-400 hover:underline;
+  @apply text-blue-400 lg:hover:underline;
 }
 
 .post__content__img {
@@ -91,7 +91,7 @@
 }
 
 .post__actions__action {
-  @apply w-1/3 flex justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition items-center gap-2;
+  @apply w-1/3 flex justify-center cursor-pointer lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 rounded-md transition items-center gap-2;
 }
 
 .post__actions__action__icon {
@@ -111,7 +111,7 @@
 }
 
 .popular__list-item {
-  @apply pr-5 mb-1 mr-1 h-16 flex rounded-r-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition;
+  @apply pr-5 mb-1 mr-1 h-16 flex rounded-r-md cursor-pointer lg:hover:bg-gray-100 dark:lg:hover:bg-gray-800 transition;
 }
 
 .popular__list-item__number {
@@ -123,5 +123,15 @@
 }
 
 .dropdownItemStyle {
-  @apply text-sm px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition;
+  @apply text-sm px-2.5 py-2 lg:hover:bg-gray-200/60 lg:hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition;
+}
+
+.profileTabMenu {
+  @apply flex flex-shrink-0 w-full h-14 dark:bg-gray-800/30 gap-2 px-2 py-2 bg-gray-100/90 shadow-md
+}
+.profileTab {
+  @apply w-3/12 text-center rounded-lg flex items-center justify-center text-sm lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 transition cursor-pointer
+}
+.profileTabActive {
+  @apply bg-sky-700 hover:bg-sky-800 text-white
 }

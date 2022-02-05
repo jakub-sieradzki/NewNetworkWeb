@@ -17,22 +17,22 @@
                 <input class="input input-bordered focus:shadow-none mb-2 dark:bg-gray-900" type="email" name="email" v-model="formData.email" placeholder="Adres e-mail" />
                 <input v-on:keyup.enter="login" class="input input-bordered focus:shadow-none dark:bg-gray-900" type="password" name="password" v-model="formData.password" placeholder="Hasło" />
                 <div class="flex justify-end flex-shrink-0 mt-3 mb-4">
-                  <a class="text-xs text-gray-300 hover:underline" href="">Przywróć hasło</a>
+                  <a class="text-xs text-gray-300 lg:hover:underline" href="">Przywróć hasło</a>
                 </div>
-                <button @click="login" class="h-10 bg-green-500 hover:bg-green-600 transition-all rounded-lg text-white shadow-lg" type="submit">Zaloguj się</button>
+                <button @click="login" class="h-10 bg-green-500 lg:hover:bg-green-600 transition-all rounded-lg text-white shadow-lg" type="submit">Zaloguj się</button>
               </div>
               <div class="w-full h-px mt-4 mb-4 bg-gray-300 dark:bg-gray-700"></div>
               <p class="text-sm mb-4">Pierwszy raz na naszej platformie?</p>
-              <a class="w-full"><button @click="register" class="w-full h-10 bg-blue-500 hover:bg-blue-600 transition-all rounded-lg text-white shadow-lg">Załóż konto</button></a>
+              <a class="w-full"><button @click="register" class="w-full h-10 bg-blue-500 lg:hover:bg-blue-600 transition-all rounded-lg text-white shadow-lg">Załóż konto</button></a>
             </div>
           </div>
         </main>
         <footer class="mt-10 md:mt-0 py-5 md:py-0 md:h-16 w-full px-10 flex flex-shrink-0 items-center lg:justify-end shadow-inner bg-white bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-25 overflow-x-scroll md:overflow-hidden">
           <div class="flex gap-6 md:gap-8 flex-shrink-0">
             <p>&copy; New Network 2021</p>
-            <a class="hover:underline" href="">Warunki użytkowania</a>
-            <a class="hover:underline" href="">Polityka prywatności</a>
-            <a class="hover:underline" href="">O nas</a>
+            <a class="lg:hover:underline" href="">Warunki użytkowania</a>
+            <a class="lg:hover:underline" href="">Polityka prywatności</a>
+            <a class="lg:hover:underline" href="">O nas</a>
           </div>
         </footer>
       </div>

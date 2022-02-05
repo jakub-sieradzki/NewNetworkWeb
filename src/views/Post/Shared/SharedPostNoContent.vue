@@ -8,7 +8,7 @@
           <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />
         </svg>
         <p class="pl-5 text-sm">
-          <span class="cursor-pointer hover:underline" @click="this.$router.push('/user/' + postData.username + '/posts')">@{{ postData.username }}</span> udostępnił post
+          <span class="cursor-pointer lg:hover:underline" @click="this.$router.push('/user/' + postData.username + '/posts')">@{{ postData.username }}</span> udostępnił post
         </p>
       </div>
       <div class="dropdown dropdown-end">

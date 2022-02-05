@@ -210,7 +210,7 @@
                     </div>
                   </div>
                   <div class="h-5"></div>
-                  <button @click="register" class="h-10 bg-green-500 hover:bg-green-600 transition-all rounded-lg text-white shadow-lg w-full">Zarejestruj się</button>
+                  <button @click="register" class="h-10 bg-green-500 lg:hover:bg-green-600 transition-all rounded-lg text-white shadow-lg w-full">Zarejestruj się</button>
                 </div>
                 <div class="flex flex-col hidden md:inline ml-5">
                   <div class="w-80 text-xs p-5 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg">

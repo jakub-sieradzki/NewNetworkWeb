@@ -2,14 +2,14 @@
   <EditProfile v-if="editProfileMode" />
   <div class="flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="md:border dark:border-gray-700 md:shadow-lg md:overflow-hidden h-full md:my-10 md:mx-5 lg:mx-20 xl:mx-30 3xl:mx-40 flex flex-col md:dark:bg-gray-900 md:rounded-lg md:flex-row gap-0">
-      <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-5/12">
+      <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-3/12 md:border-r dark:border-gray-700">
         <img ref="profileBackgroundImg" :src="profileBackground" class="h-40 w-full object-cover shadow-md" alt="ProfileBackground" />
         <img ref="profileImg" class="m-auto -mt-20 h-40 w-40 rounded-full shadow-xl" src="images/profile.png" alt="ProfilePhoto" />
-        <div class="flex flex-col">
+        <div class="flex flex-col px-3 break-words">
           <p class="text-center text-2xl font-bold mt-5">{{ name }} {{ surname }}</p>
           <p class="text-center text-sm my-3 px-5 text-gray-500 dark:text-gray-400">{{ description }}</p>
           <div class="flex justify-center my-6">
-            <div @click="toggleEditProfileMode" v-if="selfProfile" class="flex gap-2 p-3 rounded-md overflow-hidden text-white bg-cyan-600 hover:bg-cyan-700 shadow-xl cursor-pointer transition">
+            <div @click="toggleEditProfileMode" v-if="selfProfile" class="flex gap-2 p-3 rounded-md overflow-hidden text-white bg-cyan-600 lg:hover:bg-cyan-700 shadow-xl cursor-pointer transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -22,19 +22,30 @@
           </div>
         </div>
       </div>
-      <div class="md:overflow-y-hidden w-full">
-        <div class="overflow-hidden h-full md:mt-10 2xl:px-32 md:px-5">
-          <div class="tabs border-white flex-grow flex-nowrap w-full pb-5 overflow-x-auto">
-            <router-link to="posts" class="tab tab-bordered flex-grow tab-active">Posty</router-link>
-            <router-link to="gallery" class="tab tab-bordered flex-grow">Galeria</router-link>
-            <router-link to="friends" class="tab tab-bordered flex-grow">Znajomi</router-link>
-            <router-link to="info" class="tab tab-bordered flex-grow">Informacje</router-link>
+      <div class="flex items-center justify-center md:w-9/12 py-3 px-3">
+        <div class="flex flex-col max-w-4xl w-full h-full dark:bg-gray-900 bg-gray-50/50 overflow-hidden rounded-lg border dark:border-gray-800">
+          <div class="profileTabMenu">
+            <router-link @click="changeViewMode('posts')" to="posts" class="profileTab" :class="{ profileTabActive: viewMode == 'posts' }">Posty</router-link>
+            <router-link @click="changeViewMode('gallery')" to="gallery" class="profileTab" :class="{ profileTabActive: viewMode == 'gallery' }">Galeria</router-link>
+            <router-link @click="changeViewMode('friends')" to="friends" class="profileTab" :class="{ profileTabActive: viewMode == 'friends' }">Znajomi</router-link>
+            <router-link @click="changeViewMode('info')" to="info" class="profileTab" :class="{ profileTabActive: viewMode == 'info' }">Informacje</router-link>
           </div>
-          <div v-if="!ifBlockedByUser && !ifBlockedBySelf" class="md:overflow-y-scroll custom-scrollbar h-5/6 px-5">
+          <div v-if="!ifBlockedByUser && !ifBlockedBySelf" class="overflow-y-auto w-full h-full py-4 mt-1 mb-2 p-2">
             <router-view :uid="this.uid" name="profileContent" class="h-full w-full"></router-view>
           </div>
         </div>
       </div>
+      <!-- <div class="overflow-y-hidden h-full md:w-9/12">
+        <div class="tabs flex-grow flex-nowrap w-full overflow-x-auto">
+          <router-link to="posts" class="tab tab-lifted tab-active dark:!bg-gray-900 dark:!border-gray-700">Posty</router-link>
+          <router-link to="gallery" class="tab tab-lifted">Galeria</router-link>
+          <router-link to="friends" class="tab tab-lifted">Znajomi</router-link>
+          <router-link to="info" class="tab tab-lifted">Informacje</router-link>
+        </div>
+        <div v-if="!ifBlockedByUser && !ifBlockedBySelf" class="overflow-y-scroll w-full h-5/6">
+          <router-view :uid="this.uid" name="profileContent" class="h-full w-full"></router-view>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -63,10 +74,14 @@ export default {
       ifBlockedBySelf: true,
       editProfileMode: false,
       profileBackground: "",
+      viewMode: "posts",
     };
   },
 
   methods: {
+    changeViewMode(value) {
+      this.viewMode = value;
+    },
     toggleEditProfileMode() {
       this.editProfileMode = !this.editProfileMode;
     },
@@ -159,12 +174,18 @@ export default {
         this.selfProfile = false;
       }
 
+      let module = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
+      this.changeViewMode(module);
+
       this.loadProfilePhoto();
       this.loadProfileBackground();
     }
   },
   async mounted() {
     console.log("mounted started");
+    let module = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
+    this.changeViewMode(module);
+
     await this.getUserInfo();
     if (this.uid == getAuth().currentUser.uid) {
       this.selfProfile = true;

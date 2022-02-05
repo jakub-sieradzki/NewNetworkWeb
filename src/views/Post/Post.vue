@@ -1,10 +1,10 @@
 <template>
   <!-- Post -->
   <CreatePost v-if="createPost" :shareId="postData.id" :shareUid="postData.uid" :shareUsername="postData.username" :shareContent="postData.content" />
-  <div class="post flex-grow" style="max-width: 650px">
+  <div class="post flex-grow" style="max-width: 600px">
     <!-- Header -->
     <div class="post__header">
-      <div @click="showProfile()" class="mr-5 w-auto min-w-0 max-w-full flex cursor-pointer hover:underline overflow-hidden">
+      <div @click="showProfile()" class="mr-5 w-auto min-w-0 max-w-full flex cursor-pointer lg:hover:underline overflow-hidden">
         <img ref="profileImg" class="post__header__user-info__profile-picture rounded-full" alt="photo" />
         <div class="overflow-hidden">
           <p class="post__header__user-info__user-name">{{ postData.name }} {{ postData.surname }}</p>
@@ -60,7 +60,7 @@
     <!-- Info -->
     <div class="h-auto w-full flex mt-4 justify-between items-center">
       <!--Categories list-->
-      <div class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 hover:bg-slate-200 hover:dark:bg-slate-700 hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
+      <div class="pt-1 pr-3 pl-2 pb-1 flex-shrink text-sm whitespace-nowrap cursor-pointer flex gap-1 items-center text-gray-500 dark:text-gray-400 lg:hover:bg-slate-200 lg:hover:dark:bg-slate-700 lg:hover:dark:bg-opacity-50 rounded-lg transition" @click="toggleShowCategories">
         <svg xmlns="http://www.w3.org/2000/svg" :class="{ 'rotate-45': showCategories }" class="stroke-current w-5 h-5 transition duration-300" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M3 12l3 3l3 -3l-3 -3z" />
@@ -122,23 +122,23 @@
           </div>
           <div tabindex="0" class="dropdown-content" :class="[showReactions ? 'dropdown-content block' : 'hidden']">
             <div class="w-64 flex gap-1 flex-grow rounded-lg bg-gray-100 dark:bg-gray-800 mb-2 border dark:border-gray-700 shadow-lg">
-              <div @click="reactClick(1)" class="flex flex-col flex-shrink-0 gap-1 items-center hover:bg-gray-200 hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 1 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
+              <div @click="reactClick(1)" class="flex flex-col flex-shrink-0 gap-1 items-center lg:hover:bg-gray-200 lg:hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 1 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
                 <img class="w-6" src="/img/1.svg" alt="0" />
                 <!-- <p class="text-xs">+1</p> -->
               </div>
-              <div @click="reactClick(2)" class="flex flex-col flex-shrink-0 gap-1 items-center hover:bg-gray-200 hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 2 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
+              <div @click="reactClick(2)" class="flex flex-col flex-shrink-0 gap-1 items-center lg:hover:bg-gray-200 lg:hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 2 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
                 <img class="w-6" src="/img/2.svg" alt="0" />
                 <!-- <p class="text-xs">+2</p> -->
               </div>
-              <div @click="reactClick(3)" class="flex flex-col flex-shrink-0 gap-1 items-center hover:bg-gray-200 hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 3 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
+              <div @click="reactClick(3)" class="flex flex-col flex-shrink-0 gap-1 items-center lg:hover:bg-gray-200 lg:hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 3 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
                 <img class="w-6" src="/img/3.svg" alt="0" />
                 <!-- <p class="text-xs">+3</p> -->
               </div>
-              <div @click="reactClick(4)" class="flex flex-col flex-shrink-0 gap-1 items-center hover:bg-gray-200 hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 4 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
+              <div @click="reactClick(4)" class="flex flex-col flex-shrink-0 gap-1 items-center lg:hover:bg-gray-200 lg:hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 4 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
                 <img class="w-6" src="/img/4.svg" alt="0" />
                 <!-- <p class="text-xs">+4</p> -->
               </div>
-              <div @click="reactClick(5)" class="flex flex-col flex-shrink-0 gap-1 items-center hover:bg-gray-200 hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 5 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
+              <div @click="reactClick(5)" class="flex flex-col flex-shrink-0 gap-1 items-center lg:hover:bg-gray-200 lg:hover:dark:bg-gray-700 p-3 rounded-lg transition" :class="[selectedRating == 5 ? ['bg-gray-200 dark:bg-gray-700'] : '']">
                 <img class="w-6" src="/img/5.svg" alt="4" />
                 <!-- <p class="text-xs">+5</p> -->
               </div>

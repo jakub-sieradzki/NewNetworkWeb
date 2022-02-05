@@ -4,7 +4,7 @@
     <SendComment :postId="postId" :commentId="null" />
     <div class="flex justify-end">
       <div class="dropdown dropdown-end">
-        <div @click="toggleShowSortMenu" tabindex="0" class="flex text-sm gap-1.5 rounded-md px-3 py-2 hover:bg-gray-100/70 dark:hover:bg-gray-800/50 cursor-pointer transition" onclick="this.parentElement.classList.toggle('dropdown-open');document.activeElement.blur()">
+        <div @click="toggleShowSortMenu" tabindex="0" class="flex text-sm gap-1.5 rounded-md px-3 py-2 lg:hover:bg-gray-100/70 dark:lg:hover:bg-gray-800/50 cursor-pointer transition" onclick="this.parentElement.classList.toggle('dropdown-open');document.activeElement.blur()">
           <p v-if="sort == 'latest'">Najnowsze</p>
           <p v-else-if="sort == 'best'">Najlepsze</p>
           <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5 transition duration-300" :class="{ 'rotate-180': showSortMenu }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">

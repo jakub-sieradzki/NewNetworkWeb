@@ -5,8 +5,8 @@
       <p class="text-sm font-semibold">{{ notification.title }}</p>
       <p class="text-xs" v-html="content"></p>
       <div class="flex font-semibold text-xs gap-1">
-        <p v-if="notification.type == 'friend_request'" @click="acceptClick()" class="hover:bg-gray-200 dark:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Akceptuj</p>
-        <p @click="markAsRead()" class="hover:bg-gray-200 dark:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer">Odrzuć</p>
+        <p v-if="notification.type == 'friend_request'" @click="acceptClick()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Akceptuj</p>
+        <p @click="markAsRead()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer">Odrzuć</p>
       </div>
     </div>
   </div>

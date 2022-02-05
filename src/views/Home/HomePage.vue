@@ -1,6 +1,6 @@
 <template>
   <CreatePost v-if="createPost" />
-  <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32">
+  <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32 overflow-x-hidden">
     <!--Categories-->
     <div class="" :class="[showMobileCategories ? ['absolute w-full dark:bg-gray-900 z-10'] : ['hidden lg:flex lg:sticky lg:top-0 lg:z-10']]">
       <Categories />

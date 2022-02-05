@@ -2,7 +2,7 @@
   <div class="max-w-xl ml-4 mr-4 flex-shrink flex-grow" style="height: max-content">
     <div class="m-auto w-full flex flex-col items-center">
       <div class="dropdown w-52 mb-2">
-        <div @click="toggleSort" tabindex="0" class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-1.5 border rounded-md dark:border-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40" onclick="this.parentElement.classList.toggle('dropdown-open');document.activeElement.blur()">
+        <div @click="toggleSort" tabindex="0" class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-1.5 border rounded-md dark:border-gray-800 cursor-pointer lg:hover:bg-gray-100 dark:lg:hover:bg-gray-800 transition text-sm bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40" onclick="this.parentElement.classList.toggle('dropdown-open');document.activeElement.blur()">
           <p v-if="sort == 'latest'">Najnowsze</p>
           <p v-else-if="sort == 'best'">Najlepsze</p>
           <p v-else-if="sort == 'popular'">Najpopularniejsze</p>
@@ -12,9 +12,9 @@
           </svg>
         </div>
         <div tabindex="0" class="dropdownStyle !mt-0">
-          <p @click="changeSorting('latest')" class="px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najnowsze</p>
-          <p @click="changeSorting('best')" class="px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najlepsze</p>
-          <p @click="changeSorting('popular')" class="px-2.5 py-2 hover:bg-gray-200/60 hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najpopularniejsze</p>
+          <p @click="changeSorting('latest')" class="px-2.5 py-2 lg:hover:bg-gray-200/60 lg:hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najnowsze</p>
+          <p @click="changeSorting('best')" class="px-2.5 py-2 lg:hover:bg-gray-200/60 lg:hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najlepsze</p>
+          <p @click="changeSorting('popular')" class="px-2.5 py-2 lg:hover:bg-gray-200/60 lg:hover:dark:bg-gray-800/60 rounded-md cursor-pointer transition">Najpopularniejsze</p>
         </div>
       </div>
       <PostsList :postsData="posts" />

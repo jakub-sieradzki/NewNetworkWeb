@@ -39,7 +39,6 @@ export default {
   async mounted() {
     this.getPosts();
     console.log("mounted");
-    console.log(this.friends);
   },
   async updated() {
     console.log("updated");

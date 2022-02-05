@@ -1,11 +1,38 @@
 <template>
-    <p>Galeria</p>
+  <div>
+    <div class="flex flex-wrap">
+      <div v-for="(value, key) in imgUrls" :key="key" class="w-1/2 md:w-1/4 pr-1 pb-1">
+        <img :src="value" @click="openImage(value)" alt="photo" class="h-36 w-full object-cover rounded-md cursor-pointer" />
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-
+import { getAllPostsByUids } from "@/database/getData";
+import { getPostImagesUrls } from "@/firebase-storage/getFiles";
 export default {
-    setup() {
-        
+  props: ["uid"],
+  data() {
+    return {
+      imgUrls: [],
+    };
+  },
+  methods: {
+    openImage(value) {
+      window.open(value, "_blank");
     },
-}
+  },
+  async mounted() {
+    let posts = await getAllPostsByUids([this.uid]);
+    let imgNames = [];
+    posts.forEach((post) => {
+      if (post.files.length > 0) {
+        for (let i = 0; i < post.files.length; i++) {
+          imgNames.push(post.files[i]);
+        }
+      }
+    });
+    this.imgUrls = await getPostImagesUrls(this.uid, imgNames);
+  },
+};  
 </script>

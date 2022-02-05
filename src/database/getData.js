@@ -43,6 +43,7 @@ async function getUserData(uid) {
   await getDoc(doc(getFirestore(), "users", uid))
     .then((doc) => {
       data = doc.data();
+      data.uid = doc.id;
     })
     .catch((err) => {
       console.log(err);

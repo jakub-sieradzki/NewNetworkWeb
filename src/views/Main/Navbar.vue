@@ -9,11 +9,11 @@
           <line x1="4" y1="18" x2="20" y2="18" />
         </svg>
       </div>
-      <p class="font-main text-xl absolute top-1/2 left-11 xl:left-0 transform -translate-y-1/2">New Network<span class="text-xs text-gray-400 ml-1">v.0.11.0</span></p>
+      <p class="font-main text-xl absolute top-1/2 left-11 xl:left-0 transform -translate-y-1/2">New Network<span class="text-xs text-gray-400 ml-1">v.0.12.0</span></p>
       <div class="dropdown hidden md:block absolute left-1/2 transform -translate-x-1/2">
         <input tabindex="0" placeholder="Szukaj" v-model="searchQuery" class="md:w-80 lg:w-96 h-10 focus:outline-none p-4 rounded-full border border-gray-300 bg-gray-200 dark:bg-gray-700 dark:border-gray-900 focus:border-blue-500" />
         <ul tabindex="0" class="z-10 p-2 shadow menu dropdown-content bg-base-100 rounded-box md:w-80 lg:w-96">
-          <li class="py-2 px-2 cursor-pointer hover:underline" @click="pushToProfile(result.username)" v-for="result in searchResult" :key="result.username">
+          <li class="py-2 px-2 cursor-pointer lg:hover:underline" @click="pushToProfile(result.username)" v-for="result in searchResult" :key="result.username">
             <p class="font-bold">{{ result.name }} {{ result.surname }}</p>
             <p>@{{ result.username }}</p>
           </li>
@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="w-full h-px bg-gray-300 dark:bg-gray-700"></div>
-            <div @click="editProfile" class="flex items-center mt-2 pt-2 pb-2 hover:bg-gray-200 dark:hover:bg-gray-700 dark:hover:bg-opacity-40 rounded-lg transition select-none cursor-pointer">
+            <div @click="editProfile" class="flex items-center mt-2 pt-2 pb-2 lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 dark:lg:hover:bg-opacity-40 rounded-lg transition select-none cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-6 h-6 ml-4 mr-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -56,7 +56,7 @@
               </svg>
               <p>Edytuj profil</p>
             </div>
-            <div @click="logout" class="flex items-center mt-1 pt-2 pb-2 hover:bg-gray-200 dark:hover:bg-gray-700 dark:hover:bg-opacity-40 rounded-lg transition select-none cursor-pointer">
+            <div @click="logout" class="flex items-center mt-1 pt-2 pb-2 lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 dark:lg:hover:bg-opacity-40 rounded-lg transition select-none cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="text-red-600 stroke-current w-6 h-6 ml-4 mr-4" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />

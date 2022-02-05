@@ -1,5 +1,5 @@
 <template>
-  <div @click="switchSelectAllCategories()" class="flex justify-center items-center rounded-xl gap-2 mt-2 mb-4 p-3 mx-4 shadow-inner bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition">
+  <div @click="switchSelectAllCategories()" class="flex justify-center items-center rounded-xl gap-2 mt-2 mb-4 p-3 mx-4 shadow-inner bg-slate-100 dark:bg-slate-800 lg:hover:bg-slate-200 dark:lg:hover:bg-slate-700 cursor-pointer transition">
     <svg v-if="selectAllCategories" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <polyline points="9 11 12 14 20 6" />
