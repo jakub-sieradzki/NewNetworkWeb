@@ -135,3 +135,7 @@
 .profileTabActive {
   @apply bg-sky-700 hover:bg-sky-800 text-white
 }
+
+.navbarDropdownStyle {
+  @apply bg-white/90 dark:bg-gray-800/40 backdrop-blur-xl sm:backdrop-blur rounded-xl mt-1.5 shadow-lg
+}

@@ -1,8 +1,8 @@
 <template>
   <CreatePost v-if="createPost" />
-  <div class="justify-center 2xl:gap-10 w-full h-full overflow-y-scroll pt-3 custom-scrollbar flex 3xl:pr-32 overflow-x-hidden">
+  <div class="justify-center 2xl:gap-10 flex pt-24 h-fit">
     <!--Categories-->
-    <div class="" :class="[showMobileCategories ? ['absolute w-full dark:bg-gray-900 z-10'] : ['hidden lg:flex lg:sticky lg:top-0 lg:z-10']]">
+    <div class="z-20" :class="[showMobileCategories ? ['absolute w-full dark:bg-gray-900'] : ['hidden lg:block lg:sticky lg:top-24 h-full']]">
       <Categories />
     </div>
 
@@ -11,10 +11,10 @@
     <MainPostsList v-if="allLoaded" />
     <!--End Post Section-->
     <!--Popular-->
-    <Popular />
+    <!-- <Popular /> -->
     <!--End popular-->
     <!-- NavBar bottom for mobile -->
-    <div class="lg:hidden lg:left-60 absolute w-full bottom-0 h-14 bg-gray-100 bg-opacity-95 dark:bg-gray-900 flex justify-between">
+    <!-- <div class="lg:hidden lg:left-60 absolute w-full bottom-0 h-14 bg-gray-100 bg-opacity-95 dark:bg-gray-900 flex justify-between">
       <div @click="showMobileCategoriesClick()" class="w-full flex justify-center items-center cursor-pointer">
         <div class="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 mr-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -42,7 +42,7 @@
           <p class="hidden sm:block">Popularne</p>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>

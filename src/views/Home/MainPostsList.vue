@@ -2,7 +2,7 @@
   <div class="max-w-xl ml-4 mr-4 flex-shrink flex-grow" style="height: max-content">
     <div class="m-auto w-full flex flex-col items-center">
       <div class="dropdown w-52 mb-2">
-        <div @click="toggleSort" tabindex="0" class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-1.5 border rounded-md dark:border-gray-800 cursor-pointer lg:hover:bg-gray-100 dark:lg:hover:bg-gray-800 transition text-sm bg-gray-200 dark:bg-gray-800 bg-opacity-20 dark:bg-opacity-40" onclick="this.parentElement.classList.toggle('dropdown-open');document.activeElement.blur()">
+        <div @click="toggleSort" tabindex="0" class="flex w-52 h-9 items-center m-auto justify-between pl-4 pr-4 mb-1.5 border rounded-md dark:border-gray-800 cursor-pointer lg:hover:bg-gray-50 dark:lg:hover:bg-gray-800 transition text-sm bg-white dark:bg-gray-800 dark:bg-opacity-40" onclick="this.parentElement.classList.toggle('dropdown-open');document.activeElement.blur()">
           <p v-if="sort == 'latest'">Najnowsze</p>
           <p v-else-if="sort == 'best'">Najlepsze</p>
           <p v-else-if="sort == 'popular'">Najpopularniejsze</p>

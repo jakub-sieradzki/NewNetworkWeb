@@ -1,6 +1,6 @@
 <template>
   <EditProfile v-if="editProfileMode" />
-  <div class="flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
+  <div class="md:pt-16 flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="md:border dark:border-gray-700 md:shadow-lg md:overflow-hidden h-full md:my-10 md:mx-5 lg:mx-20 xl:mx-30 3xl:mx-40 flex flex-col md:dark:bg-gray-900 md:rounded-lg md:flex-row gap-0">
       <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-3/12 md:border-r dark:border-gray-700">
         <img ref="profileBackgroundImg" :src="profileBackground" class="h-40 w-full object-cover shadow-md" alt="ProfileBackground" />
