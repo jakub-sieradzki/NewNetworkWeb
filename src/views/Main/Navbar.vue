@@ -31,7 +31,7 @@
               </svg>
               <p class="hidden sm:block">Zdjęcia</p>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 stroke-current w-4 h-4 transition duration-300" :class="{ 'rotate-180' : showMenu == 'postTypes'}" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 stroke-current w-4 h-4 transition duration-300" :class="{ 'rotate-180': showMenu == 'postTypes' }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <polyline points="6 9 12 15 18 9" />
             </svg>
@@ -53,12 +53,15 @@
       </div>
       <div class="w-3/12 flex items-center justify-end gap-3">
         <div class="flex h-full">
-          <div @click="changeShowMenu('notifications')" class="flex items-center my-2 p-2 px-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
-              <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
-            </svg>
+          <div class="indicator">
+            <div :class="{ 'indicator-item badge w-3 h-3 p-0 mt-3 mr-1 bg-red-600 border-red-600': unreadNotificationsList.length > 0 }"></div>
+            <div @click="changeShowMenu('notifications')" class="flex items-center my-2 p-2 px-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+                <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+              </svg>
+            </div>
           </div>
         </div>
         <div class="flex h-full flex-shrink-0">
@@ -72,7 +75,7 @@
     <div class="flex mx-2 md:mx-5">
       <div class="flex w-full flex-shrink-0">
         <div v-if="showMenu == 'postTypes'" class="navbarDropdownStyle flex-shrink-0 !w-44 h-fit mt-1.5 p-2 flex flex-col gap-1">
-          <div class="dropdownItemStyle flex items-center gap-2.5 !text-sm">
+          <div @click="navTo('all')" class="dropdownItemStyle flex items-center gap-2.5 !text-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <polyline points="5 12 3 12 12 3 21 12 19 12" />
@@ -81,7 +84,7 @@
             </svg>
             <p>Główna</p>
           </div>
-          <div class="dropdownItemStyle flex items-center gap-2.5 !text-sm">
+          <div @click="navTo('text')" class="dropdownItemStyle flex items-center gap-2.5 !text-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -89,7 +92,7 @@
             </svg>
             <p>Tekst</p>
           </div>
-          <div class="dropdownItemStyle flex items-center gap-2.5 !text-sm">
+          <div @click="navTo('images')" class="dropdownItemStyle flex items-center gap-2.5 !text-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <line x1="15" y1="8" x2="15.01" y2="8" />
@@ -122,7 +125,7 @@
                 </svg>
                 <p>Ustawienia</p>
               </div>
-              <div class="dropdownItemStyle flex gap-2 h-10 items-center">
+              <div @click="logout" class="dropdownItemStyle flex gap-2 h-10 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
@@ -194,6 +197,9 @@ export default {
     },
     pushToProfile(username) {
       this.$router.push("/user/" + username + "/posts");
+    },
+    navTo(value) {
+      this.$router.push("/home/" + value);
     },
   },
   async mounted() {
