@@ -164,7 +164,9 @@ async function searchUsername(s) {
   const q = query(collection(getFirestore(), "users"), where("username", ">=", s), where("username", "<=", s + "\uf8ff"));
   await getDocs(q).then((docs) => {
     docs.forEach((doc) => {
-      queryArray.push(doc.data());
+      let user = doc.data();
+      user.id = doc.id;
+      queryArray.push(user);
     });
   });
   return queryArray;

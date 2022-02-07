@@ -11,6 +11,7 @@ import ProfileFriends from "../views/Profile/Friends.vue";
 import ProfileGallery from "../views/Profile/Gallery.vue";
 import ProfileInfo from "../views/Profile/Info.vue";
 import ProfilePosts from "../views/Profile/Posts.vue";
+import Search from "../views/Home/Search.vue";
 import store from "../store";
 
 const routes = [
@@ -30,6 +31,15 @@ const routes = [
         components: {
           mainContent: Hashtags,
         },
+      },
+      {
+        path: "search",
+        components: {
+          mainContent: Search,
+        },
+        meta: {
+          KeepAlive: true 
+        }
       },
       {
         path: "user/:username",

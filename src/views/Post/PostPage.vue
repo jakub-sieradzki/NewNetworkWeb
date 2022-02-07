@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex items-start justify-center pt-5 pb-14 px-2 xl:pr-48 overflow-y-auto custom-scrollbar" v-if="post.length != 0">
+  <div class="h-full w-full flex items-start justify-center pb-14 px-2 overflow-y-auto pt-24" v-if="post.length != 0">
     <Post :postData="post" />
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full items-center overflow-y-auto gap-5">
+  <div class="flex flex-col w-full items-center overflow-y-auto gap-5 pt-24">
       <p class="text-4xl p-5">{{ "#" + hashtag }}</p>
       <PostsList :postsData="postsData"/>
   </div>

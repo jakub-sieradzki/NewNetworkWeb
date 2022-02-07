@@ -50,8 +50,6 @@ export default {
     },
   },
   mounted() {
-    this.$refs.commentSpan.focus();
-
     // if (this.commentId != null) {
     //   this.$refs.commentSpan.innerHTML = "@" + this.usernameToRespond + "&nbsp;";
     // }

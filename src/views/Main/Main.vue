@@ -4,11 +4,15 @@
     <Navbar />
     <div class="absolute p-0 h-screen w-screen top-0">
       <div class="justify-center w-screen h-screen overflow-y-scroll flex overflow-x-hidden">
-        <router-view name="mainContent"></router-view>
+        <router-view name="mainContent" v-slot="{ Component }">
+          <keep-alive include="Search">
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
       </div>
     </div>
     <!-- Navbar for Mobile -->
-    <div class="lg:hidden fixed bottom-0 px-2 w-full">
+    <div class="lg:hidden fixed bottom-0 px-2 md:px-5 w-full">
       <div v-if="showCategories" class="flex w-full justify-center">
         <div class="flex w-full md:w-96 justify-center mb-3 dark:bg-gray-800/40 bg-white/80 border dark:border-none backdrop-blur dark:backdrop-blur-xl rounded-2xl p-7">
           <div class="w-72">
@@ -73,7 +77,7 @@ export default {
     },
     toggleShowCategories() {
       this.showCategories = !this.showCategories;
-    }
+    },
   },
 };
 </script>
