@@ -11,7 +11,7 @@
       </div>
       <div class="flex justify-between items-center mt-4 flex-wrap gap-2">
         <div class="flex gap-1 flex-wrap">
-          <div class="dropdown">
+          <div v-if="!fromPage" class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
               <p>Moja tablica</p>
             </div>
@@ -22,7 +22,7 @@
               <p class="text-sm p-2 lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 transition rounded-md mt-1 cursor-pointer">Grupa1</p>
             </div>
           </div>
-          <div class="dropdown">
+          <div v-if="!fromPage" class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
               <p v-if="postVisibility == 'public'">Publiczne</p>
               <p v-else-if="postVisibility == 'friends'">Znajomi</p>
@@ -37,7 +37,7 @@
               <p>Kategorie</p>
             </div>
             <div tabindex="0" @click.stop="" class="h-64 w-64 overflow-y-scroll dropdown-content mt-2 p-2 bg-gray-100 dark:bg-gray-800 dark:border-gray-600 border rounded-md shadow-xl">
-              <CategoriesList @selected="emittedCategories" :categories="this.categories" :allSelected="false" />
+              <CategoriesList @selected="emittedCategories" :allSelected="false" />
             </div>
           </div>
         </div>
@@ -129,11 +129,11 @@ import { mapState } from "vuex";
 import { getAuth } from "firebase/auth";
 import CategoriesList from "../Categories/CategoriesList.vue";
 import categories from "../../data/categories";
-import { sendPost } from "../../database/setData";
+import { sendPagePost, sendPost } from "../../database/setData";
 import { uploadPostImages } from "@/firebase-storage/modifyFiles";
 
 export default {
-  props: ["shareId", "shareUid", "shareUsername", "shareContent"],
+  props: ["shareId", "shareUid", "shareUsername", "shareContent", "fromPage"],
   components: {
     CategoriesList,
   },
@@ -144,6 +144,7 @@ export default {
       },
       imagesURLs: [],
       share: false,
+      pagePost: false,
       categories: {},
       selectedCategories: [],
       postType: "txt",
@@ -160,6 +161,10 @@ export default {
 
     if (this.shareId) {
       this.share = true;
+    }
+
+    if (this.pageId) {
+      this.pagePost = true;
     }
   },
   methods: {
@@ -211,31 +216,55 @@ export default {
         let blob = await fetch(this.imagesURLs[i]).then((r) => r.blob());
         let fileType = blob.type.slice(blob.type.indexOf("/") + 1);
         let storageFileName = fileName + "." + fileType;
-        
+
         blobs.push(blob);
         storageFilesNames.push(storageFileName);
       }
 
-      await uploadPostImages(getAuth().currentUser.uid, storageFilesNames, blobs);
+      let send;
 
-      let sId = "";
-      if (this.shareId) {
-        sId = this.shareId;
+      if (!this.fromPage) {
+        await uploadPostImages(getAuth().currentUser.uid, storageFilesNames, blobs);
+
+        let sId = "";
+        if (this.shareId) {
+          sId = this.shareId;
+        }
+
+        send = await sendPost({
+          uid: this.uid,
+          username: this.username,
+          name: this.name,
+          surname: this.surname,
+          content: this.postContent.content,
+          files: storageFilesNames,
+          shareId: sId,
+          categories: this.selectedCategories,
+          type: this.postType,
+          hashtags: hashtagsArray,
+          visibility: this.postVisibility,
+        });
+      } else {
+        await uploadPostImages(this.fromPage.pid, storageFilesNames, blobs);
+
+        let sId = "";
+        if (this.shareId) {
+          sId = this.shareId;
+        }
+
+        send = await sendPagePost(this.fromPage.pid, {
+          pid: this.fromPage.pid,
+          pagename: this.fromPage.pagename,
+          name: this.fromPage.name,
+          content: this.postContent.content,
+          files: storageFilesNames,
+          shareId: sId,
+          categories: this.selectedCategories,
+          type: this.postType,
+          hashtags: hashtagsArray,
+          visibility: this.postVisibility,
+        });
       }
-
-      const send = await sendPost({
-        uid: this.uid,
-        username: this.username,
-        name: this.name,
-        surname: this.surname,
-        content: this.postContent.content,
-        files: storageFilesNames,
-        shareId: sId,
-        categories: this.selectedCategories,
-        type: this.postType,
-        hashtags: hashtagsArray,
-        visibility: this.postVisibility,
-      });
 
       if (send) {
         alert("Wysłano post");

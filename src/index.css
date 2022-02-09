@@ -143,3 +143,35 @@
 .searchPlaceholder {
   @apply flex flex-col w-full h-full gap-3 items-center justify-center text-gray-400 font-semibold text-center
 }
+
+.createEditWindowBackgroundStyle {
+  @apply fixed top-0 h-screen w-screen md:bg-gray-200/60 dark:md:bg-gray-800/80 md:backdrop-blur-sm z-20
+}
+
+.createEditWindowHelperDivStyle {
+  @apply flex flex-col justify-center w-full h-full md:absolute md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:py-16 md:px-12
+}
+
+.createEditWindowMainDivStyle {
+  @apply flex flex-col flex-grow-0 h-full md:h-auto bg-gray-50 dark:bg-gray-900 md:shadow-2xl md:rounded-xl px-6 py-5
+}
+
+.helpTextCreatePage {
+  @apply ml-1 dark:text-gray-400 text-gray-500 text-xs
+}
+
+.profileMainStyle {
+  @apply md:border dark:border-gray-700 md:shadow-lg md:overflow-hidden h-full md:my-10 md:mx-5 lg:mx-20 3xl:mx-40 flex flex-col md:dark:bg-gray-900 md:rounded-lg md:flex-row gap-0
+}
+
+.profileInfoDivStyle {
+  @apply md:dark:bg-gray-800/40 md:bg-gray-50 md:w-3/12 md:border-r dark:border-gray-700
+}
+
+.profileContentDivStyle {
+  @apply flex items-center justify-center md:w-9/12 py-3 px-3
+}
+
+.profileTabsContentStyle {
+  @apply flex flex-col max-w-4xl w-full h-full dark:bg-gray-900 bg-gray-50/50 overflow-hidden rounded-lg border dark:border-gray-800
+}

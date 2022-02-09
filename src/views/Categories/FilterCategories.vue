@@ -9,7 +9,7 @@
     </div>
     <div v-if="showCategories" class="flex flex-col flex-shrink-0">
       <div class="overflow-y-scroll custom-scrollbar scrollbar-none max-h-80 md:max-h-96">
-        <CategoriesList :categories="this.categories" :allSelected="true" @selected="loadSelectedCategories" />
+        <CategoriesList :allSelected="true" @selected="loadSelectedCategories" />
       </div>
       <div @click="applyCategories()" class="flex items-center justify-center gap-1 h-14 text-white cursor-pointer bg-slate-700 dark:bg-slate-800 dark:lg:hover:bg-slate-700 transition lg:hover:bg-slate-900 mt-1">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -22,7 +22,6 @@
   </div>
 </template>
 <script>
-import categories from "../../data/categories";
 import { mapMutations } from "vuex";
 import CategoriesList from "./CategoriesList.vue";
 export default {
@@ -55,7 +54,6 @@ export default {
     },
   },
   mounted() {
-    this.categories = categories;
   },
 };
 </script>

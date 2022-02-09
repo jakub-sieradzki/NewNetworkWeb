@@ -5,12 +5,12 @@
 </template>
 <script>
 import PostsList from "../Post/PostsList.vue";
-import { getAllPostsByUids, getPublicPostsByUids } from "../../database/getData";
+import { getAllPostsByUids, getPagePosts, getPublicPostsByUids } from "../../database/getData";
 import { mapState } from "vuex";
 
 export default {
   components: { PostsList },
-  props: ["uid"],
+  props: ["pid"],
   data() {
     return {
       postsLoaded: false,
@@ -18,34 +18,28 @@ export default {
       lastUid: "",
     };
   },
-  computed: {
-    ...mapState("userPeopleInfo", ["friends"]),
-  },
+  computed: {},
   methods: {
     async getPosts() {
       let docsPosts;
-      if (this.friends.includes(this.uid)) {
-        docsPosts = await getAllPostsByUids([this.uid]);
-      } else {
-        docsPosts = await getPublicPostsByUids([this.uid]);
-      }
-
+      docsPosts = await getPagePosts(this.pid);
+      console.log("docsPosts: ", docsPosts);
       docsPosts.sort((a, b) => b.createdTimestamp.toDate().getTime() - a.createdTimestamp.toDate().getTime());
-      this.lastUid = this.uid;
+      // this.lastUid = this.uid;
       this.posts = docsPosts;
       this.postsLoaded = true;
     },
   },
   async mounted() {
-    console.log("post uid: ", this.uid);
-    console.log("mounted");
     this.getPosts();
+    console.log("pid: ", this.pid);
+    console.log("mounted");
   },
   async updated() {
     console.log("updated");
-    if (this.lastUid != this.uid) {
-      this.getPosts();
-    }
+    // if (this.lastUid != this.uid) {
+    //   this.getPosts();
+    // }
   },
 };
 </script>

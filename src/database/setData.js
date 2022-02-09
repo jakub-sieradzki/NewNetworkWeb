@@ -337,4 +337,34 @@ async function deleteComment(postId, commentId, subcommentId) {
   return deleted;
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment };
+async function sendPagePost(pid, data) {
+  let sent = false;
+  await addDoc(collection(getFirestore(), "pages", pid, "posts"), {
+    pid: data.pid,
+    username: data.pagename,
+    name: data.name,
+    content: data.content,
+    createdTimestamp: serverTimestamp(),
+    files: data.files,
+    shareId: data.shareId,
+    categories: data.categories,
+    ratings: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      count: 0,
+    },
+    type: data.type,
+    hashtags: data.hashtags,
+    visibility: data.visibility,
+  }).then(() => {
+    sent = true;
+    console.log("success");
+  });
+
+  return sent;
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost };

@@ -1,8 +1,8 @@
 <template>
   <EditProfile v-if="editProfileMode" />
   <div class="md:pt-16 flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
-    <div class="md:border dark:border-gray-700 md:shadow-lg md:overflow-hidden h-full md:my-10 md:mx-5 lg:mx-20 xl:mx-30 3xl:mx-40 flex flex-col md:dark:bg-gray-900 md:rounded-lg md:flex-row gap-0">
-      <div class="md:dark:bg-gray-800/40 md:bg-gray-50 md:w-3/12 md:border-r dark:border-gray-700">
+    <div class="profileMainStyle">
+      <div class="profileInfoDivStyle">
         <img ref="profileBackgroundImg" :src="profileBackground" class="h-40 w-full object-cover shadow-md" alt="ProfileBackground" />
         <img ref="profileImg" class="m-auto -mt-20 h-40 w-40 rounded-full shadow-xl" src="images/profile.png" alt="ProfilePhoto" />
         <div class="flex flex-col px-3 break-words">
@@ -22,8 +22,8 @@
           </div>
         </div>
       </div>
-      <div class="flex items-center justify-center md:w-9/12 py-3 px-3">
-        <div class="flex flex-col max-w-4xl w-full h-full dark:bg-gray-900 bg-gray-50/50 overflow-hidden rounded-lg border dark:border-gray-800">
+      <div class="profileContentDivStyle">
+        <div class="profileTabsContentStyle">
           <div class="profileTabMenu">
             <router-link @click="changeViewMode('posts')" to="posts" class="profileTab" :class="{ profileTabActive: viewMode == 'posts' }">Posty</router-link>
             <router-link @click="changeViewMode('gallery')" to="gallery" class="profileTab" :class="{ profileTabActive: viewMode == 'gallery' }">Galeria</router-link>
@@ -35,17 +35,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="overflow-y-hidden h-full md:w-9/12">
-        <div class="tabs flex-grow flex-nowrap w-full overflow-x-auto">
-          <router-link to="posts" class="tab tab-lifted tab-active dark:!bg-gray-900 dark:!border-gray-700">Posty</router-link>
-          <router-link to="gallery" class="tab tab-lifted">Galeria</router-link>
-          <router-link to="friends" class="tab tab-lifted">Znajomi</router-link>
-          <router-link to="info" class="tab tab-lifted">Informacje</router-link>
-        </div>
-        <div v-if="!ifBlockedByUser && !ifBlockedBySelf" class="overflow-y-scroll w-full h-5/6">
-          <router-view :uid="this.uid" name="profileContent" class="h-full w-full"></router-view>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -127,6 +116,7 @@ export default {
     },
     async getUserInfo() {
       const userData = await getUserDataOnUsername(this.$route.params.username);
+      console.log("userData.id: ", userData.id);
       this.uid = userData.id;
       this.name = userData.name;
       this.surname = userData.surname;

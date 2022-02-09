@@ -79,4 +79,48 @@ async function getProfileBackgroundsList(uid) {
   return filesFullPath;
 }
 
-export { getProfileImageUrl, getPostImagesUrls, getProfileImagesList, getProfileBackgroundUrl, getProfileBackgroundsList };
+async function getPageProfileImageUrl(pid) {
+  let pageProfileImageFullPath = null;
+  const pageProfileImageDirectoryRef = ref(getStorage(), "/pages/" + pid + "/profileImage");
+  await listAll(pageProfileImageDirectoryRef).then((res) => {
+    for (let item of res.items) {
+      pageProfileImageFullPath = item.fullPath;
+      break;
+    }
+  });
+  let imageUrl = null;
+  if (pageProfileImageFullPath != null) {
+    await getDownloadURL(ref(getStorage(), pageProfileImageFullPath))
+      .then((url) => {
+        imageUrl = url;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return imageUrl;
+}
+
+async function getPageProfileBackgroundUrl(pid) {
+  let pageProfileBackgroundFullPath = null;
+  const pageProfileBackgroundDirectoryRef = ref(getStorage(), "pages/" + pid + "/profileBackground");
+  await listAll(pageProfileBackgroundDirectoryRef).then((res) => {
+    for (let item of res.items) {
+      pageProfileBackgroundFullPath = item.fullPath;
+      break;
+    }
+  });
+  let imageUrl = null;
+  if (pageProfileBackgroundFullPath != null) {
+    await getDownloadURL(ref(getStorage(), pageProfileBackgroundFullPath))
+      .then((url) => {
+        imageUrl = url;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return imageUrl;
+}
+
+export { getProfileImageUrl, getPostImagesUrls, getProfileImagesList, getProfileBackgroundUrl, getProfileBackgroundsList, getPageProfileImageUrl, getPageProfileBackgroundUrl };

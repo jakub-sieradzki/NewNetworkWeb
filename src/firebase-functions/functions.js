@@ -97,4 +97,21 @@ async function updateNameAndSurname(newName, newSurname) {
   });
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname };
+async function createPage(data) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const updateNameAndSurname = httpsCallable(functions, "createPage");
+  await updateNameAndSurname({
+    name: data.name,
+    pagename: data.pagename,
+    description: data.description,
+    categories: data.categories,
+  }).then((r) => {
+    console.log("created page successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage };

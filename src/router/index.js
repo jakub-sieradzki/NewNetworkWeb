@@ -12,6 +12,11 @@ import ProfileGallery from "../views/Profile/Gallery.vue";
 import ProfileInfo from "../views/Profile/Info.vue";
 import ProfilePosts from "../views/Profile/Posts.vue";
 import Search from "../views/Home/Search.vue";
+import Pages from "../views/Home/Pages.vue";
+import Page from "@/views/Page/Page.vue";
+import PagePosts from "@/views/Page/Posts.vue";
+import PageGallery from "@/views/Page/Gallery.vue";
+import PageInfo from "@/views/Page/Info.vue";
 import store from "../store";
 
 const routes = [
@@ -40,6 +45,12 @@ const routes = [
         meta: {
           KeepAlive: true 
         }
+      },
+      {
+        path: "pages",
+        components: {
+          mainContent: Pages,
+        },
       },
       {
         path: "user/:username",
@@ -72,6 +83,32 @@ const routes = [
             },
           },
         ],
+      },
+      {
+        path: "page/:pagename",
+        components: {
+          mainContent: Page,
+        },
+        children: [
+          {
+            path: "posts",
+            components: {
+              pageContent: PagePosts
+            },
+          },
+          {
+            path: "gallery",
+            components: {
+              pageContent: PageGallery
+            },
+          },
+          {
+            path: "info",
+            components: {
+              pageContent: PageInfo,
+            }
+          },
+        ]
       },
       {
         path: "/post/:postId",

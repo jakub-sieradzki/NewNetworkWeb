@@ -172,4 +172,31 @@ async function searchUsername(s) {
   return queryArray;
 }
 
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername };
+async function getPageDataOnPagename(pagename) {
+  let pageData = null;
+  const q = query(collection(getFirestore(), "pages"), where("pagename", "==", pagename));
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      pageData = doc.data();
+      pageData.id = doc.id;
+    });
+  });
+  return pageData;
+}
+
+async function getPagePosts(pid) {
+  let pagePosts = [];
+  const pagePostsRef = collection(getFirestore(), "pages", pid, "posts");
+
+  await getDocs(pagePostsRef).then((docs) => {
+    docs.forEach((doc) => {
+      let post = doc.data();
+      post.id = doc.id;
+      pagePosts.push(post);
+    });
+  });
+
+  return pagePosts;
+}
+
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts };

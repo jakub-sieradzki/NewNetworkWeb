@@ -59,4 +59,31 @@ async function uploadProfileBackground(uid, blob, fileName) {
   return snap;
 }
 
-export { uploadPostImages, removePostImages, removeAllProfileImages, uploadProfileImage, removeAllProfileBackgrounds, uploadProfileBackground };
+async function uploadPageProfileImage(pid, blob, fileName) {
+  let snap = null;
+  await uploadBytes(ref(getStorage(), "pages/" + pid + "/profileImage/" + fileName), blob).then((snapshot) => {
+    console.log("Uploaded page profile image");
+    snap = snapshot;
+  });
+
+  return snap;
+}
+async function uploadPageBackground(pid, blob, fileName) {
+  let snap = null;
+  await uploadBytes(ref(getStorage(), "pages/" + pid + "/profileBackground/" + fileName), blob).then((snapshot) => {
+    console.log("Uploaded profile background");
+    snap = snapshot;
+  });
+
+  return snap;
+}
+
+async function uploadPagePostImages(pid, storageFilesNames, blobs) {
+  for (let i = 0; i < blobs.length; i++) {
+    await uploadBytes(ref(getStorage(), "pages/" + pid + "/" + storageFilesNames[i]), blobs[i]).then((snapshot) => {
+      console.log(i, ": ", snapshot);
+    });
+  }
+}
+
+export { uploadPostImages, removePostImages, removeAllProfileImages, uploadProfileImage, removeAllProfileBackgrounds, uploadProfileBackground, uploadPageProfileImage, uploadPageBackground, uploadPagePostImages };

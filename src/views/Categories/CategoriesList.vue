@@ -14,7 +14,7 @@
   </div>
   <div class="relative h-full">
     <div class="mx-4">
-      <Category v-for="(value, key) in categories" :key="key" :value="value" />
+      <Category v-for="(value, key) in categoriesList" :key="key" :value="value" />
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ import { mapState } from 'vuex';
 import categories from "../../data/categories";
 import Category from "../Categories/Category.vue";
 export default {
-  props: ["categories", "allSelected"],
+  props: ["allSelected"],
   components: {
     Category,
   },
@@ -31,6 +31,7 @@ export default {
     return {
       selectedCategories: [],
       selectAllCategories: false,
+      categoriesList: {},
     };
   },
   computed: {
@@ -83,6 +84,7 @@ export default {
     },
   },
   mounted() {
+    this.categoriesList = categories;
     if (this.allSelected) {
       this.loadAllCategories();
     } else {
