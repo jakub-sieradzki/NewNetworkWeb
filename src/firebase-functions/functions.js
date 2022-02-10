@@ -91,7 +91,7 @@ async function updateNameAndSurname(newName, newSurname) {
   const updateNameAndSurname = httpsCallable(functions, "updateNameAndSurname");
   await updateNameAndSurname({
     name: newName,
-    surname: newSurname
+    surname: newSurname,
   }).then(() => {
     console.log("updated user successfully");
   });
@@ -100,8 +100,8 @@ async function updateNameAndSurname(newName, newSurname) {
 async function createPage(data) {
   let result = false;
   const functions = getFunctions(getApp(), "europe-west1");
-  const updateNameAndSurname = httpsCallable(functions, "createPage");
-  await updateNameAndSurname({
+  const createPage = httpsCallable(functions, "createPage");
+  await createPage({
     name: data.name,
     pagename: data.pagename,
     description: data.description,
@@ -114,4 +114,31 @@ async function createPage(data) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage };
+async function observePage(pid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const observePage = httpsCallable(functions, "observePage");
+  await observePage({
+    pid: pid,
+  }).then((r) => {
+    console.log("added page to observed successfully");
+    result = r;
+  });
+
+  return result;
+}
+async function removeObservedPage(pid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const removeObservedPage = httpsCallable(functions, "removeObservedPage");
+  await removeObservedPage({
+    pid: pid,
+  }).then((r) => {
+    console.log("removed page from observed successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage };

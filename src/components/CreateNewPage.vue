@@ -172,6 +172,7 @@ export default {
 
       alert("Pomyślnie utworzono stronę");
       this.$parent.toggleShowCreateNewPage();
+      this.$router.push("/page/" + this.pUniqueName + "/posts");
     },
   },
 };

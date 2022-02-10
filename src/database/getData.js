@@ -1,4 +1,5 @@
-import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
+import { splitArray } from "@/helpers/arrayHelpers";
+import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, FieldPath } from "firebase/firestore";
 
 async function getAllPostsByUids(uids) {
   let postsData = [];
@@ -199,4 +200,29 @@ async function getPagePosts(pid) {
   return pagePosts;
 }
 
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts };
+async function getPagesInfo(pagesList) {
+  let list = [];
+  for (let i = 0; i < pagesList.length; i++) {
+    let d = await getDoc(doc(getFirestore(), "pages", pagesList[i]));
+    let data = d.data();
+    data.id = d.id;
+    list.push(data);
+  }
+
+  return list;
+}
+
+async function searchPagename(s) {
+  let queryArray = [];
+  const q = query(collection(getFirestore(), "pages"), where("pagename", ">=", s), where("pagename", "<=", s + "\uf8ff"));
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      let page = doc.data();
+      page.id = doc.id;
+      queryArray.push(page);
+    });
+  });
+  return queryArray;
+}
+
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename };

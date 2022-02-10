@@ -190,7 +190,7 @@ import { mapState } from "vuex";
 
 import { getPostFullCategoriesList } from "@/helpers/categories";
 import { getPostAverageRating } from "@/helpers/postRating";
-import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { getPageProfileImageUrl, getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
 import { removePostImages } from "@/firebase-storage/modifyFiles";
 import { getLinkifyText } from "@/helpers/textHelpers";
 
@@ -345,7 +345,12 @@ export default {
     if (this.postData.uid == getAuth().currentUser.uid) {
       img.setAttribute("src", this.currentUserProfileImage);
     } else {
-      let url = await getProfileImageUrl(this.postData.uid);
+      let url = null;
+      if (this.postData.pid) {
+        url = await getPageProfileImageUrl(this.postData.pid);
+      } else {
+        url = await getProfileImageUrl(this.postData.uid);
+      }
       if (url != null) {
         img.setAttribute("src", url);
       } else {
