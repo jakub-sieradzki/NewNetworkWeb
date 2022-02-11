@@ -1,8 +1,9 @@
 <template>
   <CreatePost v-if="createPost" :fromPage="{ pid: pid, pagename: pagename, name: name }" />
+  <edit-page v-if="editPage" :pageData="{ pid: pid, name: name, description: description, categories: categories, profileImage: pageProfileImage, profileBackground: pageProfileBackground }" />
   <div class="md:pt-16 flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="profileMainStyle md:!flex-row-reverse">
-      <div class="profileInfoDivStyle">
+      <div class="profileInfoDivStyle md:overflow-y-auto">
         <img ref="profileBackgroundImg" :src="pageProfileBackground" class="h-40 w-full object-cover shadow-md" alt="ProfileBackground" />
         <img ref="profileImg" class="m-auto -mt-20 h-40 w-40 rounded-full shadow-xl" :src="pageProfileImage" alt="ProfilePhoto" />
         <div class="flex flex-col px-3 break-words">
@@ -47,7 +48,24 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col justify-center my-6">
+          <div class="flex flex-col justify-center items-center my-6 gap-3">
+            <div v-if="adminMode" @click="toggleEditPage" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+                <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+              </svg>
+              <p class="text-sm">Edytuj stronę</p>
+            </div>
+            <div v-if="adminMode" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
+                <circle cx="12" cy="11" r="1" />
+                <line x1="12" y1="12" x2="12" y2="14.5" />
+              </svg>
+              <p class="text-sm">Zarządzaj uprawnieniami</p>
+            </div>
             <div class="w-full px-10">
               <div @click="showCreatePost" class="w-full flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-lg transition duration-500 cursor-pointer transform lg:hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                 <img src="/img/add.svg" alt="add" class="w-8 h-8 mr-1" />
@@ -78,10 +96,12 @@ import { getPageProfileBackgroundUrl, getPageProfileImageUrl } from "@/firebase-
 import { getBlobFromURL } from "@/helpers/blobFunctions";
 import CreatePost from "@/views/Post/CreatePost.vue";
 import { mapState } from "vuex";
-import { observePage, removeObservedPage } from '@/firebase-functions/functions';
+import { observePage, removeObservedPage } from "@/firebase-functions/functions";
+import EditPage from "@/views/Page/EditPage.vue";
 export default {
   components: {
     CreatePost,
+    EditPage,
   },
   data() {
     return {
@@ -95,12 +115,18 @@ export default {
       createPost: false,
       viewMode: "posts",
       showMoreOptions: false,
+      adminMode: false,
+      modMode: false,
+      editPage: false,
     };
   },
   computed: {
-    ...mapState("userPagesInfo", ["observed", "blocked"]),
+    ...mapState("userPagesInfo", ["observed", "blocked", "administered", "moderated"]),
   },
   methods: {
+    toggleEditPage() {
+      this.editPage = !this.editPage;
+    },
     toggleShowMoreOptions() {
       this.showMoreOptions = !this.showMoreOptions;
     },
@@ -142,7 +168,7 @@ export default {
     },
     async removePageObservedClick() {
       await removeObservedPage(this.pid);
-    }
+    },
   },
 
   async mounted() {
@@ -150,6 +176,15 @@ export default {
     this.changeViewMode(module);
 
     await this.getPageInfo();
+
+    if (this.administered.includes(this.pid)) {
+      this.adminMode = true;
+    }
+
+    if (this.moderated.includes(this.pid)) {
+      this.modMode = true;
+    }
+
     await this.getPageImages();
   },
 };

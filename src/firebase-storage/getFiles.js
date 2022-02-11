@@ -123,4 +123,28 @@ async function getPageProfileBackgroundUrl(pid) {
   return imageUrl;
 }
 
-export { getProfileImageUrl, getPostImagesUrls, getProfileImagesList, getProfileBackgroundUrl, getProfileBackgroundsList, getPageProfileImageUrl, getPageProfileBackgroundUrl };
+async function getPageProfileImagesList(pid) {
+  let filesFullPath = [];
+  const listRef = ref(getStorage(), "pages/" + pid + "/profileImage");
+  await listAll(listRef).then((res) => {
+    res.items.forEach((item) => {
+      filesFullPath.push(item.fullPath);
+    });
+  });
+
+  return filesFullPath;
+}
+
+async function getPageBackgroundsList(pid) {
+  let filesFullPath = [];
+  const listRef = ref(getStorage(), "pages/" + pid + "/profileBackground");
+  await listAll(listRef).then((res) => {
+    res.items.forEach((item) => {
+      filesFullPath.push(item.fullPath);
+    });
+  });
+
+  return filesFullPath;
+}
+
+export { getProfileImageUrl, getPostImagesUrls, getProfileImagesList, getProfileBackgroundUrl, getProfileBackgroundsList, getPageProfileImageUrl, getPageProfileBackgroundUrl, getPageProfileImagesList, getPageBackgroundsList };

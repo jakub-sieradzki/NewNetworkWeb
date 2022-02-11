@@ -23,7 +23,7 @@ import { mapState } from 'vuex';
 import categories from "../../data/categories";
 import Category from "../Categories/Category.vue";
 export default {
-  props: ["allSelected"],
+  props: ["allSelected", "toSelect"],
   components: {
     Category,
   },
@@ -90,6 +90,10 @@ export default {
     } else {
       this.selectAllCategories = true;
     }
+    if(this.toSelect) {
+      this.selectedCategories = this.toSelect;
+    }
+    
     this.$emit("selected", this.selectedCategories);
   },
 };

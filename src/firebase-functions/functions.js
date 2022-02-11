@@ -141,4 +141,19 @@ async function removeObservedPage(pid) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage };
+async function changePageName(pid, newName) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const changePageName = httpsCallable(functions, "changePageName");
+  await changePageName({
+    pid: pid,
+    name: newName
+  }).then((r) => {
+    console.log("changed page name successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName };

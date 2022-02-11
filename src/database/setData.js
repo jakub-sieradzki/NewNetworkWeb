@@ -367,4 +367,30 @@ async function sendPagePost(pid, data) {
   return sent;
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost };
+async function updatePageDescription(pid, newDescription) {
+  const pageRef = doc(getFirestore(), "pages", pid);
+  await updateDoc(pageRef, {
+    description: newDescription,
+  })
+    .then(() => {
+      console.log("Updated description successfully");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+async function updatePageCategories(pid, newCategories) {
+  const pageRef = doc(getFirestore(), "pages", pid);
+  await updateDoc(pageRef, {
+    categories: newCategories,
+  })
+    .then(() => {
+      console.log("Updated categories successfully");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories };

@@ -1,5 +1,5 @@
 import { getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
-import { getProfileImagesList, getProfileBackgroundsList } from "./getFiles";
+import { getProfileImagesList, getProfileBackgroundsList, getPageProfileImagesList, getPageBackgroundsList } from "./getFiles";
 
 async function uploadPostImages(uid, storageFilesNames, blobs) {
   for (let i = 0; i < blobs.length; i++) {
@@ -86,4 +86,22 @@ async function uploadPagePostImages(pid, storageFilesNames, blobs) {
   }
 }
 
-export { uploadPostImages, removePostImages, removeAllProfileImages, uploadProfileImage, removeAllProfileBackgrounds, uploadProfileBackground, uploadPageProfileImage, uploadPageBackground, uploadPagePostImages };
+async function removeAllPageProfileImages(pid) {
+  let filesFullPath = await getPageProfileImagesList(pid);
+  for (let i = 0; i < filesFullPath.length; i++) {
+    await deleteObject(ref(getStorage(), filesFullPath[i])).then(() => {
+      console.log("Deleted all old profile images successfully");
+    });
+  }
+}
+
+async function removeAllPageBackgrounds(pid) {
+  let filesFullPath = await getPageBackgroundsList(pid);
+  for (let i = 0; i < filesFullPath.length; i++) {
+    await deleteObject(ref(getStorage(), filesFullPath[i])).then(() => {
+      console.log("Deleted all old pages backgrounds successfully");
+    });
+  }
+}
+
+export { uploadPostImages, removePostImages, removeAllProfileImages, uploadProfileImage, removeAllProfileBackgrounds, uploadProfileBackground, uploadPageProfileImage, uploadPageBackground, uploadPagePostImages, removeAllPageProfileImages, removeAllPageBackgrounds };
