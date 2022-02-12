@@ -1,5 +1,6 @@
 <template>
   <CreatePost v-if="createPost" :fromPage="{ pid: pid, pagename: pagename, name: name }" />
+  <manage-permissions v-if="editPermissions" :pid="pid" :pName="name" :pagename="pagename" />
   <edit-page v-if="editPage" :pageData="{ pid: pid, name: name, description: description, categories: categories, profileImage: pageProfileImage, profileBackground: pageProfileBackground }" />
   <div class="md:pt-16 flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="profileMainStyle md:!flex-row-reverse">
@@ -57,20 +58,26 @@
               </svg>
               <p class="text-sm">Edytuj stronę</p>
             </div>
-            <div v-if="adminMode" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
+            <div v-if="adminMode" @click="toggleEditPermissions" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
                 <circle cx="12" cy="11" r="1" />
                 <line x1="12" y1="12" x2="12" y2="14.5" />
               </svg>
-              <p class="text-sm">Zarządzaj uprawnieniami</p>
+              <p class="text-sm">Uprawnienia</p>
             </div>
-            <div class="w-full px-10">
+            <div v-if="adminMode || modMode" class="w-full px-10">
               <div @click="showCreatePost" class="w-full flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-lg transition duration-500 cursor-pointer transform lg:hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                 <img src="/img/add.svg" alt="add" class="w-8 h-8 mr-1" />
                 <p class="text-xl text-white text-center">Nowy post</p>
               </div>
+            </div>
+            <div v-if="requestAdmin.includes(pid)" @click="acceptAdminClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
+              <p>Zostań administatorem strony</p>
+            </div>
+            <div v-if="requestMod.includes(pid)" @click="acceptModClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
+              <p>Zostań moderatorem strony</p>
             </div>
           </div>
         </div>
@@ -96,12 +103,14 @@ import { getPageProfileBackgroundUrl, getPageProfileImageUrl } from "@/firebase-
 import { getBlobFromURL } from "@/helpers/blobFunctions";
 import CreatePost from "@/views/Post/CreatePost.vue";
 import { mapState } from "vuex";
-import { observePage, removeObservedPage } from "@/firebase-functions/functions";
+import { acceptPageAdminInvitation, acceptPageModInvitation, observePage, removeObservedPage } from "@/firebase-functions/functions";
 import EditPage from "@/views/Page/EditPage.vue";
+import ManagePermissions from "@/components/ManagePermissions.vue";
 export default {
   components: {
     CreatePost,
     EditPage,
+    ManagePermissions,
   },
   data() {
     return {
@@ -118,12 +127,32 @@ export default {
       adminMode: false,
       modMode: false,
       editPage: false,
+      editPermissions: false,
     };
   },
   computed: {
-    ...mapState("userPagesInfo", ["observed", "blocked", "administered", "moderated"]),
+    ...mapState("userPagesInfo", ["observed", "blocked", "administered", "moderated", "requestAdmin", "requestMod"]),
+  },
+  watch: {
+    administered(newValue, oldValue) {
+      if (newValue.includes(this.pid)) {
+        this.adminMode = true;
+      } else {
+        this.adminMode = false;
+      }
+    },
+    moderated(newValue, oldValue) {
+      if (newValue.includes(this.pid)) {
+        this.modMode = true;
+      } else {
+        this.modMode = false;
+      }
+    },
   },
   methods: {
+    toggleEditPermissions() {
+      this.editPermissions = !this.editPermissions;
+    },
     toggleEditPage() {
       this.editPage = !this.editPage;
     },
@@ -168,6 +197,12 @@ export default {
     },
     async removePageObservedClick() {
       await removeObservedPage(this.pid);
+    },
+    async acceptAdminClick() {
+      await acceptPageAdminInvitation(this.pid);
+    },
+    async acceptModClick() {
+      await acceptPageModInvitation(this.pid);
     },
   },
 

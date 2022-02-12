@@ -142,6 +142,7 @@ export default {
       const pagesDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "pages"), (doc) => {
         this.setPagesInfo(doc.data());
         console.log("done getting pages");
+        console.log("pages info: ", doc.data())
       });
     },
 

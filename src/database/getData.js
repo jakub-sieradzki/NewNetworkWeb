@@ -72,7 +72,7 @@ async function getUserDataOnUsername(username) {
   await getDocs(q).then((docs) => {
     docs.forEach((doc) => {
       userData = doc.data();
-      userData.id = doc.id;
+      userData.uid = doc.id;
     });
   });
   return userData;
@@ -225,4 +225,14 @@ async function searchPagename(s) {
   return queryArray;
 }
 
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename };
+async function getPagePermissions(pid) {
+  let permissions = false;
+  await getDoc(doc(getFirestore(), "pages", pid, "details", "permissions")).then((doc) => {
+    if (doc.exists()) {
+      permissions = doc.data();
+    }
+  });
+  return permissions;
+}
+
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions };

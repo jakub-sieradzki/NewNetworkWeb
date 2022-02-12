@@ -49,17 +49,17 @@
               <div class="flex flex-col gap-7 w-full">
                 <div class="flex flex-col w-full gap-2">
                   <p class="ml-1 text-sm dark:text-gray-200">Nazwa strony</p>
-                  <input v-model="pName" class="dark:bg-black/20 py-3 px-5 outline-none rounded-md text-sm border dark:border-gray-700" type="text" placeholder="Nazwa strony" />
+                  <input v-model="pName" class="inputStyle" type="text" placeholder="Nazwa strony" />
                   <p class="helpTextCreatePage">Podstawowa nazwa strony. Możesz ją zmieniać nie częściej niż co 90 dni</p>
                 </div>
                 <div class="flex flex-col w-full gap-2">
                   <p class="ml-1 text-sm dark:text-gray-200">Unikalna nazwa strony</p>
-                  <input v-model="pUniqueName" class="dark:bg-black/20 py-3 px-5 outline-none rounded-md text-sm border dark:border-gray-700" type="text" placeholder="Unikalna nazwa strony" />
+                  <input v-model="pUniqueName" class="inputStyle" type="text" placeholder="Unikalna nazwa strony" />
                   <p class="helpTextCreatePage">Unikalną nazwę strony można nadać tylko podczas tworzenia strony, później nie ma możliwości jej zmiany</p>
                 </div>
                 <div class="flex flex-col w-full gap-2">
                   <p class="ml-1 text-sm dark:text-gray-200">Opis</p>
-                  <input v-model="pDescription" class="dark:bg-black/20 py-3 px-5 outline-none rounded-md text-sm border dark:border-gray-700" type="text" placeholder="Opis" />
+                  <input v-model="pDescription" class="inputStyle" type="text" placeholder="Opis" />
                 </div>
                 <div class="flex flex-col w-full gap-2">
                   <div class="flex w-full gap-4 items-center">

@@ -117,7 +117,7 @@ export default {
     async getUserInfo() {
       const userData = await getUserDataOnUsername(this.$route.params.username);
       console.log("userData.id: ", userData.id);
-      this.uid = userData.id;
+      this.uid = userData.uid;
       this.name = userData.name;
       this.surname = userData.surname;
       this.username = userData.username;

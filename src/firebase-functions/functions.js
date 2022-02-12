@@ -156,4 +156,54 @@ async function changePageName(pid, newName) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName };
+async function updatePagePermissions(data) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const updatePagePermissions = httpsCallable(functions, "updatePagePermissions");
+  await updatePagePermissions({
+    pName: data.pName,
+    pid: data.pid,
+    pagename: data.pagename,
+    adminsToAdd: data.adminsToAdd,
+    modsToAdd: data.modsToAdd,
+    adminsToRemove: data.adminsToRemove,
+    modsToRemove: data.modsToRemove,
+    adminsInvitationsToRemove: data.adminsInvitationsToRemove,
+    modsInvitationsToRemove: data.modsInvitationsToRemove,
+  }).then((r) => {
+    console.log("updated page permissions successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function acceptPageAdminInvitation(pid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const acceptPageAdminInvitation = httpsCallable(functions, "acceptPageAdminInvitation");
+  await acceptPageAdminInvitation({
+    pid: pid
+  }).then((r) => {
+    console.log("accepted page admin successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function acceptPageModInvitation(pid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const acceptPageModInvitation = httpsCallable(functions, "acceptPageModInvitation");
+  await acceptPageModInvitation({
+    pid: pid
+  }).then((r) => {
+    console.log("accepted page moderator successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation };

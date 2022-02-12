@@ -4,6 +4,8 @@ const state = () => ({
     observed: [],
     administered: [],
     moderated: [],
+    requestAdmin: [],
+    requestMod: [],
 });
 
 const mutations = {
@@ -22,12 +24,20 @@ const mutations = {
     setModerated(state, value) {
         state.moderated = value
     },
+    setRequestAdmin(state, value) {
+        state.requestAdmin = value
+    },
+    setRequestMod(state, value) {
+        state.requestMod = value
+    },
     setPagesInfo(state, values) {
         state.blocked = values.blocked
         state.liked = values.liked
         state.observed = values.observed
         state.administered = values.administered
         state.moderated = values.moderated
+        state.requestAdmin = values.request_admin
+        state.requestMod = values.request_mod
     }
 }
 

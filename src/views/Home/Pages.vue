@@ -26,6 +26,9 @@
             <div v-for="page in administeredInfoList" :key="page.id">
               <single-page-list-item :page="page" />
             </div>
+            <div v-for="page in moderatedInfoList" :key="page.id">
+              <single-page-list-item :page="page" />
+            </div>
           </div>
         </div>
       </div>
@@ -48,11 +51,12 @@ export default {
     return {
       showCreateNewPage: false,
       administeredInfoList: [],
+      moderatedInfoList: [],
       observedInfoList: [],
     };
   },
   computed: {
-    ...mapState("userPagesInfo", ["observed", "administered"]),
+    ...mapState("userPagesInfo", ["observed", "administered", "moderated"]),
   },
   methods: {
     toggleShowCreateNewPage() {
@@ -60,8 +64,10 @@ export default {
     },
   },
   async mounted() {
+    console.log("administered pages: ", this.administered);
     this.observedInfoList = await getPagesInfo(this.observed);
     this.administeredInfoList = await getPagesInfo(this.administered);
+    this.moderatedInfoList = await getPagesInfo(this.moderated);
   },
 };
 </script>
