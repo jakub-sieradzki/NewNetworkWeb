@@ -77,8 +77,9 @@
           <div @click="closeManagePermissions" class="flex items-center px-3.5 py-2.5 mt-2 justify-center bg-gray-200 lg:hover:bg-gray-300 dark:bg-gray-800 lg:dark:hover:bg-gray-700 rounded-lg cursor-pointer transition">
             <p class="text-sm">Anuluj</p>
           </div>
-          <div @click="saveChanges" class="flex items-center px-3.5 py-2.5 mt-2 justify-center bg-sky-600 lg:hover:bg-sky-500 rounded-lg cursor-pointer transition">
-            <p class="text-sm text-white">Zapisz zmiany</p>
+          <div @click="saveChanges" class="flex items-center px-3.5 py-2.5 mt-2 justify-center bg-sky-600 lg:hover:bg-sky-500 rounded-lg cursor-pointer transition" :class="{ 'cursor-not-allowed' : isSaving }">
+            <p v-if="!isSaving" class="text-sm text-white">Zapisz zmiany</p>
+            <p v-else class="text-sm text-white">Zapisywanie...</p>
           </div>
         </div>
       </div>
@@ -122,6 +123,8 @@ export default {
 
       adminsInvitationsToRemove: [],
       modsInvitationsToRemove: [],
+
+      isSaving: false,
     };
   },
   methods: {
@@ -242,6 +245,7 @@ export default {
       }
     },
     async saveChanges() {
+      this.isSaving = true;
       console.log("admins to add: ", this.adminsToAdd);
       console.log("admins to remove: ", this.adminsToRemove);
       console.log("mods to add: ", this.modsToAdd);
@@ -258,6 +262,9 @@ export default {
         adminsInvitationsToRemove: this.adminsInvitationsToRemove,
         modsInvitationsToRemove: this.modsInvitationsToRemove,
       });
+
+      alert("Pomyślnie zapisano zmiany");
+      this.$parent.toggleEditPermissions();
     },
   },
   async mounted() {
