@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="w-6/12 flex items-center justify-center">
-        <p><span class="inline-block sm:hidden">NN </span><span class="hidden sm:inline-block">New Network </span> <span class="text-xs">v.0.13.0</span></p>
+        <p><span class="inline-block sm:hidden">NN </span><span class="hidden sm:inline-block">New Network </span> <span class="text-xs">v.0.14.0</span></p>
       </div>
       <div class="w-3/12 flex items-center justify-end gap-3">
         <div class="flex h-full">
