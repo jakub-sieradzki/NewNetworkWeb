@@ -67,13 +67,13 @@ export default {
     if(this.notification.type == "page_request_admin") {
       this.title = "Zostań administratorem strony";
       this.content = "Strona " + this.notification.name + " chce, żebyś został jej administratorem";
-      this.profileImage = await getPageProfileImageUrl(this.notification.pid);
+      this.profileImage = await getProfileImageUrl(this.notification.pid);
     }
 
     if(this.notification.type == "page_request_mod") {
       this.title = "Zostań moderatorem strony";
       this.content = "Strona " + this.notification.name + " chce, żebyś został jej moderatorem";
-      this.profileImage = await getPageProfileImageUrl(this.notification.pid);
+      this.profileImage = await getProfileImageUrl(this.notification.pid);
     }
   },
 };

@@ -26,7 +26,7 @@
 <script>
 import Post from "../Post/Post.vue";
 import PostsList from "../Post/PostsList.vue";
-import { getAllPostsByUids, getPublicPostsByUids } from "../../database/getData";
+import { getAllPagesPostsByPids, getAllPostsByUids, getPublicPostsByUids } from "../../database/getData";
 import { mapState } from "vuex";
 import { getPostAverageRating } from "@/helpers/postRating";
 export default {
@@ -41,6 +41,9 @@ export default {
   },
   computed: {
     ...mapState("userPeopleInfo", ["observed", "friends"]),
+    ...mapState("userPagesInfo", {
+      pagesObserved: "observed",
+    }),
     ...mapState(["currentType", "categoriesObserved"]),
   },
   watch: {
@@ -55,8 +58,10 @@ export default {
     if (this.observed.length != 0) {
       let friendsPosts = await getAllPostsByUids(this.getAllObservedFriends());
       let otherPosts = await getPublicPostsByUids(this.getOnlyObservedUsers());
+      let pagesPosts = await getAllPagesPostsByPids(this.pagesObserved);
       this.postsData.push(...friendsPosts);
       this.postsData.push(...otherPosts);
+      this.postsData.push(...pagesPosts);
     }
     this.loadPosts();
   },

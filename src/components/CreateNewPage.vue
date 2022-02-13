@@ -94,7 +94,7 @@ import ChangeProfileImage from "@/components/ChangeProfileImage.vue";
 import CategoriesList from "@/views/Categories/CategoriesList.vue";
 import { createPage } from "@/firebase-functions/functions";
 import { getBlobFromURL, getBlobFullName } from "@/helpers/blobFunctions";
-import { uploadPageBackground, uploadPageProfileImage } from "@/firebase-storage/modifyFiles";
+import { uploadPageBackground, uploadPageProfileImage, uploadProfileBackground, uploadProfileImage } from "@/firebase-storage/modifyFiles";
 export default {
   components: {
     ChangeProfileImage,
@@ -163,11 +163,11 @@ export default {
         
         let blobProfileImage = await getBlobFromURL(this.readyProfileImageUrl);
         let profileImageName = await getBlobFullName(this.readyProfileImageUrl);
-        await uploadPageProfileImage(pageId, blobProfileImage, profileImageName);
+        await uploadProfileImage(pageId, blobProfileImage, profileImageName);
 
         let blobProfileBackground = await getBlobFromURL(this.readyBackgroundImageUrl);
         let profileBackgroundName = await getBlobFullName(this.readyBackgroundImageUrl);
-        await uploadPageBackground(pageId, blobProfileBackground, profileBackgroundName);
+        await uploadProfileBackground(pageId, blobProfileBackground, profileBackgroundName);
       }
 
       alert("Pomyślnie utworzono stronę");

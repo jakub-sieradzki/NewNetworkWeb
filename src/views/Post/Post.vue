@@ -1,6 +1,6 @@
 <template>
   <!-- Post -->
-  <CreatePost v-if="createPost" :shareId="postData.id" :shareUid="postData.uid" :shareUsername="postData.username" :shareContent="postData.content" />
+  <CreatePost v-if="createPost" :shareId="postData.id" :shareUid="postData.uid" :shareUsername="postData.username" :sharePagename="postData.pagename" :shareContent="postData.content" />
   <div class="post flex-grow" style="max-width: 600px">
     <!-- Header -->
     <div class="post__header">
@@ -8,7 +8,8 @@
         <img ref="profileImg" class="post__header__user-info__profile-picture rounded-full" alt="photo" />
         <div class="overflow-hidden">
           <p class="post__header__user-info__user-name">{{ postData.name }} {{ postData.surname }}</p>
-          <p class="post__header__user-info__user-id">@{{ postData.username }}</p>
+          <p v-if="postSourceType == 'user'" class="post__header__user-info__user-id">@{{ postData.username }}</p>
+          <p v-else-if="postSourceType == 'page'" class="post__header__user-info__user-id">{{ postData.pagename }}</p>
         </div>
       </div>
       <div class="flex gap-4 flex-shrink-0 items-center">
@@ -243,7 +244,11 @@ export default {
       }
     },
     showProfile() {
-      this.$router.push("/user/" + this.postData.username + "/posts");
+      if (this.postSourceType == "user") {
+        this.$router.push("/user/" + this.postData.username + "/posts");
+      } else if (this.postSourceType == "page") {
+        this.$router.push("/page/" + this.postData.pagename + "/posts");
+      }
     },
     toggleComments() {
       this.showComments = !this.showComments;
@@ -356,8 +361,8 @@ export default {
       img.setAttribute("src", this.currentUserProfileImage);
     } else {
       let url = null;
-      if (this.postData.pid) {
-        url = await getPageProfileImageUrl(this.postData.pid);
+      if (this.postSourceType == "page") {
+        url = await getProfileImageUrl(this.postData.pid);
       } else {
         url = await getProfileImageUrl(this.postData.uid);
       }
@@ -373,7 +378,11 @@ export default {
 
     // Get post images
     if (this.postData.files) {
-      this.imagesUrls = await getPostImagesUrls(this.postData.uid, this.postData.files);
+      if (this.postSourceType == "user") {
+        this.imagesUrls = await getPostImagesUrls(this.postData.uid, this.postData.files);
+      } else if (this.postSourceType == "page") {
+        this.imagesUrls = await getPostImagesUrls(this.postData.pid, this.postData.files);
+      }
     }
     // set post rating
     this.updateRating(this.postsRated);

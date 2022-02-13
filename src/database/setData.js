@@ -341,7 +341,7 @@ async function sendPagePost(data) {
   let sent = false;
   await addDoc(collection(getFirestore(), "posts"), {
     pid: data.pid,
-    username: data.pagename,
+    pagename: data.pagename,
     name: data.name,
     content: data.content,
     createdTimestamp: serverTimestamp(),

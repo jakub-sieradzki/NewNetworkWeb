@@ -7,10 +7,18 @@
       <div class="profileInfoDivStyle md:overflow-y-auto">
         <img ref="profileBackgroundImg" :src="pageProfileBackground" class="h-40 w-full object-cover shadow-md" alt="ProfileBackground" />
         <img ref="profileImg" class="m-auto -mt-20 h-40 w-40 rounded-full shadow-xl" :src="pageProfileImage" alt="ProfilePhoto" />
-        <div class="flex flex-col px-3 break-words">
+        <div class="flex flex-col px-3 break-words items-center">
           <p class="text-center text-2xl font-bold mt-5">{{ name }}</p>
           <p class="text-center text-lg mt-2">{{ pagename }}</p>
           <p class="text-center text-sm my-5 px-5 text-gray-500 dark:text-gray-400">{{ description }}</p>
+          <div class="flex gap-2 p-3 border dark:border-gray-700 rounded-lg mb-5 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="12" cy="12" r="2" />
+              <path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" />
+            </svg>
+            <p>{{ observedCount }}</p>
+          </div>
           <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer self-center">
             <div class="flex">
               <div v-if="observed.includes(pid)" @click="removePageObservedClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
@@ -49,7 +57,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col justify-center items-center my-6 gap-3">
+          <div class="flex flex-col justify-center items-center my-7 gap-3">
             <div v-if="adminMode" @click="toggleEditPage" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -67,10 +75,10 @@
               </svg>
               <p class="text-sm">Uprawnienia</p>
             </div>
-            <div v-if="adminMode || modMode" class="w-full px-10">
-              <div @click="showCreatePost" class="w-full flex items-center pt-8 pb-8 pl-4 pr-4 mt-12 justify-center rounded-lg transition duration-500 cursor-pointer transform lg:hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
-                <img src="/img/add.svg" alt="add" class="w-8 h-8 mr-1" />
-                <p class="text-xl text-white text-center">Nowy post</p>
+            <div v-if="adminMode || modMode" class="w-full flex justify-center px-5 mt-6">
+              <div @click="showCreatePost" class="flex items-center px-4 py-4 w-44 justify-center rounded-lg transition duration-500 cursor-pointer transform lg:hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
+                <img src="/img/add.svg" alt="add" class="w-6 h-6 mr-1" />
+                <p class="text-md text-white text-center">Nowy post</p>
               </div>
             </div>
             <div v-if="requestAdmin.includes(pid)" @click="acceptAdminClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
@@ -90,7 +98,7 @@
             <router-link @click="changeViewMode('info')" to="info" class="profileTab" :class="{ profileTabActive: viewMode == 'info' }">Informacje</router-link>
           </div>
           <div v-if="this.pid" class="overflow-y-auto w-full h-full py-4 mt-1 mb-2 p-2">
-            <router-view :pid="this.pid" name="pageContent" class="h-full w-full"></router-view>
+            <router-view :pid="this.pid" :infoData="infoData" name="pageContent" class="h-full w-full"></router-view>
           </div>
         </div>
       </div>
@@ -99,7 +107,7 @@
 </template>
 <script>
 import { getPageDataOnPagename } from "@/database/getData";
-import { getPageProfileBackgroundUrl, getPageProfileImageUrl } from "@/firebase-storage/getFiles";
+import { getPageProfileBackgroundUrl, getPageProfileImageUrl, getProfileBackgroundUrl, getProfileImageUrl } from "@/firebase-storage/getFiles";
 import { getBlobFromURL } from "@/helpers/blobFunctions";
 import CreatePost from "@/views/Post/CreatePost.vue";
 import { mapState } from "vuex";
@@ -128,6 +136,8 @@ export default {
       modMode: false,
       editPage: false,
       editPermissions: false,
+      infoData: {},
+      observedCount: -1,
     };
   },
   computed: {
@@ -173,9 +183,13 @@ export default {
       this.pagename = pageData.pagename;
       this.description = pageData.description;
       this.categories = pageData.categories;
+      this.infoData = {
+        created: pageData.createdTimestamp,
+      };
+      this.observedCount = pageData.observedCount;
     },
     async getPageImages() {
-      let profileImgUrl = await getPageProfileImageUrl(this.pid);
+      let profileImgUrl = await getProfileImageUrl(this.pid);
 
       if (profileImgUrl != null) {
         let blob = await getBlobFromURL(profileImgUrl);
@@ -184,7 +198,7 @@ export default {
         this.pageProfileImage = "/img/avatar.png";
       }
 
-      let backgroundImgUrl = await getPageProfileBackgroundUrl(this.pid);
+      let backgroundImgUrl = await getProfileBackgroundUrl(this.pid);
       if (backgroundImgUrl != null) {
         let blob = await getBlobFromURL(backgroundImgUrl);
         this.pageProfileBackground = URL.createObjectURL(blob);

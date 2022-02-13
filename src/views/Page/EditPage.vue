@@ -89,8 +89,8 @@ import ChangeProfileImage from "@/components/ChangeProfileImage.vue";
 import CategoriesList from "@/views/Categories/CategoriesList.vue";
 import { changePageName, createPage } from "@/firebase-functions/functions";
 import { getBlobFromURL, getBlobFullName } from "@/helpers/blobFunctions";
-import { removeAllPageBackgrounds, removeAllPageProfileImages, uploadPageBackground, uploadPageProfileImage } from "@/firebase-storage/modifyFiles";
-import { updatePageCategories } from '@/database/setData';
+import { removeAllProfileBackgrounds, removeAllProfileImages, uploadProfileBackground, uploadProfileImage } from "@/firebase-storage/modifyFiles";
+import { updatePageCategories, updatePageDescription } from '@/database/setData';
 export default {
   props: ["pageData"],
   components: {
@@ -144,16 +144,16 @@ export default {
         let blobProfileImage = await getBlobFromURL(this.readyProfileImageUrl);
         let profileImageName = await getBlobFullName(this.readyProfileImageUrl);
 
-        await removeAllPageProfileImages(this.pageData.pid);
-        await uploadPageProfileImage(this.pageData.pid, blobProfileImage, profileImageName);
+        await removeAllProfileImages(this.pageData.pid);
+        await uploadProfileImage(this.pageData.pid, blobProfileImage, profileImageName);
       }
 
       if (this.isProfileBackgroundEdited) {
         let blobProfileBackground = await getBlobFromURL(this.readyBackgroundImageUrl);
         let profileBackgroundName = await getBlobFullName(this.readyBackgroundImageUrl);
-
-        await removeAllPageBackgrounds(this.pageData.pid);
-        await uploadPageBackground(this.pageData.pid, blobProfileBackground, profileBackgroundName);
+        
+        await removeAllProfileBackgrounds(this.pageData.pid);
+        await uploadProfileBackground(this.pageData.pid, blobProfileBackground, profileBackgroundName);
       }
 
       if(this.pName != this.pageData.name) {

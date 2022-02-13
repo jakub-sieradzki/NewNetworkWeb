@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import { getPageProfileImageUrl } from '@/firebase-storage/getFiles';
+import { getProfileImageUrl } from '@/firebase-storage/getFiles';
 export default {
   props: ["page"],
   data() {
@@ -17,8 +17,7 @@ export default {
     };
   },
   async mounted() {
-
-    let profileImg = await getPageProfileImageUrl(this.page.id);
+    let profileImg = await getProfileImageUrl(this.page.id);
     if (profileImg == null) {
       this.profileImage = "/img/avatar.png";
     } else {

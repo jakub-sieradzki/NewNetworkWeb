@@ -6,7 +6,8 @@
         <img ref="profileImg" class="post__header__user-info__profile-picture rounded-full" alt="photo" />
         <div class="overflow-hidden">
           <p class="post__header__user-info__user-name">{{ post.name }} {{ post.surname }}</p>
-          <p class="post__header__user-info__user-id">@{{ post.username }}</p>
+          <p v-if="postSourceType == 'user'" class="post__header__user-info__user-id">@{{ post.username }}</p>
+          <p v-else-if="postSourceType == 'page'" class="post__header__user-info__user-id">{{ post.pagename }}</p>
         </div>
       </div>
     </div>
@@ -31,9 +32,9 @@
 <script>
 import { getPost } from "@/database/getData";
 import { getPostImagesUrls, getProfileImageUrl } from "@/firebase-storage/getFiles";
-import { getAuth } from '@firebase/auth';
-import { mapState } from 'vuex';
-import { DateTime } from 'luxon';
+import { getAuth } from "@firebase/auth";
+import { mapState } from "vuex";
+import { DateTime } from "luxon";
 export default {
   props: ["postId"],
   data() {
@@ -41,6 +42,7 @@ export default {
       post: {},
       imagesUrls: [],
       localDate: "",
+      postSourceType: "",
     };
   },
   computed: {
@@ -51,6 +53,13 @@ export default {
   async mounted() {
     //Get post data
     this.post = await getPost(this.postId);
+    console.log("shared post: ", this.post);
+
+    if (this.post.pid) {
+      this.postSourceType = "page";
+    } else {
+      this.postSourceType = "user";
+    }
 
     // Get time
     this.localDate = DateTime.fromJSDate(this.post.createdTimestamp.toDate()).toRelative();
@@ -60,7 +69,13 @@ export default {
     if (this.post.uid == getAuth().currentUser.uid) {
       img.setAttribute("src", this.currentUserProfileImage);
     } else {
-      let url = await getProfileImageUrl(this.post.uid);
+      let url;
+      if (this.postSourceType == "page") {
+        url = await getProfileImageUrl(this.post.pid);
+      } else if (this.postSourceType == "user") {
+        url = await getProfileImageUrl(this.post.uid);
+      }
+
       if (url != null) {
         img.setAttribute("src", url);
       } else {

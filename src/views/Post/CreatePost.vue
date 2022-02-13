@@ -66,7 +66,8 @@
       <div class="mt-3 flex flex-col" v-if="share">
         <p class="text-xs pb-3">Udostępniasz post:</p>
         <div class="flex flex-col bg-gray-200 dark:bg-gray-800 shadow-inner px-5 py-3 rounded-lg">
-          <p class="text-sm">@{{ this.shareUsername }}</p>
+          <p v-if="shareUsername != null" class="text-sm">@{{ this.shareUsername }}</p>
+          <p v-else-if="sharePagename" class="text-sm">{{ this.sharePagename }}</p>
           <p class="truncate">{{ this.shareContent }}</p>
         </div>
       </div>
@@ -133,7 +134,7 @@ import { sendPagePost, sendPost } from "../../database/setData";
 import { uploadPostImages } from "@/firebase-storage/modifyFiles";
 
 export default {
-  props: ["shareId", "shareUid", "shareUsername", "shareContent", "fromPage"],
+  props: ["shareId", "shareUid", "shareUsername", "sharePagename", "shareContent", "fromPage"],
   components: {
     CategoriesList,
   },

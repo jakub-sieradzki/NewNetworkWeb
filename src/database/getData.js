@@ -235,4 +235,23 @@ async function getPagePermissions(pid) {
   return permissions;
 }
 
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions };
+async function getAllPagesPostsByPids(pids) {
+  let postsData = [];
+  if (pids.length > 0) {
+    const q = query(collection(getFirestore(), "posts"), where("pid", "in", pids), orderBy("createdTimestamp", "desc"));
+    await getDocs(q)
+      .then((docs) => {
+        docs.forEach((doc) => {
+          let postData = doc.data();
+          postData.id = doc.id;
+          postsData.push(postData);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return postsData;
+}
+
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids };
