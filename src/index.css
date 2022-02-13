@@ -145,7 +145,7 @@
 }
 
 .createEditWindowBackgroundStyle {
-  @apply fixed top-0 h-screen w-screen md:bg-gray-200/60 dark:md:bg-gray-800/80 md:backdrop-blur-sm z-20
+  @apply fixed top-0 left-0 h-screen w-screen md:bg-gray-200/60 dark:md:bg-gray-800/80 md:backdrop-blur-sm z-20
 }
 
 .createEditWindowHelperDivStyle {
@@ -178,4 +178,8 @@
 
 .inputStyle {
   @apply dark:bg-black/20 py-3 px-5 outline-none rounded-md text-sm border dark:border-gray-700
+}
+
+.hoverAnimation {
+  @apply hover:-translate-y-1 hover:shadow-lg transition duration-300
 }

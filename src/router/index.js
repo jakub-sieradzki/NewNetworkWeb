@@ -17,6 +17,7 @@ import Page from "@/views/Page/Page.vue";
 import PagePosts from "@/views/Page/Posts.vue";
 import PageGallery from "@/views/Page/Gallery.vue";
 import PageInfo from "@/views/Page/Info.vue";
+import PageSettings from "@/views/Page/Settings.vue";
 import store from "../store";
 
 const routes = [
@@ -106,6 +107,12 @@ const routes = [
             path: "info",
             components: {
               pageContent: PageInfo,
+            }
+          },
+          {
+            path: "settings",
+            components: {
+              pageContent: PageSettings,
             }
           },
         ]

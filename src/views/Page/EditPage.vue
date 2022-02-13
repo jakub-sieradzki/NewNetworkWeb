@@ -176,8 +176,8 @@ export default {
     this.pName = this.pageData.name;
     this.pDescription = this.pageData.description;
     this.pCategories = this.pageData.categories;
-    this.readyProfileImageUrl = this.pageData.profileImage;
-    this.readyBackgroundImageUrl = this.pageData.profileBackground;
+    this.readyProfileImageUrl = this.pageData.pageProfileImage;
+    this.readyBackgroundImageUrl = this.pageData.pageProfileBackground;
   },
 };
 </script>

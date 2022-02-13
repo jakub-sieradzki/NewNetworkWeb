@@ -22,14 +22,14 @@
 <script>
 import { getUserDetailsDoc } from "@/database/getData";
 export default {
-  props: ["pid", "infoData"],
+  props: ["pid", "pageData"],
   data() {
     return {
       createdDate: "",
     };
   },
   async mounted() {
-    this.createdDate = this.infoData.created.toDate().toLocaleDateString();
+    this.createdDate = this.pageData.created.toDate().toLocaleDateString();
   },
 };
 </script>

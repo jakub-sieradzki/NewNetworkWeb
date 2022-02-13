@@ -204,9 +204,11 @@ async function getPagesInfo(pagesList) {
   let list = [];
   for (let i = 0; i < pagesList.length; i++) {
     let d = await getDoc(doc(getFirestore(), "pages", pagesList[i]));
-    let data = d.data();
-    data.id = d.id;
-    list.push(data);
+    if (d.exists()) {
+      let data = d.data();
+      data.id = d.id;
+      list.push(data);
+    }
   }
 
   return list;

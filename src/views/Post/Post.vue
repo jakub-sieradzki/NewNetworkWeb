@@ -229,6 +229,10 @@ export default {
     ...mapState("user", {
       currentUserProfileImage: "profileImage",
     }),
+    ...mapState("userPagesInfo", {
+      pagesAdministered: "administered",
+      pagesModerated: "moderated",
+    }),
   },
   watch: {
     postsRated(newRated, oldRated) {
@@ -273,7 +277,19 @@ export default {
           alert("Wystąpił błąd");
         }
       } else {
-        alert("To nie jest Twój post, więc nie możesz go usunąć :)");
+        if (this.postSourceType == "page") {
+          if (this.pagesAdministered.includes(this.postData.pid) || this.pagesModerated.includes(this.postData.pid)) {
+            await removePostImages(this.postData.pid, this.postData.files);
+            let deleted = await deletePost(this.postData.id);
+            if (deleted) {
+              alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
+            } else {
+              alert("Wystąpił błąd");
+            }
+          }
+        } else {
+          alert("To nie jest Twój post, więc nie możesz go usunąć :)");
+        }
       }
     },
     reactMouseOver() {

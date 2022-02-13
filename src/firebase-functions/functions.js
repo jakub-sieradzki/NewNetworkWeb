@@ -206,4 +206,18 @@ async function acceptPageModInvitation(pid) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation };
+async function deletePage(pid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const deletePage = httpsCallable(functions, "deletePage");
+  await deletePage({
+    pid: pid
+  }).then((r) => {
+    console.log("deleted page successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage };

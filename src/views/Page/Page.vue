@@ -1,7 +1,5 @@
 <template>
   <CreatePost v-if="createPost" :fromPage="{ pid: pid, pagename: pagename, name: name }" />
-  <manage-permissions v-if="editPermissions" :pid="pid" :pName="name" :pagename="pagename" />
-  <edit-page v-if="editPage" :pageData="{ pid: pid, name: name, description: description, categories: categories, profileImage: pageProfileImage, profileBackground: pageProfileBackground }" />
   <div class="md:pt-16 flex flex-col flex-grow overflow-y-scroll md:overflow-y-hidden">
     <div class="profileMainStyle md:!flex-row-reverse">
       <div class="profileInfoDivStyle md:overflow-y-auto">
@@ -58,23 +56,6 @@
             </div>
           </div>
           <div class="flex flex-col justify-center items-center my-7 gap-3">
-            <div v-if="adminMode" @click="toggleEditPage" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-              </svg>
-              <p class="text-sm">Edytuj stronę</p>
-            </div>
-            <div v-if="adminMode" @click="toggleEditPermissions" class="w-44 flex items-center justify-center gap-2 p-3 rounded-lg overflow-hidden text-white bg-sky-600 lg:hover:bg-sky-700 shadow-xl cursor-pointer transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
-                <circle cx="12" cy="11" r="1" />
-                <line x1="12" y1="12" x2="12" y2="14.5" />
-              </svg>
-              <p class="text-sm">Uprawnienia</p>
-            </div>
             <div v-if="adminMode || modMode" class="w-full flex justify-center px-5 mt-6">
               <div @click="showCreatePost" class="flex items-center px-4 py-4 w-44 justify-center rounded-lg transition duration-500 cursor-pointer transform lg:hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                 <img src="/img/add.svg" alt="add" class="w-6 h-6 mr-1" />
@@ -96,9 +77,10 @@
             <router-link @click="changeViewMode('posts')" to="posts" class="profileTab" :class="{ profileTabActive: viewMode == 'posts' }">Posty</router-link>
             <router-link @click="changeViewMode('gallery')" to="gallery" class="profileTab" :class="{ profileTabActive: viewMode == 'gallery' }">Galeria</router-link>
             <router-link @click="changeViewMode('info')" to="info" class="profileTab" :class="{ profileTabActive: viewMode == 'info' }">Informacje</router-link>
+            <router-link @click="changeViewMode('settings')" to="settings" class="profileTab" :class="{ profileTabActive: viewMode == 'settings', '!hidden': !adminMode }">Ustawienia</router-link>
           </div>
           <div v-if="this.pid" class="overflow-y-auto w-full h-full py-4 mt-1 mb-2 p-2">
-            <router-view :pid="this.pid" :infoData="infoData" name="pageContent" class="h-full w-full"></router-view>
+            <router-view :pid="this.pid" :pageData="{ pid, name, pagename, description, categories, pageProfileImage, pageProfileBackground, observedCount, created }" name="pageContent" class="h-full w-full"></router-view>
           </div>
         </div>
       </div>
@@ -107,18 +89,14 @@
 </template>
 <script>
 import { getPageDataOnPagename } from "@/database/getData";
-import { getPageProfileBackgroundUrl, getPageProfileImageUrl, getProfileBackgroundUrl, getProfileImageUrl } from "@/firebase-storage/getFiles";
+import { getProfileBackgroundUrl, getProfileImageUrl } from "@/firebase-storage/getFiles";
 import { getBlobFromURL } from "@/helpers/blobFunctions";
 import CreatePost from "@/views/Post/CreatePost.vue";
 import { mapState } from "vuex";
 import { acceptPageAdminInvitation, acceptPageModInvitation, observePage, removeObservedPage } from "@/firebase-functions/functions";
-import EditPage from "@/views/Page/EditPage.vue";
-import ManagePermissions from "@/components/ManagePermissions.vue";
 export default {
   components: {
     CreatePost,
-    EditPage,
-    ManagePermissions,
   },
   data() {
     return {
@@ -134,10 +112,8 @@ export default {
       showMoreOptions: false,
       adminMode: false,
       modMode: false,
-      editPage: false,
-      editPermissions: false,
-      infoData: {},
-      observedCount: -1,
+      observedCount: null,
+      created: null,
     };
   },
   computed: {
@@ -160,12 +136,6 @@ export default {
     },
   },
   methods: {
-    toggleEditPermissions() {
-      this.editPermissions = !this.editPermissions;
-    },
-    toggleEditPage() {
-      this.editPage = !this.editPage;
-    },
     toggleShowMoreOptions() {
       this.showMoreOptions = !this.showMoreOptions;
     },
@@ -176,17 +146,15 @@ export default {
       this.createPost = true;
     },
     async getPageInfo() {
-      const pageData = await getPageDataOnPagename(this.$route.params.pagename);
-      console.log("pageData.id: ", pageData.id);
-      this.pid = pageData.id;
-      this.name = pageData.name;
-      this.pagename = pageData.pagename;
-      this.description = pageData.description;
-      this.categories = pageData.categories;
-      this.infoData = {
-        created: pageData.createdTimestamp,
-      };
-      this.observedCount = pageData.observedCount;
+      const pageInfo = await getPageDataOnPagename(this.$route.params.pagename);
+      console.log("pageData.id: ", pageInfo.id);
+      this.pid = pageInfo.id;
+      this.name = pageInfo.name;
+      this.pagename = pageInfo.pagename;
+      this.description = pageInfo.description;
+      this.categories = pageInfo.categories;
+      this.created = pageInfo.createdTimestamp;
+      this.observedCount = pageInfo.observedCount;
     },
     async getPageImages() {
       let profileImgUrl = await getProfileImageUrl(this.pid);
