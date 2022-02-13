@@ -252,7 +252,7 @@ export default {
           sId = this.shareId;
         }
 
-        send = await sendPagePost(this.fromPage.pid, {
+        send = await sendPagePost({
           pid: this.fromPage.pid,
           pagename: this.fromPage.pagename,
           name: this.fromPage.name,

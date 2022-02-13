@@ -324,7 +324,7 @@ async function removeCommentReaction(uid, postId, commentId, subcommentId, value
 
 async function deleteComment(postId, commentId, subcommentId) {
   let deleted = false;
-  if(commentId == subcommentId) {
+  if (commentId == subcommentId) {
     await deleteDoc(doc(getFirestore(), "posts", postId, "comments", commentId)).then(() => {
       deleted = true;
     });
@@ -337,9 +337,9 @@ async function deleteComment(postId, commentId, subcommentId) {
   return deleted;
 }
 
-async function sendPagePost(pid, data) {
+async function sendPagePost(data) {
   let sent = false;
-  await addDoc(collection(getFirestore(), "pages", pid, "posts"), {
+  await addDoc(collection(getFirestore(), "posts"), {
     pid: data.pid,
     username: data.pagename,
     name: data.name,

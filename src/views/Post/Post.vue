@@ -219,6 +219,8 @@ export default {
       selectedRating: 0,
       averageRatingInt: 0,
       linkifyPostContent: "",
+      postSourceType: "",
+      postSourceId: "",
     };
   },
   computed: {
@@ -334,6 +336,14 @@ export default {
     },
   },
   async mounted() {
+    if (this.postData.uid) {
+      this.postSourceType = "user";
+      this.postSourceId = this.postData.uid;
+    } else if (this.postData.pid) {
+      this.postSourceType = "page";
+      this.postSourceId = this.postData.pid;
+    }
+
     // Convert date
     const date = this.postData.createdTimestamp.toDate();
     this.postFullDateAdded = date.toLocaleString();

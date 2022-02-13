@@ -187,9 +187,9 @@ async function getPageDataOnPagename(pagename) {
 
 async function getPagePosts(pid) {
   let pagePosts = [];
-  const pagePostsRef = collection(getFirestore(), "pages", pid, "posts");
+  const q = query(collection(getFirestore(), "posts"), where("pid", "==", pid));
 
-  await getDocs(pagePostsRef).then((docs) => {
+  await getDocs(q).then((docs) => {
     docs.forEach((doc) => {
       let post = doc.data();
       post.id = doc.id;
