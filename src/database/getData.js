@@ -256,4 +256,45 @@ async function getAllPagesPostsByPids(pids) {
   return postsData;
 }
 
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids };
+async function getGroupDataOnGroupname(groupname) {
+  let groupData = null;
+  const q = query(collection(getFirestore(), "groups"), where("groupname", "==", groupname));
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      groupData = doc.data();
+      groupData.id = doc.id;
+    });
+  });
+  return groupData;
+}
+
+async function getGroupsInfo(groupsList) {
+  let list = [];
+  for (let i = 0; i < groupsList.length; i++) {
+    let d = await getDoc(doc(getFirestore(), "groups", groupsList[i]));
+    if (d.exists()) {
+      let data = d.data();
+      data.id = d.id;
+      list.push(data);
+    }
+  }
+
+  return list;
+}
+
+async function getGroupPosts(gid) {
+  let groupPosts = [];
+  const q = query(collection(getFirestore(), "posts"), where("gid", "==", gid));
+
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      let post = doc.data();
+      post.id = doc.id;
+      groupPosts.push(post);
+    });
+  });
+
+  return groupPosts;
+}
+
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids, getGroupDataOnGroupname, getGroupsInfo, getGroupPosts };

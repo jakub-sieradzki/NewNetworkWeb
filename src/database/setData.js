@@ -393,4 +393,38 @@ async function updatePageCategories(pid, newCategories) {
     });
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories };
+async function sendGroupPost(data) {
+  let sent = false;
+  await addDoc(collection(getFirestore(), "posts"), {
+    gid: data.gid,
+    groupDisplayName: data.groupDisplayName,
+    groupUniqueName: data.groupUniqueName,
+    uid: data.uid,
+    username: data.username,
+    name: data.name,
+    surname: data.surname,
+    content: data.content,
+    createdTimestamp: serverTimestamp(),
+    files: data.files,
+    shareId: data.shareId,
+    categories: data.categories,
+    ratings: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      count: 0,
+    },
+    type: data.type,
+    hashtags: data.hashtags,
+    visibility: data.visibility,
+  }).then(() => {
+    sent = true;
+    console.log("success");
+  });
+
+  return sent;
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost };

@@ -220,4 +220,22 @@ async function deletePage(pid) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage };
+async function createGroup(data) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const createGroup = httpsCallable(functions, "createGroup");
+  await createGroup({
+    name: data.name,
+    groupname: data.groupname,
+    description: data.description,
+    categories: data.categories,
+    type: data.type,
+  }).then((r) => {
+    console.log("created group successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup };

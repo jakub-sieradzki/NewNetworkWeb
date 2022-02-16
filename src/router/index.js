@@ -19,6 +19,12 @@ import PageGallery from "@/views/Page/Gallery.vue";
 import PageInfo from "@/views/Page/Info.vue";
 import PageSettings from "@/views/Page/Settings.vue";
 import store from "../store";
+import Groups from "@/views/Home/Groups.vue";
+import Group from "@/views/Group/Group.vue";
+import GroupPosts from "@/views/Group/Posts.vue";
+import GroupGallery from "@/views/Group/Gallery.vue";
+import GroupInfo from "@/views/Group/Info.vue";
+import GroupSettings from "@/views/Group/Settings.vue";
 
 const routes = [
   {
@@ -52,6 +58,12 @@ const routes = [
         components: {
           mainContent: Pages,
         },
+      },
+      {
+        path: "groups",
+        components: {
+          mainContent: Groups,
+        }
       },
       {
         path: "user/:username",
@@ -113,6 +125,38 @@ const routes = [
             path: "settings",
             components: {
               pageContent: PageSettings,
+            }
+          },
+        ]
+      },
+      {
+        path: "group/:groupname",
+        components: {
+          mainContent: Group,
+        },
+        children: [
+          {
+            path: "posts",
+            components: {
+              groupContent: GroupPosts,
+            },
+          },
+          {
+            path: "gallery",
+            components: {
+              groupContent: GroupGallery,
+            },
+          },
+          {
+            path: "info",
+            components: {
+              groupContent: GroupInfo,
+            }
+          },
+          {
+            path: "settings",
+            components: {
+              groupContent: GroupSettings,
             }
           },
         ]

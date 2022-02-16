@@ -11,7 +11,7 @@
       </div>
       <div class="flex justify-between items-center mt-4 flex-wrap gap-2">
         <div class="flex gap-1 flex-wrap">
-          <div v-if="!fromPage" class="dropdown">
+          <div v-if="!fromPage && !fromGroup" class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
               <p>Moja tablica</p>
             </div>
@@ -22,7 +22,7 @@
               <p class="text-sm p-2 lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 transition rounded-md mt-1 cursor-pointer">Grupa1</p>
             </div>
           </div>
-          <div v-if="!fromPage" class="dropdown">
+          <div v-if="!fromPage && !fromGroup" class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
               <p v-if="postVisibility == 'public'">Publiczne</p>
               <p v-else-if="postVisibility == 'friends'">Znajomi</p>
@@ -130,11 +130,11 @@ import { mapState } from "vuex";
 import { getAuth } from "firebase/auth";
 import CategoriesList from "../Categories/CategoriesList.vue";
 import categories from "../../data/categories";
-import { sendPagePost, sendPost } from "../../database/setData";
+import { sendGroupPost, sendPagePost, sendPost } from "../../database/setData";
 import { uploadPostImages } from "@/firebase-storage/modifyFiles";
 
 export default {
-  props: ["shareId", "shareUid", "shareUsername", "sharePagename", "shareContent", "fromPage"],
+  props: ["shareId", "shareUid", "shareUsername", "sharePagename", "shareContent", "fromPage", "fromGroup"],
   components: {
     CategoriesList,
   },
@@ -167,6 +167,8 @@ export default {
     if (this.pageId) {
       this.pagePost = true;
     }
+
+    console.log(this.fromGroup);
   },
   methods: {
     selectedImages(e) {
@@ -224,15 +226,38 @@ export default {
 
       let send;
 
-      if (!this.fromPage) {
-        await uploadPostImages(getAuth().currentUser.uid, storageFilesNames, blobs);
+      let sId = "";
+      if (this.shareId) {
+        sId = this.shareId;
+      }
 
-        let sId = "";
-        if (this.shareId) {
-          sId = this.shareId;
+      if (this.fromPage) {
+        await uploadPostImages(this.fromPage.pid, storageFilesNames, blobs);
+
+        send = await sendPagePost({
+          pid: this.fromPage.pid,
+          pagename: this.fromPage.pagename,
+          name: this.fromPage.name,
+          content: this.postContent.content,
+          files: storageFilesNames,
+          shareId: sId,
+          categories: this.selectedCategories,
+          type: this.postType,
+          hashtags: hashtagsArray,
+          visibility: this.postVisibility,
+        });
+      } else if (this.fromGroup) {
+        if(this.fromGroup.groupType == "public") {
+          this.postVisibility = "group_public";
+        } else if(this.fromGroup.groupType == "private") {
+          this.postVisibility = "group_private";
         }
+        await uploadPostImages(this.fromGroup.gid, storageFilesNames, blobs);
 
-        send = await sendPost({
+        send = await sendGroupPost({
+          gid: this.fromGroup.gid,
+          groupDisplayName: this.fromGroup.name,
+          groupUniqueName: this.fromGroup.groupname,
           uid: this.uid,
           username: this.username,
           name: this.name,
@@ -246,17 +271,13 @@ export default {
           visibility: this.postVisibility,
         });
       } else {
-        await uploadPostImages(this.fromPage.pid, storageFilesNames, blobs);
+        await uploadPostImages(getAuth().currentUser.uid, storageFilesNames, blobs);
 
-        let sId = "";
-        if (this.shareId) {
-          sId = this.shareId;
-        }
-
-        send = await sendPagePost({
-          pid: this.fromPage.pid,
-          pagename: this.fromPage.pagename,
-          name: this.fromPage.name,
+        send = await sendPost({
+          uid: this.uid,
+          username: this.username,
+          name: this.name,
+          surname: this.surname,
           content: this.postContent.content,
           files: storageFilesNames,
           shareId: sId,
