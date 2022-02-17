@@ -238,4 +238,82 @@ async function createGroup(data) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup };
+async function updateGroupPermissions(data) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const updatePagePermissions = httpsCallable(functions, "updateGroupPermissions");
+  await updatePagePermissions({
+    gName: data.gName,
+    gid: data.gid,
+    groupname: data.groupname,
+    adminsToAdd: data.adminsToAdd,
+    modsToAdd: data.modsToAdd,
+    adminsToRemove: data.adminsToRemove,
+    modsToRemove: data.modsToRemove,
+    adminsInvitationsToRemove: data.adminsInvitationsToRemove,
+    modsInvitationsToRemove: data.modsInvitationsToRemove,
+  }).then((r) => {
+    console.log("updated group permissions successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function joinGroup(gid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const joinGroup = httpsCallable(functions, "joinGroup");
+  await joinGroup({
+    gid: gid,
+  }).then((r) => {
+    console.log("joined group successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function leaveGroup(gid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const leaveGroup = httpsCallable(functions, "leaveGroup");
+  await leaveGroup({
+    gid: gid,
+  }).then((r) => {
+    console.log("left group successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function acceptGroupAdminInvitation(gid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const acceptGroupAdminInvitation = httpsCallable(functions, "acceptGroupAdminInvitation");
+  await acceptGroupAdminInvitation({
+    gid: gid
+  }).then((r) => {
+    console.log("accepted group admin successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function acceptGroupModInvitation(gid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const acceptGroupModInvitation = httpsCallable(functions, "acceptGroupModInvitation");
+  await acceptGroupModInvitation({
+    gid: gid
+  }).then((r) => {
+    console.log("accepted group moderator successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation };

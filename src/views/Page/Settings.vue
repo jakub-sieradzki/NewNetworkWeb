@@ -1,5 +1,5 @@
 <template>
-  <manage-permissions v-if="editPermissions" :pid="pageData.pid" :pName="pageData.name" :pagename="pageData.pagename" />
+  <manage-permissions v-if="editPermissions" :pageData="{pid: pageData.pid, name: pageData.name, pagename: pageData.pagename }" />
   <edit-page v-if="editPage" :pageData="pageData" />
   <div v-if="adminMode">
     <div class="flex flex-wrap px-2">

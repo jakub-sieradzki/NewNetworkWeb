@@ -77,7 +77,7 @@
           <div @click="closeManagePermissions" class="flex items-center px-3.5 py-2.5 mt-2 justify-center bg-gray-200 lg:hover:bg-gray-300 dark:bg-gray-800 lg:dark:hover:bg-gray-700 rounded-lg cursor-pointer transition">
             <p class="text-sm">Anuluj</p>
           </div>
-          <div @click="saveChanges" class="flex items-center px-3.5 py-2.5 mt-2 justify-center bg-sky-600 lg:hover:bg-sky-500 rounded-lg cursor-pointer transition" :class="{ 'cursor-not-allowed' : isSaving }">
+          <div @click="saveChanges" class="flex items-center px-3.5 py-2.5 mt-2 justify-center bg-sky-600 lg:hover:bg-sky-500 rounded-lg cursor-pointer transition" :class="{ 'cursor-not-allowed': isSaving }">
             <p v-if="!isSaving" class="text-sm text-white">Zapisz zmiany</p>
             <p v-else class="text-sm text-white">Zapisywanie...</p>
           </div>
@@ -87,12 +87,12 @@
   </div>
 </template>
 <script>
-import { getPagePermissions, getUserData, getUserDataOnUsername } from "@/database/getData";
+import { getGroupPermissions, getPagePermissions, getUserData, getUserDataOnUsername } from "@/database/getData";
 import PermissionsSingleUser from "@/components/PermissionsSingleUser.vue";
 import { getProfileImageUrl } from "@/firebase-storage/getFiles";
-import { updatePagePermissions } from "@/firebase-functions/functions";
+import { updateGroupPermissions, updatePagePermissions } from "@/firebase-functions/functions";
 export default {
-  props: ["pid", "pName", "pagename"],
+  props: ["pageData", "groupData"],
   components: {
     PermissionsSingleUser,
   },
@@ -251,24 +251,43 @@ export default {
       console.log("mods to add: ", this.modsToAdd);
       console.log("mods to remove: ", this.modsToRemove);
 
-      await updatePagePermissions({
-        pName: this.pName,
-        pid: this.pid,
-        pagename: this.pagename,
-        adminsToAdd: this.adminsToAdd,
-        modsToAdd: this.modsToAdd,
-        adminsToRemove: this.adminsToRemove,
-        modsToRemove: this.modsToRemove,
-        adminsInvitationsToRemove: this.adminsInvitationsToRemove,
-        modsInvitationsToRemove: this.modsInvitationsToRemove,
-      });
+      if (this.pageData) {
+        await updatePagePermissions({
+          pName: this.pageData.name,
+          pid: this.pageData.pid,
+          pagename: this.pageData.pagename,
+          adminsToAdd: this.adminsToAdd,
+          modsToAdd: this.modsToAdd,
+          adminsToRemove: this.adminsToRemove,
+          modsToRemove: this.modsToRemove,
+          adminsInvitationsToRemove: this.adminsInvitationsToRemove,
+          modsInvitationsToRemove: this.modsInvitationsToRemove,
+        });
+      } else {
+        await updateGroupPermissions({
+          gName: this.groupData.name,
+          gid: this.groupData.gid,
+          groupname: this.groupData.groupname,
+          adminsToAdd: this.adminsToAdd,
+          modsToAdd: this.modsToAdd,
+          adminsToRemove: this.adminsToRemove,
+          modsToRemove: this.modsToRemove,
+          adminsInvitationsToRemove: this.adminsInvitationsToRemove,
+          modsInvitationsToRemove: this.modsInvitationsToRemove,
+        });
+      }
 
       alert("Pomyślnie zapisano zmiany");
       this.$parent.toggleEditPermissions();
     },
   },
   async mounted() {
-    let originalPermissions = await getPagePermissions(this.pid);
+    let originalPermissions;
+    if (this.pageData) {
+      originalPermissions = await getPagePermissions(this.pageData.pid);
+    } else {
+      originalPermissions = await getGroupPermissions(this.groupData.gid);
+    }
 
     this.originalAdminsList = originalPermissions.admins;
     this.originalModsList = originalPermissions.mods;

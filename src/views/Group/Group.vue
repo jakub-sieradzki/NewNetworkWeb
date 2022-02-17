@@ -35,7 +35,7 @@
           </div>
           <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer self-center">
             <div class="flex">
-              <div v-if="observed.includes(gid)" @click="removePageObservedClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
+              <div v-if="observed.includes(gid)" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="9" cy="7" r="4" />
@@ -44,7 +44,7 @@
                 </svg>
                 <p class="text-sm">Opuść grupę</p>
               </div>
-              <div v-else @click="observePageClick()" class="flex p-3 gap-2 bg-emerald-500 w-44 text-white lg:hover:bg-emerald-600 items-center justify-center transition">
+              <div v-else @click="joinGroupClick()" class="flex p-3 gap-2 bg-emerald-500 w-44 text-white lg:hover:bg-emerald-600 items-center justify-center transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="9" cy="7" r="4" />
@@ -73,17 +73,19 @@
             </div>
           </div>
           <div class="flex flex-col justify-center items-center my-7 gap-3">
-            <div v-if="adminMode || modMode" class="w-full flex justify-center px-5 mt-6">
+            <div v-if="joined.includes(gid)" class="w-full flex justify-center px-5 mt-6">
               <div @click="showCreatePost" class="flex items-center px-4 py-4 w-44 justify-center rounded-lg transition duration-500 cursor-pointer transform lg:hover:scale-110 bg-gradient-to-r from-blue-600 to-blue-900 shadow-2xl">
                 <img src="/img/add.svg" alt="add" class="w-6 h-6 mr-1" />
                 <p class="text-md text-white text-center">Nowy post</p>
               </div>
             </div>
-            <div v-if="requestAdmin.includes(gid)" @click="acceptAdminClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
-              <p>Zostań administatorem grupy</p>
-            </div>
-            <div v-if="requestMod.includes(gid)" @click="acceptModClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
-              <p>Zostań moderatorem grupy</p>
+            <div v-if="joined.includes(gid)">
+              <div v-if="requestAdmin.includes(gid)" @click="acceptAdminClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
+                <p>Zostań administatorem grupy</p>
+              </div>
+              <div v-if="requestMod.includes(gid)" @click="acceptModClick" class="p-3 bg-emerald-600 rounded-lg hover:bg-emerald-700 text-white cursor-pointer transition">
+                <p>Zostań moderatorem grupy</p>
+              </div>
             </div>
           </div>
         </div>
@@ -97,7 +99,7 @@
             <router-link @click="changeViewMode('settings')" to="settings" class="profileTab" :class="{ profileTabActive: viewMode == 'settings', '!hidden': !adminMode }">Ustawienia</router-link>
           </div>
           <div v-if="this.gid" class="overflow-y-auto w-full h-full py-4 mt-1 mb-2 p-2">
-            <router-view :gid="this.gid" :pageData="{ gid, name, groupname, description, categories, groupProfileImage, groupProfileBackground, membersCount, created }" name="groupContent" class="h-full w-full"></router-view>
+            <router-view :gid="this.gid" :groupData="{ gid, name, groupname, description, categories, groupProfileImage, groupProfileBackground, membersCount, created }" name="groupContent" class="h-full w-full"></router-view>
           </div>
         </div>
       </div>
@@ -109,7 +111,7 @@ import { getProfileBackgroundUrl, getProfileImageUrl } from "@/firebase-storage/
 import { getBlobFromURL } from "@/helpers/blobFunctions";
 import CreatePost from "@/views/Post/CreatePost.vue";
 import { mapState } from "vuex";
-import { acceptPageAdminInvitation, acceptPageModInvitation } from "@/firebase-functions/functions";
+import { acceptGroupAdminInvitation, acceptGroupModInvitation, joinGroup, leaveGroup } from "@/firebase-functions/functions";
 import { getGroupDataOnGroupname } from "@/database/getData";
 export default {
   components: {
@@ -135,7 +137,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("userGroupsInfo", ["observed", "blocked", "administered", "moderated", "requestAdmin", "requestMod"]),
+    ...mapState("userGroupsInfo", ["joined", "observed", "blocked", "administered", "moderated", "requestAdmin", "requestMod"]),
   },
   watch: {
     administered(newValue, oldValue) {
@@ -193,17 +195,18 @@ export default {
         this.groupProfileBackground = "/img/wallpaper.jpg";
       }
     },
-    async observePageClick() {
-      await observePage(this.gid);
+    async joinGroupClick() {
+      await joinGroup(this.gid);
     },
-    async removePageObservedClick() {
-      await removeObservedPage(this.gid);
+    async leaveGroupClick() {
+      await leaveGroup(this.gid);
     },
     async acceptAdminClick() {
-      await acceptPageAdminInvitation(this.gid);
+      await acceptGroupAdminInvitation(this.gid);
     },
     async acceptModClick() {
-      await acceptPageModInvitation(this.gid);
+      console.log("gid: ", this.gid);
+      await acceptGroupModInvitation(this.gid);
     },
   },
 

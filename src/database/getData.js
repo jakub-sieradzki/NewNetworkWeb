@@ -297,4 +297,14 @@ async function getGroupPosts(gid) {
   return groupPosts;
 }
 
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids, getGroupDataOnGroupname, getGroupsInfo, getGroupPosts };
+async function getGroupPermissions(gid) {
+  let permissions = false;
+  await getDoc(doc(getFirestore(), "groups", gid, "details", "permissions")).then((doc) => {
+    if (doc.exists()) {
+      permissions = doc.data();
+    }
+  });
+  return permissions;
+}
+
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids, getGroupDataOnGroupname, getGroupsInfo, getGroupPosts, getGroupPermissions };

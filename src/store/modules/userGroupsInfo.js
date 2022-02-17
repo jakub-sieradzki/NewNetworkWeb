@@ -1,5 +1,5 @@
 const state = () => ({
-    blocked: [],
+    blockedBy: [],
     joined: [],
     observed: [],
     administered: [],
@@ -9,8 +9,8 @@ const state = () => ({
 })
 
 const mutations = {
-    setBlocked(state, value) {
-        state.blocked = value
+    setBlockedBy(state, value) {
+        state.blockedBy = value
     },
     setJoined(state, value) {
         state.joined = value
@@ -31,7 +31,7 @@ const mutations = {
         state.requestMod = value
     },
     setGroupsInfo(state, values) {
-        state.blocked = values.blocked
+        state.blockedBy = values.blocked_by
         state.joined = values.joined
         state.observed = values.observed
         state.administered = values.administered
