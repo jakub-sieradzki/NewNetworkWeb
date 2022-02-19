@@ -39,7 +39,7 @@
 </template>
 <script>
 import SingleGroupListItem from "@/components/SingleGroupListItem.vue";
-import CreateNewGroup from "@/components/CreateNewGroup.vue";
+import CreateNewGroup from "@/views/Group/CreateNewGroup.vue";
 import { mapState } from "vuex";
 import { getGroupsInfo } from "@/database/getData";
 export default {

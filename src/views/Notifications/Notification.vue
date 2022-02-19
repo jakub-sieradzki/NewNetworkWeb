@@ -7,7 +7,7 @@
       <div class="flex font-semibold text-xs gap-1">
         <p v-if="notification.type == 'friend_request'" @click="acceptClick()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Akceptuj</p>
         <p v-if="notification.type == 'page_request_admin' || notification.type == 'page_request_mod'" @click="showPageClick()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Zobacz</p>
-        <p v-if="notification.type == 'group_request_admin' || notification.type == 'group_request_mod'" @click="showGroupClick()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Zobacz</p>
+        <p v-if="notification.type == 'group_request_admin' || notification.type == 'group_request_mod' || notification.type == 'group_accept'" @click="showGroupClick()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer text-blue-500">Zobacz</p>
         <p @click="markAsRead()" class="lg:hover:bg-gray-200 dark:lg:hover:bg-gray-800 px-1.5 py-1.5 rounded-md transition cursor-pointer">Odrzuć</p>
       </div>
     </div>
@@ -83,6 +83,14 @@ export default {
     } else if (this.notification.type == "group_request_mod") {
       this.title = "Zostań moderatorem grupy";
       this.content = "Grupa " + this.notification.name + " chce, żebyś został jej moderatorem";
+      this.profileImage = await getProfileImageUrl(this.notification.gid);
+    } else if(this.notification.type == "group_accept") {
+      this.title = "Dołączasz do grupy";
+      this.content = "Grupa " + this.notification.name + " zaakceptowała Twoją prośbę o dołączenie";
+      this.profileImage = await getProfileImageUrl(this.notification.gid);
+    } else if(this.notification.type == "group_deny") {
+      this.title = "Odrzucono prośbę";
+      this.content = "Grupa " + this.notification.name + " odrzuciła Twoją prośbę o dołączenie";
       this.profileImage = await getProfileImageUrl(this.notification.gid);
     }
   },

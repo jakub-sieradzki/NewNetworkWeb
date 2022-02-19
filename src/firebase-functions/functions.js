@@ -316,4 +316,39 @@ async function acceptGroupModInvitation(gid) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation };
+async function changeGroupName(gid, newName) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const changeGroupName = httpsCallable(functions, "changeGroupName");
+  await changeGroupName({
+    gid: gid,
+    name: newName
+  }).then((r) => {
+    console.log("changed group name successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function updateGroupMembers(groupInfo, data) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const updateGroupMembers = httpsCallable(functions, "updateGroupMembers");
+  await updateGroupMembers({
+    gid: groupInfo.gid,
+    gName: groupInfo.name,
+    groupname: groupInfo.groupname,
+    membersToRemove: data.membersToRemove,
+    membersToAccept: data.membersToAccept,
+    membersToDeny: data.membersToDeny,
+    membersToUnblock: data.membersToUnblock,
+  }).then((r) => {
+    console.log("changed group name successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers };

@@ -427,4 +427,30 @@ async function sendGroupPost(data) {
   return sent;
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost };
+async function updateGroupDescription(gid, newDescription) {
+  const pageRef = doc(getFirestore(), "groups", gid);
+  await updateDoc(pageRef, {
+    description: newDescription,
+  })
+    .then(() => {
+      console.log("Updated description successfully");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+async function updateGroupCategories(gid, newCategories) {
+  const pageRef = doc(getFirestore(), "groups", gid);
+  await updateDoc(pageRef, {
+    categories: newCategories,
+  })
+    .then(() => {
+      console.log("Updated categories successfully");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost, updateGroupDescription, updateGroupCategories };

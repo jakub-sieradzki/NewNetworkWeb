@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import CreateNewPage from "@/components/CreateNewPage.vue";
+import CreateNewPage from "@/views/Page/CreateNewPage.vue";
 import SinglePageListItem from "@/components/SinglePageListItem.vue";
 import { mapState } from "vuex";
 import { getPagesInfo } from "@/database/getData";
