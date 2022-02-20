@@ -118,7 +118,7 @@
     </div>
     <!-- End Info -->
     <!--Actions-->
-    <div v-if="groupsJoined.includes(postData.gid)" class="post__actions gap-1">
+    <div v-if="!this.postData.gid || groupsJoined.includes(postData.gid)" class="post__actions gap-1">
       <div class="post__actions__action" :class="[selectedRating > 0 ? 'border border-blue-700 ' : '', postData.gid ? '!w-1/2' : '']">
         <div ref="rateButton" @mouseover="reactMouseOver()" @mouseleave="reactMouseLeave()" class="rateButton w-full h-full" :class="[showReactions ? 'dropdown dropdown-open dropdown-top' : '']">
           <div @click="mainReactClick()" tabindex="0" class="flex w-full h-full gap-2">
