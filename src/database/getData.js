@@ -1,21 +1,23 @@
 import { splitArray } from "@/helpers/arrayHelpers";
 import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, FieldPath } from "firebase/firestore";
 
-async function getAllPostsByUids(uids) {
+async function getAllPersonalPostsByUids(uids) {
   let postsData = [];
   if (uids.length > 0) {
-    const q = query(collection(getFirestore(), "posts"), where("uid", "in", uids), orderBy("createdTimestamp", "desc"));
-    await getDocs(q)
-      .then((docs) => {
-        docs.forEach((doc) => {
-          let postData = doc.data();
-          postData.id = doc.id;
-          postsData.push(postData);
+    for (let i = 0; i < uids.length; i++) {
+      const q = query(collection(getFirestore(), "posts"), where("uid", "==", uids[i]), where("visibility", "in", ["private", "public"]), orderBy("createdTimestamp", "desc"));
+      await getDocs(q)
+        .then((docs) => {
+          docs.forEach((doc) => {
+            let postData = doc.data();
+            postData.id = doc.id;
+            postsData.push(postData);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    }
   }
   return postsData;
 }
@@ -369,4 +371,67 @@ async function getGroupDocs(gid) {
 
   return groupDocs;
 }
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids, getGroupDataOnGroupname, getGroupsInfo, getGroupPosts, getGroupPermissions, getGroupMembers, getUsersInfo, getGroupRequests, getGroupUsersBlocked, getGroupDocs };
+
+async function getAllGroupsPostsByGids(gids) {
+  let postsData = [];
+  if (gids.length > 0) {
+    const q = query(collection(getFirestore(), "posts"), where("gid", "in", gids), orderBy("createdTimestamp", "desc"));
+    await getDocs(q)
+      .then((docs) => {
+        docs.forEach((doc) => {
+          let postData = doc.data();
+          postData.id = doc.id;
+          postsData.push(postData);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return postsData;
+}
+
+async function searchGroupname(s) {
+  let queryArray = [];
+  const q = query(collection(getFirestore(), "groups"), where("groupname", ">=", s), where("groupname", "<=", s + "\uf8ff"));
+  await getDocs(q).then((docs) => {
+    docs.forEach((doc) => {
+      let page = doc.data();
+      page.id = doc.id;
+      queryArray.push(page);
+    });
+  });
+  return queryArray;
+}
+
+export {
+  getAllPersonalPostsByUids,
+  getPublicPostsByUids,
+  getUserData,
+  getUserDetailsDoc,
+  getUserDataOnUsername,
+  getPostComments,
+  getSubcomments,
+  checkIfAnySubcomments,
+  getPostsByHashtag,
+  getPost,
+  getPostsByUsername,
+  searchUsername,
+  getPageDataOnPagename,
+  getPagePosts,
+  getPagesInfo,
+  searchPagename,
+  getPagePermissions,
+  getAllPagesPostsByPids,
+  getGroupDataOnGroupname,
+  getGroupsInfo,
+  getGroupPosts,
+  getGroupPermissions,
+  getGroupMembers,
+  getUsersInfo,
+  getGroupRequests,
+  getGroupUsersBlocked,
+  getGroupDocs,
+  getAllGroupsPostsByGids,
+  searchGroupname,
+};

@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="flex flex-col gap-2">
-      <Comment v-for="com in comments" :key="com.id" :com="com" :postId="postId" :originalComId="com.id" />
+      <Comment v-for="com in comments" :key="com.id" :com="com" :postId="postId" :originalComId="com.id" :gid="gid" />
     </div>
   </div>
   <!-- End comments -->
@@ -29,7 +29,7 @@ import SendComment from "./SendComment.vue";
 import Comment from "./Comment.vue";
 import { getPostComments } from "@/database/getData";
 export default {
-  props: ["postId"],
+  props: ["postId", "gid"],
   components: {
     SendComment,
     Comment,

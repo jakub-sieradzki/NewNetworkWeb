@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import { getAllPagesPostsByPids, getAllPostsByUids } from "@/database/getData";
+import { getAllPagesPostsByPids, getAllPersonalPostsByUids } from "@/database/getData";
 import { getPostImagesUrls } from "@/firebase-storage/getFiles";
 export default {
   props: ["pid"],

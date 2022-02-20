@@ -6,6 +6,7 @@ const state = () => ({
     moderated: [],
     requestAdmin: [],
     requestMod: [],
+    requestMember: [],
 })
 
 const mutations = {
@@ -30,6 +31,9 @@ const mutations = {
     setRequestMod(state, value) {
         state.requestMod = value
     },
+    setRequestMember(state, value) {
+        state.requestMember = value
+    },
     setGroupsInfo(state, values) {
         state.blockedBy = values.blocked_by
         state.joined = values.joined
@@ -38,6 +42,7 @@ const mutations = {
         state.moderated = values.moderated
         state.requestAdmin = values.request_admin
         state.requestMod = values.request_mod
+        state.requestMember = values.request_member
     }
 }
 

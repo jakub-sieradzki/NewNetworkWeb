@@ -5,7 +5,7 @@
 </template>
 <script>
 import PostsList from "../Post/PostsList.vue";
-import { getAllPostsByUids, getPublicPostsByUids } from "../../database/getData";
+import { getAllPersonalPostsByUids, getPublicPostsByUids } from "../../database/getData";
 import { mapState } from "vuex";
 
 export default {
@@ -25,7 +25,7 @@ export default {
     async getPosts() {
       let docsPosts;
       if (this.friends.includes(this.uid)) {
-        docsPosts = await getAllPostsByUids([this.uid]);
+        docsPosts = await getAllPersonalPostsByUids([this.uid]);
       } else {
         docsPosts = await getPublicPostsByUids([this.uid]);
       }

@@ -14,7 +14,7 @@
             <circle cx="12" cy="5" r="1" />
           </svg>
           <div tabindex="0" class="dropdownStyle w-48">
-            <div @click="deleteCommentClick" class="dropdownItemStyle flex items-center">
+            <div @click="deleteCommentClick" v-if="selfComment || groupsAdministered.includes(gid) || groupsModerated.includes(gid)" class="dropdownItemStyle flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <line x1="4" y1="7" x2="20" y2="7" />
@@ -24,6 +24,14 @@
                 <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
               </svg>
               <p class="pl-3">Usuń komentarz</p>
+            </div>
+            <div @click="deleteAndBlockUser" v-if="!selfComment && (groupsAdministered.includes(gid) || groupsModerated.includes(gid))" class="dropdownItemStyle flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                <path d="M7 12h14l-3 -3m0 6l3 -3" />
+              </svg>
+              <p class="pl-3">Usuń i zablokuj uż.</p>
             </div>
           </div>
         </div>
@@ -79,8 +87,9 @@ import { getProfileImageUrl } from "@/firebase-storage/getFiles";
 import { getLinkifyText } from "@/helpers/textHelpers";
 import { DateTime } from "luxon";
 import { addCommentReaction, deleteComment, removeCommentReaction, updateCommentReaction } from "@/database/setData";
+import { kickUsersFromGroup } from '@/firebase-functions/functions';
 export default {
-  props: ["postId", "com", "originalComId"],
+  props: ["postId", "com", "originalComId", "gid"],
   components: {
     SendComment,
     Comment,
@@ -95,6 +104,7 @@ export default {
       commentFullDate: "",
       content: "",
       selectedRating: 0,
+      selfComment: false,
     };
   },
   computed: {
@@ -102,6 +112,10 @@ export default {
       currentUserProfileImage: "profileImage",
     }),
     ...mapState(["commentsRated"]),
+    ...mapState("userGroupsInfo", {
+      groupsAdministered: "administered",
+      groupsModerated: "moderated",
+    }),
   },
   watch: {
     commentsRated(newValue, oldValue) {
@@ -164,6 +178,7 @@ export default {
       }
     },
     async deleteCommentClick() {
+      console.log("comment gid: ", this.gid);
       if (this.com.uid == getAuth().currentUser.uid) {
         let result = await deleteComment(this.postId, this.originalComId, this.com.id);
         if (result) {
@@ -171,12 +186,31 @@ export default {
         } else {
           alert("Wystąpił problem z usuwaniem komentarza");
         }
+      } else if (this.gid) {
+        if (this.groupsAdministered.includes(this.gid) || this.groupsModerated.includes(this.gid)) {
+          let result = await deleteComment(this.postId, this.originalComId, this.com.id);
+          if (result) {
+            alert("Komentarz pomyślnie usunięty. Odśwież sekcję komentarzy aby zobaczyć zmiany");
+          } else {
+            alert("Wystąpił problem z usuwaniem komentarza");
+          }
+        } else {
+          alert("Możesz usuwać tylko swoje komentarze");
+        }
       } else {
         alert("Możesz usuwać tylko swoje komentarze");
       }
     },
+    async deleteAndBlockUser() {
+      await kickUsersFromGroup(this.gid, [this.com.uid]);
+      await this.deleteCommentClick();
+      alert("Pomyślnie usunięto post i zbanowano użytkownika");
+    }
   },
   async mounted() {
+    if (this.com.uid == getAuth().currentUser.uid) {
+      this.selfComment = true;
+    }
     this.content = getLinkifyText(this.com.content);
     this.updateRated();
     // Convert time

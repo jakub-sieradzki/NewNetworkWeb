@@ -35,7 +35,17 @@
           </div>
           <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer self-center">
             <div class="flex">
-              <div v-if="joined.includes(gid)" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
+              <div v-if="blockedBy.includes(gid)" class="flex p-3 gap-2 bg-red-700 text-white cursor-default">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                  <line x1="19" y1="7" x2="19" y2="10" />
+                  <line x1="19" y1="14" x2="19" y2="14.01" />
+                </svg>
+                <p class="text-sm">Zostałeś zablokowany przez tę grupę</p>
+              </div>
+              <div v-else-if="joined.includes(gid)" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="9" cy="7" r="4" />
@@ -43,6 +53,14 @@
                   <line x1="16" y1="11" x2="22" y2="11" />
                 </svg>
                 <p class="text-sm">Opuść grupę</p>
+              </div>
+              <div v-else-if="requestMember.includes(gid)" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <circle cx="12" cy="7" r="4" />
+                  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                </svg>
+                <p class="text-sm">Wysłano prośbę o przyjęcie do grupy</p>
               </div>
               <div v-else @click="joinGroupClick()" class="flex p-3 gap-2 bg-emerald-500 w-44 text-white lg:hover:bg-emerald-600 items-center justify-center transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -99,7 +117,7 @@
         </div>
       </div>
       <div class="profileContentDivStyle">
-        <div class="profileTabsContentStyle">
+        <div v-if="!blockedBy.includes(gid)" class="profileTabsContentStyle">
           <div class="profileTabMenu">
             <router-link @click="changeViewMode('posts')" to="posts" class="profileTab" :class="{ profileTabActive: viewMode == 'posts' }">Posty</router-link>
             <router-link @click="changeViewMode('gallery')" to="gallery" class="profileTab" :class="{ profileTabActive: viewMode == 'gallery' }">Galeria</router-link>
@@ -107,7 +125,7 @@
             <router-link @click="changeViewMode('settings')" to="settings" class="profileTab" :class="{ profileTabActive: viewMode == 'settings', '!hidden': !adminMode }">Ustawienia</router-link>
           </div>
           <div v-if="this.gid" class="overflow-y-auto w-full h-full py-4 mt-1 mb-2 p-2">
-            <router-view :gid="this.gid" :groupData="{ gid, name, groupname, description, categories, groupProfileImage, groupProfileBackground, membersCount, created }" name="groupContent" class="h-full w-full"></router-view>
+            <router-view :gid="this.gid" :groupData="{ gid, name, groupname, description, categories, groupProfileImage, groupProfileBackground, membersCount, created, groupType }" name="groupContent" class="h-full w-full"></router-view>
           </div>
         </div>
       </div>
@@ -145,7 +163,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("userGroupsInfo", ["joined", "observed", "blocked", "administered", "moderated", "requestAdmin", "requestMod"]),
+    ...mapState("userGroupsInfo", ["joined", "observed", "blockedBy", "administered", "moderated", "requestAdmin", "requestMod", "requestMember"]),
   },
   watch: {
     administered(newValue, oldValue) {
@@ -221,7 +239,7 @@ export default {
     },
     async removeObservedGroupClick() {
       await removeObservedGroup(this.gid);
-    }
+    },
   },
 
   async mounted() {

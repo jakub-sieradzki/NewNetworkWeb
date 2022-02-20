@@ -19,9 +19,9 @@
       </div>
       <div class="w-full">
         <div class="flex flex-col gap-3 items-start bg-gray-100 border dark:border-gray-800 dark:bg-gray-800/50 rounded-md p-5 pt-3">
-          <div class="flex w-full justify-between items-center truncate">
+          <div class="flex w-full h-8 justify-between items-center truncate">
             <p class="text-sm font-semibold">Regulamin grupy</p>
-            <svg @click="toggleEditRules" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-8 h-8 p-1.5 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer transition" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg v-if="administered.includes(gid) || moderated.includes(gid)" @click="toggleEditRules" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-8 h-8 p-1.5 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer transition" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
               <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
@@ -40,6 +40,7 @@
 import { getGroupDocs } from "@/database/getData";
 import { DateTime } from "luxon";
 import EditRules from "./EditRules.vue";
+import { mapState } from 'vuex';
 export default {
   props: ["gid", "groupData"],
   components: {
@@ -52,6 +53,9 @@ export default {
       lastEdit: "",
       editRules: false,
     };
+  },
+  computed: {
+      ...mapState("userGroupsInfo", ["administered", "moderated"]),
   },
   methods: {
     toggleEditRules() {

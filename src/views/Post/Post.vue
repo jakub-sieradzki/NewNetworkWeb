@@ -188,7 +188,7 @@
       </div>
     </div>
     <!--End Actions-->
-    <PostComments v-if="showComments" :postId="this.postData.id" />
+    <PostComments v-if="showComments" :postId="this.postData.id" :gid="this.postData.gid"/>
   </div>
   <!-- End Post -->
 </template>

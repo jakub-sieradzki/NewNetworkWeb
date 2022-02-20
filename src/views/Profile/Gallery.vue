@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import { getAllPostsByUids } from "@/database/getData";
+import { getAllPersonalPostsByUids } from "@/database/getData";
 import { getPostImagesUrls } from "@/firebase-storage/getFiles";
 export default {
   props: ["uid"],
@@ -23,7 +23,7 @@ export default {
     },
   },
   async mounted() {
-    let posts = await getAllPostsByUids([this.uid]);
+    let posts = await getAllPersonalPostsByUids([this.uid]);
     let imgNames = [];
     posts.forEach((post) => {
       if (post.files.length > 0) {

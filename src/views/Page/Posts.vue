@@ -5,7 +5,7 @@
 </template>
 <script>
 import PostsList from "../Post/PostsList.vue";
-import { getAllPostsByUids, getPagePosts, getPublicPostsByUids } from "../../database/getData";
+import { getAllPersonalPostsByUids, getPagePosts, getPublicPostsByUids } from "../../database/getData";
 import { mapState } from "vuex";
 
 export default {

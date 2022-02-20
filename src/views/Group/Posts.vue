@@ -1,24 +1,30 @@
 <template>
-  <div v-if="postsLoaded" class="m-auto flex flex-col gap-6 w-full" style="">
+  <div v-if="postsLoaded && showPosts" class="m-auto flex flex-col gap-6 w-full" style="">
     <PostsList :postsData="posts" :groupView="true" />
+  </div>
+  <div v-else-if="!showPosts" class="flex w-full h-full items-center justify-center">
+    <p>Aby zobaczyć posty musisz dołączyć do grupy</p>
   </div>
 </template>
 <script>
 import PostsList from "../Post/PostsList.vue";
-import { getAllPostsByUids, getGroupPosts, getPagePosts, getPublicPostsByUids } from "../../database/getData";
+import { getAllPersonalPostsByUids, getGroupPosts, getPagePosts, getPublicPostsByUids } from "../../database/getData";
 import { mapState } from "vuex";
 
 export default {
   components: { PostsList },
-  props: ["gid"],
+  props: ["gid", "groupData"],
   data() {
     return {
       postsLoaded: false,
       posts: [],
       lastUid: "",
+      showPosts: true,
     };
   },
-  computed: {},
+  computed: {
+    ...mapState("userGroupsInfo", ["joined"]),
+  },
   methods: {
     async getPosts() {
       let docsPosts;
@@ -32,15 +38,12 @@ export default {
     },
   },
   async mounted() {
-    this.getPosts();
-    console.log("gid: ", this.gid);
-    console.log("mounted");
+    if ((this.groupData.groupType == "private" && this.joined.includes(this.gid)) || this.groupData.groupType == "public") {
+      this.getPosts();
+    } else {
+      this.showPosts = false;
+    }
   },
-  async updated() {
-    console.log("updated");
-    // if (this.lastUid != this.uid) {
-    //   this.getPosts();
-    // }
-  },
+  async updated() {},
 };
 </script>

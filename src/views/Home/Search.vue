@@ -67,25 +67,50 @@
             </div>
           </div>
         </div>
+        <div class="flex flex-col gap-1">
+          <p v-if="searchStatus == 'done'" class="text-sm font-semibold self-start">Grupy</p>
+          <div class="flex gap-3 py-3 overflow-y-auto" ref="userList" @mousewheel="scrollX">
+            <div v-if="searchStatus == 'done'" class="w-full">
+              <div v-if="groupnameSearchResult.length <= 0" class="searchPlaceholder">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-16 h-16" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <circle cx="12" cy="12" r="9" />
+                  <line x1="9" y1="10" x2="9.01" y2="10" />
+                  <line x1="15" y1="10" x2="15.01" y2="10" />
+                  <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0" />
+                </svg>
+                <p>Nic nie znaleziono</p>
+              </div>
+              <div v-else class="flex w-full gap-3">
+                <div v-for="result in groupnameSearchResult" :key="result.id">
+                  <single-group-list-item :group="result" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { searchPagename, searchUsername } from "@/database/getData";
+import { searchGroupname, searchPagename, searchUsername } from "@/database/getData";
 import SingleUserListItem from "@/components/SingleUserListItem.vue";
 import SinglePageListItem from "@/components/SinglePageListItem.vue";
+import SingleGroupListItem from "@/components/SingleGroupListItem.vue";
 export default {
   name: "Search",
   components: {
     SingleUserListItem,
     SinglePageListItem,
+    SingleGroupListItem,
   },
   data() {
     return {
       searchQuery: "",
       usernameSearchResult: [],
       pagenameSearchResult: [],
+      groupnameSearchResult: [],
       searchStatus: "not started",
       searchTimeout: null,
     };
@@ -103,6 +128,7 @@ export default {
         this.searchTimeout = setTimeout(async () => {
           this.usernameSearchResult = await searchUsername(newQuery);
           this.pagenameSearchResult = await searchPagename(newQuery);
+          this.groupnameSearchResult = await searchGroupname(newQuery);
           this.searchStatus = "done";
         }, 1000);
       } else if (newQuery.length == 0) {
