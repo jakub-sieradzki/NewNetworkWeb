@@ -404,6 +404,25 @@ async function searchGroupname(s) {
   return queryArray;
 }
 
+async function getAllGroupsPostsByPids(gids) {
+  let postsData = [];
+  if (gids.length > 0) {
+    const q = query(collection(getFirestore(), "posts"), where("gid", "in", gids), orderBy("createdTimestamp", "desc"));
+    await getDocs(q)
+      .then((docs) => {
+        docs.forEach((doc) => {
+          let postData = doc.data();
+          postData.id = doc.id;
+          postsData.push(postData);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return postsData;
+}
+
 export {
   getAllPersonalPostsByUids,
   getPublicPostsByUids,
@@ -434,4 +453,5 @@ export {
   getGroupDocs,
   getAllGroupsPostsByGids,
   searchGroupname,
+  getAllGroupsPostsByPids
 };

@@ -4,9 +4,9 @@
   <manage-users v-if="editUsers" :groupData="groupData" :gid="groupData.gid" />
   <manage-requests v-if="editRequests" :groupData="groupData" :gid="groupData.gid" />
   <manage-blocked v-if="editBlocked" :groupData="groupData" :gid="groupData.gid" />
-  <div v-if="adminMode">
+  <div>
     <div class="flex flex-wrap px-2">
-      <div class="w-full md:w-1/2 h-20 md:odd:pr-3">
+      <div v-if="adminMode" class="w-full md:w-1/2 h-20 md:odd:pr-3">
         <div @click="toggleEditGroup" class="flex items-center bg-sky-600 text-white rounded-md p-5 cursor-pointer hoverAnimation">
           <div class="flex items-center gap-4 truncate">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full md:w-1/2 h-20 md:odd:pr-3">
+      <div v-if="adminMode" class="w-full md:w-1/2 h-20 md:odd:pr-3">
         <div @click="toggleEditPermissions" class="flex items-center bg-sky-600 text-white rounded-md p-5 cursor-pointer hoverAnimation">
           <div class="flex items-center gap-4 truncate">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full md:w-1/2 h-20 md:odd:pr-3">
+      <div v-if="adminMode || modMode" class="w-full md:w-1/2 h-20 md:odd:pr-3">
         <div @click="toggleEditUsers" class="flex items-center bg-sky-600 text-white rounded-md p-5 cursor-pointer hoverAnimation">
           <div class="flex items-center gap-4 truncate">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full md:w-1/2 h-20 md:odd:pr-3">
+      <div v-if="adminMode || modMode" class="w-full md:w-1/2 h-20 md:odd:pr-3">
         <div @click="toggleEditRequests" class="flex items-center bg-sky-600 text-white rounded-md p-5 cursor-pointer hoverAnimation">
           <div class="flex items-center gap-4 truncate">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -58,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full md:w-1/2 h-20 md:odd:pr-3">
+      <div v-if="adminMode || modMode" class="w-full md:w-1/2 h-20 md:odd:pr-3">
         <div @click="toggleEditBlocked" class="flex items-center bg-sky-600 text-white rounded-md p-5 cursor-pointer hoverAnimation">
           <div class="flex items-center gap-4 truncate">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -71,8 +71,8 @@
           </div>
         </div>
       </div>
-      <div class="w-full md:w-1/2 h-20 md:odd:pr-3">
-        <div @click="deletePageClick" class="flex items-center bg-red-600 text-white rounded-md p-5 cursor-pointer hoverAnimation">
+      <div v-if="adminMode" class="w-full md:w-1/2 h-20 md:odd:pr-3">
+        <div class="flex items-center bg-red-900 text-white rounded-md p-5 cursor-not-allowed hoverAnimation">
           <div class="flex items-center gap-4 truncate">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-7 h-7 flex-shrink-0" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -82,7 +82,7 @@
               <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
               <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
             </svg>
-            <p class="">Usuń grupę</p>
+            <p class="">Usuń grupę (wkrótce)</p>
           </div>
         </div>
       </div>
@@ -114,6 +114,7 @@ export default {
       editRequests: false,
       editBlocked: false,
       adminMode: false,
+      modMode: false,
     };
   },
   methods: {
@@ -144,11 +145,14 @@ export default {
     },
   },
   computed: {
-    ...mapState("userGroupsInfo", ["administered"]),
+    ...mapState("userGroupsInfo", ["administered", "moderated"]),
   },
   mounted() {
     if (this.administered.includes(this.groupData.gid)) {
       this.adminMode = true;
+    }
+    if (this.moderated.includes(this.groupData.gid)) {
+      this.modMode = true;
     }
   },
 };

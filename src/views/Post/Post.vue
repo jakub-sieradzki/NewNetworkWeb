@@ -118,7 +118,7 @@
     </div>
     <!-- End Info -->
     <!--Actions-->
-    <div class="post__actions gap-1">
+    <div v-if="groupsJoined.includes(postData.gid)" class="post__actions gap-1">
       <div class="post__actions__action" :class="[selectedRating > 0 ? 'border border-blue-700 ' : '', postData.gid ? '!w-1/2' : '']">
         <div ref="rateButton" @mouseover="reactMouseOver()" @mouseleave="reactMouseLeave()" class="rateButton w-full h-full" :class="[showReactions ? 'dropdown dropdown-open dropdown-top' : '']">
           <div @click="mainReactClick()" tabindex="0" class="flex w-full h-full gap-2">
@@ -188,7 +188,7 @@
       </div>
     </div>
     <!--End Actions-->
-    <PostComments v-if="showComments" :postId="this.postData.id" :gid="this.postData.gid"/>
+    <PostComments v-if="showComments" :postId="this.postData.id" :gid="this.postData.gid" />
   </div>
   <!-- End Post -->
 </template>
@@ -253,6 +253,7 @@ export default {
     ...mapState("userGroupsInfo", {
       groupsAdministered: "administered",
       groupsModerated: "moderated",
+      groupsJoined: "joined",
     }),
   },
   watch: {
@@ -289,7 +290,27 @@ export default {
     },
     async deletePostClick() {
       const user = getAuth().currentUser;
-      if (user.uid == this.postData.uid) {
+      if (this.postSourceType == "group") {
+        if (this.groupsAdministered.includes(this.postData.gid) || this.groupsModerated.includes(this.postData.gid)) {
+          await removePostImages(this.postData.gid, this.postData.files);
+          let deleted = await deletePost(this.postData.id);
+          if (deleted) {
+            alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
+          } else {
+            alert("Wystąpił błąd");
+          }
+        }
+      } else if (this.postSourceType == "page") {
+        if (this.pagesAdministered.includes(this.postData.pid) || this.pagesModerated.includes(this.postData.pid)) {
+          await removePostImages(this.postData.pid, this.postData.files);
+          let deleted = await deletePost(this.postData.id);
+          if (deleted) {
+            alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
+          } else {
+            alert("Wystąpił błąd");
+          }
+        }
+      } else if (user.uid == this.postData.uid) {
         await removePostImages(user.uid, this.postData.files);
         let deleted = await deletePost(this.postData.id);
         if (deleted) {
@@ -298,19 +319,7 @@ export default {
           alert("Wystąpił błąd");
         }
       } else {
-        if (this.postSourceType == "page" || this.postSourceType == "group") {
-          if (this.pagesAdministered.includes(this.postData.pid) || this.pagesModerated.includes(this.postData.pid) || this.groupsAdministered.includes(this.postData.gid) || this.groupsModerated.includes(this.postData.gid)) {
-            await removePostImages(this.postData.pid, this.postData.files);
-            let deleted = await deletePost(this.postData.id);
-            if (deleted) {
-              alert("Usunięto post. Odśwież stronę aby zobaczyć zmiany");
-            } else {
-              alert("Wystąpił błąd");
-            }
-          }
-        } else {
-          alert("To nie jest Twój post, więc nie możesz go usunąć :)");
-        }
+        alert("To nie jest Twój post, więc nie możesz go usunąć :)");
       }
     },
     reactMouseOver() {
@@ -430,6 +439,8 @@ export default {
         this.imagesUrls = await getPostImagesUrls(this.postData.uid, this.postData.files);
       } else if (this.postSourceType == "page") {
         this.imagesUrls = await getPostImagesUrls(this.postData.pid, this.postData.files);
+      } else if (this.postSourceType == "group") {
+        this.imagesUrls = await getPostImagesUrls(this.postData.gid, this.postData.files);
       }
     }
     // set post rating

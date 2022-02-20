@@ -122,7 +122,7 @@
             <router-link @click="changeViewMode('posts')" to="posts" class="profileTab" :class="{ profileTabActive: viewMode == 'posts' }">Posty</router-link>
             <router-link @click="changeViewMode('gallery')" to="gallery" class="profileTab" :class="{ profileTabActive: viewMode == 'gallery' }">Galeria</router-link>
             <router-link @click="changeViewMode('info')" to="info" class="profileTab" :class="{ profileTabActive: viewMode == 'info' }">Informacje</router-link>
-            <router-link @click="changeViewMode('settings')" to="settings" class="profileTab" :class="{ profileTabActive: viewMode == 'settings', '!hidden': !adminMode }">Ustawienia</router-link>
+            <router-link @click="changeViewMode('settings')" to="settings" class="profileTab" :class="{ profileTabActive: viewMode == 'settings', '!hidden': !(adminMode || modMode) }">Ustawienia</router-link>
           </div>
           <div v-if="this.gid" class="overflow-y-auto w-full h-full py-4 mt-1 mb-2 p-2">
             <router-view :gid="this.gid" :groupData="{ gid, name, groupname, description, categories, groupProfileImage, groupProfileBackground, membersCount, created, groupType }" name="groupContent" class="h-full w-full"></router-view>
