@@ -1,6 +1,6 @@
 <template>
   <div v-if="postsLoaded" class="m-auto flex flex-col gap-6 w-full" style="">
-    <PostsList :postsData="posts" />
+    <PostsList :postsData="posts" :groupView="true" />
   </div>
 </template>
 <script>

@@ -310,7 +310,7 @@ async function getGroupPermissions(gid) {
 async function getGroupMembers(gid) {
   let usersList = [];
   await getDoc(doc(getFirestore(), "groups", gid, "details", "members")).then((doc) => {
-    if(doc.exists()) {
+    if (doc.exists()) {
       usersList = doc.data().members;
     }
   });
@@ -322,7 +322,7 @@ async function getUsersInfo(uids) {
   let usersInfo = [];
   let uidsArray = splitArray(uids, 10);
   console.log("uids array: ", uidsArray);
-  for(let i = 0; i < uidsArray.length; i++) {
+  for (let i = 0; i < uidsArray.length; i++) {
     console.log("uids array single: ", uidsArray[i]);
     const q = query(collection(getFirestore(), "users"), where("uid", "in", uidsArray[i]));
     await getDocs(q).then((docs) => {
@@ -331,7 +331,7 @@ async function getUsersInfo(uids) {
         d.id = doc.id;
         usersInfo.push(d);
       });
-    })
+    });
   }
 
   return usersInfo;
@@ -340,7 +340,7 @@ async function getUsersInfo(uids) {
 async function getGroupRequests(gid) {
   let usersList = [];
   await getDoc(doc(getFirestore(), "groups", gid, "details", "members_requests")).then((doc) => {
-    if(doc.exists()) {
+    if (doc.exists()) {
       usersList = doc.data().requests;
     }
   });
@@ -351,11 +351,22 @@ async function getGroupRequests(gid) {
 async function getGroupUsersBlocked(gid) {
   let usersList = [];
   await getDoc(doc(getFirestore(), "groups", gid, "details", "members_blocked")).then((doc) => {
-    if(doc.exists()) {
+    if (doc.exists()) {
       usersList = doc.data().blocked;
     }
   });
 
   return usersList;
 }
-export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids, getGroupDataOnGroupname, getGroupsInfo, getGroupPosts, getGroupPermissions, getGroupMembers, getUsersInfo, getGroupRequests, getGroupUsersBlocked };
+
+async function getGroupDocs(gid) {
+  let groupDocs = {};
+  await getDoc(doc(getFirestore(), "groups", gid, "details", "docs")).then((doc) => {
+    if (doc.exists()) {
+      groupDocs = doc.data();
+    }
+  });
+
+  return groupDocs;
+}
+export { getAllPostsByUids, getPublicPostsByUids, getUserData, getUserDetailsDoc, getUserDataOnUsername, getPostComments, getSubcomments, checkIfAnySubcomments, getPostsByHashtag, getPost, getPostsByUsername, searchUsername, getPageDataOnPagename, getPagePosts, getPagesInfo, searchPagename, getPagePermissions, getAllPagesPostsByPids, getGroupDataOnGroupname, getGroupsInfo, getGroupPosts, getGroupPermissions, getGroupMembers, getUsersInfo, getGroupRequests, getGroupUsersBlocked, getGroupDocs };

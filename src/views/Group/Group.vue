@@ -35,7 +35,7 @@
           </div>
           <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer self-center">
             <div class="flex">
-              <div v-if="observed.includes(gid)" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
+              <div v-if="joined.includes(gid)" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="9" cy="7" r="4" />
@@ -53,22 +53,30 @@
                 </svg>
                 <p class="text-sm">Dołącz do grupy</p>
               </div>
-              <div @click="toggleShowMoreOptions" class="flex dark:bg-gray-800 bg-gray-300/60 p-3 self-start lg:hover:bg-gray-300/30 lg:hover:dark:bg-gray-700 transition">
+              <div v-if="joined.includes(gid)" @click="toggleShowMoreOptions" class="flex dark:bg-gray-800 bg-gray-300/60 p-3 self-start lg:hover:bg-gray-300/30 lg:hover:dark:bg-gray-700 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5 transition duration-300" :class="{ 'rotate-180': showMoreOptions }" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
             </div>
-            <div v-if="showMoreOptions" class="flex flex-col cursor-not-allowed">
-              <div class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
+            <div v-if="showMoreOptions && joined.includes(gid)" class="flex flex-col">
+              <div v-if="observed.includes(gid)" @click="removeObservedGroupClick" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65" />
-                  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2" />
                   <line x1="3" y1="3" x2="21" y2="21" />
+                  <path d="M10.584 10.587a2 2 0 0 0 2.828 2.83" />
+                  <path d="M9.363 5.365a9.466 9.466 0 0 1 2.637 -.365c4 0 7.333 2.333 10 7c-.778 1.361 -1.612 2.524 -2.503 3.488m-2.14 1.861c-1.631 1.1 -3.415 1.651 -5.357 1.651c-4 0 -7.333 -2.333 -10 -7c1.369 -2.395 2.913 -4.175 4.632 -5.341" />
                 </svg>
-                <p class="text-sm">Zablokuj (wkrótce)</p>
+                <p class="text-sm">Przestań obserwować</p>
+              </div>
+              <div v-else @click="observeGroupClick" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <circle cx="12" cy="12" r="2" />
+                  <path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" />
+                </svg>
+                <p class="text-sm">Obserwuj</p>
               </div>
             </div>
           </div>
@@ -111,7 +119,7 @@ import { getProfileBackgroundUrl, getProfileImageUrl } from "@/firebase-storage/
 import { getBlobFromURL } from "@/helpers/blobFunctions";
 import CreatePost from "@/views/Post/CreatePost.vue";
 import { mapState } from "vuex";
-import { acceptGroupAdminInvitation, acceptGroupModInvitation, joinGroup, leaveGroup } from "@/firebase-functions/functions";
+import { acceptGroupAdminInvitation, acceptGroupModInvitation, joinGroup, leaveGroup, observeGroup, removeObservedGroup } from "@/firebase-functions/functions";
 import { getGroupDataOnGroupname } from "@/database/getData";
 export default {
   components: {
@@ -208,6 +216,12 @@ export default {
       console.log("gid: ", this.gid);
       await acceptGroupModInvitation(this.gid);
     },
+    async observeGroupClick() {
+      await observeGroup(this.gid);
+    },
+    async removeObservedGroupClick() {
+      await removeObservedGroup(this.gid);
+    }
   },
 
   async mounted() {

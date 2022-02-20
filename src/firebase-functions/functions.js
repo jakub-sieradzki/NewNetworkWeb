@@ -147,7 +147,7 @@ async function changePageName(pid, newName) {
   const changePageName = httpsCallable(functions, "changePageName");
   await changePageName({
     pid: pid,
-    name: newName
+    name: newName,
   }).then((r) => {
     console.log("changed page name successfully");
     result = r;
@@ -183,7 +183,7 @@ async function acceptPageAdminInvitation(pid) {
   const functions = getFunctions(getApp(), "europe-west1");
   const acceptPageAdminInvitation = httpsCallable(functions, "acceptPageAdminInvitation");
   await acceptPageAdminInvitation({
-    pid: pid
+    pid: pid,
   }).then((r) => {
     console.log("accepted page admin successfully");
     result = r;
@@ -197,7 +197,7 @@ async function acceptPageModInvitation(pid) {
   const functions = getFunctions(getApp(), "europe-west1");
   const acceptPageModInvitation = httpsCallable(functions, "acceptPageModInvitation");
   await acceptPageModInvitation({
-    pid: pid
+    pid: pid,
   }).then((r) => {
     console.log("accepted page moderator successfully");
     result = r;
@@ -211,7 +211,7 @@ async function deletePage(pid) {
   const functions = getFunctions(getApp(), "europe-west1");
   const deletePage = httpsCallable(functions, "deletePage");
   await deletePage({
-    pid: pid
+    pid: pid,
   }).then((r) => {
     console.log("deleted page successfully");
     result = r;
@@ -293,7 +293,7 @@ async function acceptGroupAdminInvitation(gid) {
   const functions = getFunctions(getApp(), "europe-west1");
   const acceptGroupAdminInvitation = httpsCallable(functions, "acceptGroupAdminInvitation");
   await acceptGroupAdminInvitation({
-    gid: gid
+    gid: gid,
   }).then((r) => {
     console.log("accepted group admin successfully");
     result = r;
@@ -307,7 +307,7 @@ async function acceptGroupModInvitation(gid) {
   const functions = getFunctions(getApp(), "europe-west1");
   const acceptGroupModInvitation = httpsCallable(functions, "acceptGroupModInvitation");
   await acceptGroupModInvitation({
-    gid: gid
+    gid: gid,
   }).then((r) => {
     console.log("accepted group moderator successfully");
     result = r;
@@ -322,7 +322,7 @@ async function changeGroupName(gid, newName) {
   const changeGroupName = httpsCallable(functions, "changeGroupName");
   await changeGroupName({
     gid: gid,
-    name: newName
+    name: newName,
   }).then((r) => {
     console.log("changed group name successfully");
     result = r;
@@ -351,4 +351,47 @@ async function updateGroupMembers(groupInfo, data) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers };
+async function observeGroup(gid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const observeGroup = httpsCallable(functions, "observeGroup");
+  await observeGroup({
+    gid: gid,
+  }).then((r) => {
+    console.log("added group to observed successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function removeObservedGroup(gid) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const removeObservedGroup = httpsCallable(functions, "removeObservedGroup");
+  await removeObservedGroup({
+    gid: gid,
+  }).then((r) => {
+    console.log("removed group from observed successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function kickUsersFromGroup(gid, uidsToKick) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const kickUsersFromGroup = httpsCallable(functions, "kickUsersFromGroup");
+  await kickUsersFromGroup({
+    gid: gid,
+    uidsToKick: uidsToKick,
+  }).then((r) => {
+    console.log("removed group from observed successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers, observeGroup, removeObservedGroup, kickUsersFromGroup };

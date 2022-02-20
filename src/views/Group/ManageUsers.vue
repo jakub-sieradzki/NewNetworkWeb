@@ -31,7 +31,7 @@
 <script>
 import { getGroupMembers, getUsersInfo } from "@/database/getData";
 import ManageUsersSingleUser from "@/components/ManageUsersSingleUser.vue";
-import { updateGroupMembers } from '@/firebase-functions/functions';
+import { kickUsersFromGroup, updateGroupMembers } from '@/firebase-functions/functions';
 export default {
   props: ["gid", "groupData"],
   components: {
@@ -60,9 +60,7 @@ export default {
     async saveChanges() {
       this.isSaving = true;
       if(this.usersToRemove.length > 0) {
-        await updateGroupMembers(this.groupData, {
-          membersToRemove: this.usersToRemove,
-        })
+        await kickUsersFromGroup(this.gid, this.usersToRemove);
       }
       alert("Pomyślnie zaktualizowano użytkowników");
       this.$parent.toggleEditUsers();

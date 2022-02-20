@@ -8,7 +8,7 @@
         <img ref="profileImg" class="post__header__user-info__profile-picture rounded-full" alt="photo" />
         <div class="overflow-hidden">
           <p class="post__header__user-info__user-name">{{ postData.name }} {{ postData.surname }}</p>
-          <p v-if="postSourceType == 'user'" class="post__header__user-info__user-id">@{{ postData.username }}</p>
+          <p v-if="postSourceType == 'user' || postSourceType == 'group'" class="post__header__user-info__user-id">@{{ postData.username }}</p>
           <p v-else-if="postSourceType == 'page'" class="post__header__user-info__user-id">{{ postData.pagename }}</p>
         </div>
       </div>
@@ -21,8 +21,16 @@
             <circle cx="12" cy="19" r="1" />
             <circle cx="12" cy="5" r="1" />
           </svg>
-          <ul class="dropdownStyle w-40 !mt-5" tabindex="0">
-            <li @click="deletePostClick()" class="dropdownItemStyle flex items-center">
+          <ul class="dropdownStyle w-52 !mt-5" tabindex="0">
+            <li v-if="!selfPost && (groupsAdministered.includes(postData.gid) || groupsModerated.includes(postData.gid))" @click="blockUserFromGroup" class="dropdownItemStyle flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                <path d="M7 12h14l-3 -3m0 6l3 -3" />
+              </svg>
+              <p class="pl-3">Usuń i zablokuj uż.</p>
+            </li>
+            <li @click="deletePostClick()" class="dropdownItemStyle flex items-center" v-if="this.selfPost || this.pagesAdministered.includes(this.postData.pid) || this.pagesModerated.includes(this.postData.pid) || this.groupsAdministered.includes(this.postData.gid) || this.groupsModerated.includes(this.postData.gid)">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <line x1="4" y1="7" x2="20" y2="7" />
@@ -87,6 +95,13 @@
           <circle cx="17" cy="5" r="2" />
           <path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" />
         </svg>
+        <svg v-else-if="postData.visibility.includes('group')" xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+        </svg>
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current fill-gray-400 w-2 h-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="12" r="4" />
@@ -104,7 +119,7 @@
     <!-- End Info -->
     <!--Actions-->
     <div class="post__actions gap-1">
-      <div class="post__actions__action" :class="[selectedRating > 0 ? 'border border-blue-700 ' : '']">
+      <div class="post__actions__action" :class="[selectedRating > 0 ? 'border border-blue-700 ' : '', postData.gid ? '!w-1/2' : '']">
         <div ref="rateButton" @mouseover="reactMouseOver()" @mouseleave="reactMouseLeave()" class="rateButton w-full h-full" :class="[showReactions ? 'dropdown dropdown-open dropdown-top' : '']">
           <div @click="mainReactClick()" tabindex="0" class="flex w-full h-full gap-2">
             <div class="flex justify-center items-center gap-2 w-full">
@@ -148,7 +163,7 @@
         </div>
       </div>
 
-      <div @click="toggleComments()" class="post__actions__action">
+      <div @click="toggleComments()" class="post__actions__action" :class="[postData.gid ? '!w-1/2' : '']">
         <svg xmlns="http://www.w3.org/2000/svg" class="post__actions__action__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M12 20l-3 -3h-2a3 3 0 0 1 -3 -3v-6a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-2l-3 3" />
@@ -160,7 +175,7 @@
           <!-- <span class="sm:text-xs"><span class="hidden sm:inline-block">(</span>{{ com_count }}<span class="hidden sm:inline-block">)</span></span> -->
         </p>
       </div>
-      <div @click="shareClick" class="post__actions__action">
+      <div v-if="!postData.gid" @click="shareClick" class="post__actions__action">
         <svg xmlns="http://www.w3.org/2000/svg" class="post__actions__action__icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="6" cy="12" r="3" />
@@ -196,6 +211,7 @@ import { removePostImages } from "@/firebase-storage/modifyFiles";
 import { getLinkifyText } from "@/helpers/textHelpers";
 
 import { DateTime } from "luxon";
+import { kickUsersFromGroup } from "@/firebase-functions/functions";
 
 export default {
   components: {
@@ -222,6 +238,7 @@ export default {
       linkifyPostContent: "",
       postSourceType: "",
       postSourceId: "",
+      selfPost: false,
     };
   },
   computed: {
@@ -232,6 +249,10 @@ export default {
     ...mapState("userPagesInfo", {
       pagesAdministered: "administered",
       pagesModerated: "moderated",
+    }),
+    ...mapState("userGroupsInfo", {
+      groupsAdministered: "administered",
+      groupsModerated: "moderated",
     }),
   },
   watch: {
@@ -277,8 +298,8 @@ export default {
           alert("Wystąpił błąd");
         }
       } else {
-        if (this.postSourceType == "page") {
-          if (this.pagesAdministered.includes(this.postData.pid) || this.pagesModerated.includes(this.postData.pid)) {
+        if (this.postSourceType == "page" || this.postSourceType == "group") {
+          if (this.pagesAdministered.includes(this.postData.pid) || this.pagesModerated.includes(this.postData.pid) || this.groupsAdministered.includes(this.postData.gid) || this.groupsModerated.includes(this.postData.gid)) {
             await removePostImages(this.postData.pid, this.postData.files);
             let deleted = await deletePost(this.postData.id);
             if (deleted) {
@@ -355,14 +376,25 @@ export default {
       }
       return objectCopy;
     },
+    async blockUserFromGroup() {
+      await kickUsersFromGroup(this.postData.gid, [this.postData.uid]);
+      await this.deletePostClick();
+      alert("Pomyślnie usunięto post i zbanowano użytkownika");
+    },
   },
   async mounted() {
-    if (this.postData.uid) {
+    if (this.postData.gid) {
+      this.postSourceType = "group";
+    } else if (this.postData.uid) {
       this.postSourceType = "user";
       this.postSourceId = this.postData.uid;
     } else if (this.postData.pid) {
       this.postSourceType = "page";
       this.postSourceId = this.postData.pid;
+    }
+
+    if (getAuth().currentUser.uid == this.postData.uid) {
+      this.selfPost = true;
     }
 
     // Convert date

@@ -5,10 +5,10 @@
       <p class="text-5xl font-semibold py-5">Twoje grupy</p>
       <div class="flex flex-col w-full gap-8 mt-10">
         <div class="flex flex-col gap-3">
-          <p class="text-sm font-semibold">Grupy, które obserwujesz</p>
+          <p class="text-sm font-semibold">Grupy, do których dołączyłeś</p>
           <div class="flex flex-col sm:flex-row gap-4">
-            <div v-for="page in joinedInfoList" :key="page.id">
-              <single-page-list-item :page="page" />
+            <div v-for="group in joinedInfoList" :key="group.id">
+              <single-group-list-item :group="group"/>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("userGroupsInfo", ["observed", "administered", "moderated"]),
+    ...mapState("userGroupsInfo", ["joined", "administered", "moderated"]),
   },
   methods: {
     toggleShowCreateNewGroup() {
@@ -65,7 +65,7 @@ export default {
   },
   async mounted() {
     console.log("administered pages: ", this.administered);
-    this.joinedInfoList = await getGroupsInfo(this.observed);
+    this.joinedInfoList = await getGroupsInfo(this.joined);
     this.administeredInfoList = await getGroupsInfo(this.administered);
     this.moderatedInfoList = await getGroupsInfo(this.moderated);
   },

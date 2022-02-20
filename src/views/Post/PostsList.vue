@@ -1,7 +1,7 @@
 <template>
   <div class="m-auto flex flex-col gap-6 w-full max-w-xl h-full">
     <div v-for="post in postsData" :key="post.id">
-      <PostFromGroup v-if="post.gid" :postData="post" />
+      <PostFromGroup v-if="post.gid && !groupView" :postData="post" />
       <Post v-else-if="!post.shareId || (post.shareId && (post.content || post.files.length > 0))" :postData="post" />
       <SharedPostNoContent v-else :postData="post" />
       <!-- <p v-else>Error loading post</p> -->
@@ -14,7 +14,7 @@ import SharedPost from "./Shared/SharedPost.vue";
 import SharedPostNoContent from "./Shared/SharedPostNoContent.vue";
 import PostFromGroup from "./PostFromGroup.vue";
 export default {
-  props: ["postsData"],
+  props: ["postsData", "groupView"],
   components: {
     Post,
     SharedPost,

@@ -453,4 +453,12 @@ async function updateGroupCategories(gid, newCategories) {
     });
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost, updateGroupDescription, updateGroupCategories };
+async function updateGroupRules(gid, rules) {
+  const groupDocsRef = doc(getFirestore(), "groups", gid, "details", "docs");
+  await updateDoc(groupDocsRef, {
+    rules: rules,
+    rules_last_edit_timestamp: serverTimestamp(),
+  });
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost, updateGroupDescription, updateGroupCategories, updateGroupRules };
