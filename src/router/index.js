@@ -25,6 +25,8 @@ import GroupPosts from "@/views/Group/Posts.vue";
 import GroupGallery from "@/views/Group/Gallery.vue";
 import GroupInfo from "@/views/Group/Info.vue";
 import GroupSettings from "@/views/Group/Settings.vue";
+import OOBE from "@/views/OOBE/OOBEmain.vue";
+import OOBEprofile from "@/views/OOBE/Profile.vue";
 
 const routes = [
   {
@@ -50,8 +52,8 @@ const routes = [
           mainContent: Search,
         },
         meta: {
-          KeepAlive: true 
-        }
+          KeepAlive: true,
+        },
       },
       {
         path: "pages",
@@ -63,7 +65,7 @@ const routes = [
         path: "groups",
         components: {
           mainContent: Groups,
-        }
+        },
       },
       {
         path: "user/:username",
@@ -106,28 +108,28 @@ const routes = [
           {
             path: "posts",
             components: {
-              pageContent: PagePosts
+              pageContent: PagePosts,
             },
           },
           {
             path: "gallery",
             components: {
-              pageContent: PageGallery
+              pageContent: PageGallery,
             },
           },
           {
             path: "info",
             components: {
               pageContent: PageInfo,
-            }
+            },
           },
           {
             path: "settings",
             components: {
               pageContent: PageSettings,
-            }
+            },
           },
-        ]
+        ],
       },
       {
         path: "group/:groupname",
@@ -151,15 +153,15 @@ const routes = [
             path: "info",
             components: {
               groupContent: GroupInfo,
-            }
+            },
           },
           {
             path: "settings",
             components: {
               groupContent: GroupSettings,
-            }
+            },
           },
-        ]
+        ],
       },
       {
         path: "/post/:postId",
@@ -172,6 +174,14 @@ const routes = [
 
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
+  { path: "/oobe", name: "OOBE", component: OOBE, children: [
+    {
+      path: "profile",
+      components: {
+        oobeContent: OOBEprofile,
+      },
+    },
+  ] },
 ];
 
 const router = createRouter({
@@ -184,7 +194,7 @@ router.beforeEach((to, from, next) => {
     if (to.path == "/" || to.path == "/home") {
       next("/home/all");
     } else {
-      if(to.fullPath == from.fullPath) {
+      if (to.fullPath == from.fullPath) {
         router.back(-2);
       }
       next();
