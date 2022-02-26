@@ -27,6 +27,7 @@ import GroupInfo from "@/views/Group/Info.vue";
 import GroupSettings from "@/views/Group/Settings.vue";
 import OOBE from "@/views/OOBE/OOBEmain.vue";
 import OOBEprofile from "@/views/OOBE/Profile.vue";
+import OOBESelectCategories from "@/views/OOBE/SelectCategories.vue";
 
 const routes = [
   {
@@ -179,6 +180,12 @@ const routes = [
       path: "profile",
       components: {
         oobeContent: OOBEprofile,
+      },
+    },
+    {
+      path: "categories",
+      components: {
+        oobeContent: OOBESelectCategories,
       },
     },
   ] },
