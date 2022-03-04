@@ -9,6 +9,9 @@ module.exports = {
       width: {
         'lg-login': '450px',
       },
+      maxWidth: {
+        'max-login': '450px',
+      },
       height: {
         'lg-editProfile': '700px;',
       },

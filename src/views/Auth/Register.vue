@@ -1,12 +1,17 @@
 <template>
-  <div class="lg:absolute lg:flex lg:flex-col lg:h-screen lg:w-screen m-auto">
+  <div class="dark:bg-gray-800">
     <div class="bg-cover bg-center bg-no-repeat" style="background-image: url('/img/wallpaper.jpg')">
-      <div class="sm:h-screen w-screen flex flex-col backdrop-filter backdrop-blur-sm bg-gray-500 dark:bg-gray-700 dark:bg-opacity-75 bg-opacity-75 custom-scrollbar">
+      <div class="lg:h-screen lg:w-screen flex flex-col backdrop-filter backdrop-blur-sm bg-gray-300 dark:bg-gray-700 dark:bg-opacity-75 bg-opacity-75 custom-scrollbar">
         <header class="relative flex justify-between w-full h-12 lg:h-16 mt-6 mb-3">
-          <p class="self-end ml-7 lg:ml-20 text-2xl text-white">New Network</p>
-          <p class="self-end mr-5 lg:mr-14 text-2xl text-white">Rejestracja</p>
+          <p class="self-end ml-7 lg:ml-20 text-2xl dark:text-white">New Network</p>
+          <p class="self-end mr-5 lg:mr-14 text-2xl dark:text-white">Rejestracja</p>
         </header>
-        <main class="relative flex lg:flex-schrink lg:overflow-hidden">
+        <main class="flex-col lg:flex-row lg:flex lg:flex-schrink lg:overflow-hidden">
+          <div class="m-auto mt-3 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-xl lg:hidden shadow-lg">
+                <div class="flex items-center justify-center">
+                    <p class="text-lg p-5 font-semibold">Zapoznaj się z zasadami moderacji</p>
+                </div>
+              </div>
           <div class="hidden xl:flex flex-col xl:ml-10 2xl:ml-20 ml-20 my-5 w-4/12 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900">
             <div>
               <p class="text-5xl text-center">ZASADY MODERACJI</p>
@@ -62,7 +67,7 @@
           </div>
           <div class="relative h-auto m-auto xl:mr-10 2xl:mr-20 my-5 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800 lg:overflow-y-scroll custom-scrollbar overflow-x-hidden">
             <div class="mx-5">
-              <p class="text-2xl p-5 pl-0 border-b-2 dark:border-gray-800">Dane logowania</p>
+              <p class="text-2xl p-5 pl-0 border-b dark:border-gray-700">Dane logowania</p>
               <div class="flex justify-between">
                 <div class="flex flex-col w-full">
                   <label class="label">
@@ -114,7 +119,7 @@
                   </div>
                 </div>
               </div>
-              <p class="text-2xl p-5 pl-0 border-b-2 dark:border-gray-800">Dane osobowe</p>
+              <p class="text-2xl p-5 pl-0 border-b dark:border-gray-700">Dane osobowe</p>
               <div class="flex justify-between">
                 <div class="w-full">
                   <label class="label">
@@ -150,7 +155,7 @@
                         </div>
                         <div tabindex="0" class="shadow card compact dropdown-content bg-base-100 rounded-box w-52">
                           <div class="card-body">
-                            <p>Nazwa użytkownika jest unikatowa dla każdego użytkownika i nie może być zmieniona.</p>
+                            <p>Nazwa użytkownika jest unikatowa dla każdego użytkownika i <span class="underline font-bold">nie może </span> być zmieniona.</p>
                             <p>Dozwolne znaki w nazwie użytkownika to litery (wielkość liter nie jest rozróżniana), cyfry oraz '_' i '-'.</p>
                           </div>
                         </div>
@@ -189,7 +194,7 @@
                     <div class="form-control">
                       <label class="cursor-pointer label">
                         <span class="label-text pr-3">Oświadczam, że mam ukończone 13 lat</span>
-                        <input type="checkbox" class="checkbox" />
+                        <input type="checkbox" class="checkbox flex-shrink-0" />
                       </label>
                     </div>
                   </div>
@@ -197,7 +202,7 @@
                     <div class="form-control">
                       <label class="cursor-pointer label">
                         <span class="label-text pr-3">Zapoznałem/am się i akceptuję <a href="" class="link">Warunki użytkowania</a></span>
-                        <input type="checkbox" class="checkbox" />
+                        <input type="checkbox" class="checkbox flex-shrink-0" />
                       </label>
                     </div>
                   </div>
@@ -205,7 +210,7 @@
                     <div class="form-control">
                       <label class="cursor-pointer label">
                         <span class="label-text pr-3">Zapoznałem/am się i akceptuję <a href="" class="link">Politykę prywatności</a></span>
-                        <input type="checkbox" class="checkbox" />
+                        <input type="checkbox" class="checkbox flex-shrink-0" />
                       </label>
                     </div>
                   </div>
@@ -216,7 +221,7 @@
                   <div class="w-80 text-xs p-5 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg">
                     <p>Możesz zmienić swoje imię i nazwisko w każdej chwili w ustawieniach profilu.</p>
                     <br />
-                    <p>Nazwa użytkownika jest unikatowa dla każdego użytkownika i nie może być zmieniona.</p>
+                    <p>Nazwa użytkownika jest unikatowa dla każdego użytkownika i <span class="underline font-bold">nie może </span> być zmieniona.</p>
                     <br />
                     <p>Dozwolne znaki w nazwie użytkownika to litery (wielkość liter nie jest rozróżniana), cyfry oraz '_' i '-'.</p>
                     <br />
@@ -233,14 +238,29 @@
             <div class="h-10"></div>
           </div>
         </main>
-        <footer class="lg:bg-transparent text-center p-1 xl:p-0 text-white xl:flex xl:h-12 xl:flex-row-reverse xl:items-start xl:text-sm xl:flex-shrink-0">
+        <!-- <footer class="lg:bg-transparent text-center p-1 xl:p-0 text-white xl:flex xl:h-12 xl:flex-row-reverse xl:items-start xl:text-sm xl:flex-shrink-0">
           <div class="space-x-4 xl:space-x-8 xl:mr-14">
             <a href="index.html" class="text-base link"> Warunki użytkowania </a>
             <a href="index.html" class="text-base link"> Polityka prywatności </a>
             <a href="index.html" class="text-base link"> O nas </a>
           </div>
           <p class="xl:mr-8 text-base">&copy; New Network 2021</p>
-        </footer>
+        </footer> -->
+        <footer class="p-4 text-white shadow md:flex md:items-center md:justify-between md:py-4 md:px-6 shadow-inner dark:bg-gray-800/50 bg-gray-800/40">
+          <span class="text-sm sm:text-center">&copy; 2022 <a href="#" class="hover:underline" target="_blank">New Network</a>. All Rights Reserved.
+          </span>
+          <ul class="flex flex-wrap items-center mt-3 md:mt-0">
+              <li>
+                  <a href="#" class="mr-4 text-sm  hover:underline md:mr-6">Warunki użytkowania</a>
+              </li>
+              <li>
+                  <a href="#" class="mr-4 text-sm  hover:underline md:mr-6">Polityka prywatności</a>
+              </li>
+              <li>
+                  <a href="#" class="text-sm  hover:underline md:mr-6">O nas</a>
+              </li>
+          </ul>
+      </footer>
       </div>
     </div>
   </div>
