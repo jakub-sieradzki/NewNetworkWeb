@@ -40,9 +40,9 @@ const mutations = {
         state.observed = values.observed
         state.administered = values.administered
         state.moderated = values.moderated
-        state.requestAdmin = values.request_admin
-        state.requestMod = values.request_mod
-        state.requestMember = values.request_member
+        state.requestAdmin = values.requestAdmin
+        state.requestMod = values.requestMod
+        state.requestMember = values.requestMember
     }
 }
 

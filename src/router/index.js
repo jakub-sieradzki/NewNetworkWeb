@@ -28,6 +28,9 @@ import GroupSettings from "@/views/Group/Settings.vue";
 import OOBE from "@/views/OOBE/OOBEmain.vue";
 import OOBEprofile from "@/views/OOBE/Profile.vue";
 import OOBESelectCategories from "@/views/OOBE/SelectCategories.vue";
+import SettingsMain from "@/views/Settings/SettingsMain.vue";
+import SettingsProfile from "@/views/Settings/Profile.vue";
+import AccountProfile from "@/views/Settings/Account.vue";
 
 const routes = [
   {
@@ -170,25 +173,50 @@ const routes = [
           mainContent: PostView,
         },
       },
+      {
+        path: "/settings", 
+        components: {
+          mainContent: SettingsMain
+        },
+        children: [
+          {
+            path: "profile",
+            components: {
+              settingsContent: SettingsProfile,
+            },
+          },
+          {
+            path: "account",
+            components: {
+              settingsContent: AccountProfile,
+            },
+          },
+        ],
+      }
     ],
   },
 
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
-  { path: "/oobe", name: "OOBE", component: OOBE, children: [
-    {
-      path: "profile",
-      components: {
-        oobeContent: OOBEprofile,
+  {
+    path: "/oobe",
+    name: "OOBE",
+    component: OOBE,
+    children: [
+      {
+        path: "profile",
+        components: {
+          oobeContent: OOBEprofile,
+        },
       },
-    },
-    {
-      path: "categories",
-      components: {
-        oobeContent: OOBESelectCategories,
+      {
+        path: "categories",
+        components: {
+          oobeContent: OOBESelectCategories,
+        },
       },
-    },
-  ] },
+    ],
+  },
 ];
 
 const router = createRouter({

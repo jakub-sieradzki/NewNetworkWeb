@@ -1,6 +1,6 @@
 <template>
   <header class="flex flex-col w-full h-auto flex-shrink-0 z-10 sticky top-4">
-    <div class="flex mx-2 md:mx-5 dark:bg-gray-800/40 bg-white/80 backdrop-blur dark:backdrop-blur-xl shadow-xl rounded-2xl px-3">
+    <div class="flex mx-2 md:mx-5 dark:bg-gray-800/80 bg-white/80 backdrop-blur dark:backdrop-blur-xl shadow-xl rounded-2xl px-3">
       <div class="w-3/12 flex items-center gap-2 md:gap-1">
         <div class="flex h-full">
           <div @click="changeShowMenu('postTypes')" @blur="changeShowMenu(null)" class="flex items-center my-2 py-3 pr-1 pl-2 sm:px-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl cursor-pointer text-xs transition">
@@ -135,7 +135,7 @@
               </div>
             </div>
             <div class="mt-3 flex flex-col gap-0.5">
-              <div class="dropdownItemStyle flex gap-2 h-10 items-center">
+              <div @click="this.$router.push('/settings/profile')" class="dropdownItemStyle flex gap-2 h-10 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <path

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-auto flex flex-col gap-6 w-full max-w-xl h-full">
+  <div class="flex flex-col w-full flex-grow gap-5" style="max-width: 600px;">
     <div v-for="post in postsData" :key="post.id">
       <PostFromGroup v-if="post.gid && !groupView" :postData="post" />
       <Post v-else-if="!post.shareId || (post.shareId && (post.content || post.files.length > 0))" :postData="post" />

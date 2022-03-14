@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     async getFriendsInfo() {
-      let friendsList = await getUserDetailsDoc(this.uid, "people");
+      let friendsList = await getUserDetailsDoc(this.uid, "friends");
       friendsList = friendsList.friends;
 
       for (let i = 0; i < friendsList.length; i++) {

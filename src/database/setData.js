@@ -461,4 +461,12 @@ async function updateGroupRules(gid, rules) {
   });
 }
 
-export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost, updateGroupDescription, updateGroupCategories, updateGroupRules };
+async function updateProfileInfo(uid, gender, birthyear) {
+  const profileInfoDocsRef = doc(getFirestore(), "users", uid, "details", "info");
+  await updateDoc(profileInfoDocsRef, {
+    gender: gender,
+    birthyear: birthyear,
+  });
+}
+
+export { sendPost, deletePost, sendComment, sendSubcomment, addPostReaction, removePostReaction, updatePostReaction, markNotificationAsRead, updateUserDescription, addCommentReaction, updateCommentReaction, removeCommentReaction, deleteComment, sendPagePost, updatePageDescription, updatePageCategories, sendGroupPost, updateGroupDescription, updateGroupCategories, updateGroupRules, updateProfileInfo };

@@ -1,6 +1,6 @@
 <template>
   <CreatePost v-if="createPost" />
-  <div class="justify-center 2xl:gap-10 flex pt-24 h-fit">
+  <div class="justify-center 2xl:gap-10 flex pt-24 h-fit w-full">
     <!--Categories-->
     <div class="z-20" :class="[showMobileCategories ? ['absolute w-full dark:bg-gray-900'] : ['hidden lg:block lg:sticky lg:top-24 h-full']]">
       <Categories />

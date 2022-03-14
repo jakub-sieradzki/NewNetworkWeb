@@ -11,6 +11,7 @@ async function userSignupSaveData(data) {
     username: data.username,
     gender: data.gender,
     birthyear: data.birthyear,
+    email: data.email,
   }).catch((err) => {
     console.log(err);
   });
@@ -394,4 +395,16 @@ async function kickUsersFromGroup(gid, uidsToKick) {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers, observeGroup, removeObservedGroup, kickUsersFromGroup };
+async function saveNewEmail() {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const saveNewEmail = httpsCallable(functions, "saveNewEmail");
+  await saveNewEmail().then((r) => {
+    console.log("saved new email successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers, observeGroup, removeObservedGroup, kickUsersFromGroup, saveNewEmail };

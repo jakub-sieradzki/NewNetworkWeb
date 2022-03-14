@@ -14,7 +14,7 @@
         <div class="flex flex-col md:flex-row gap-8 items-center md:gap-16 md:mx-10 md:my-5 overflow-y-auto scrollbar-none">
           <div class="flex md:w-1/2 w-full items-center justify-center">
             <div class="flex flex-col justify-center items-center w-full max-w-sm gap-6">
-              <input type="file" id="inputProfileImage" @change="changeProfileImage" accept="image/*" style="display: none" />
+              <input type="file" id="inputProfileImage" @change="changeProfileImage" accept="image/*" onclick="this.value=null;" style="display: none" />
               <div onclick="document.getElementById('inputProfileImage').click();" class="flex flex-col items-center gap-3 cursor-pointer rounded-xl p-3 group">
                 <img class="w-48 h-48 self-center rounded-full lg:group-hover:brightness-75 transition" :src="readyProfileImageUrl" alt="profile photo" />
                 <div class="flex items-center gap-2 dark:bg-gray-800/50 backdrop-blur-sm py-1.5 px-4 rounded-2xl border dark:border-gray-700">
@@ -29,7 +29,7 @@
                 </div>
               </div>
               <div class="group relative h-40 w-full cursor-pointer text-white">
-                <input type="file" id="inputBackgroundImage" accept="image/*" @change="changeBackgroundImage" style="display: none" />
+                <input type="file" id="inputBackgroundImage" accept="image/*" @change="changeBackgroundImage" onclick="this.value=null;" style="display: none" />
                 <img onclick="document.getElementById('inputBackgroundImage').click();" class="h-40 w-full object-cover rounded-md lg:group-hover:brightness-75 transition" :src="readyBackgroundImageUrl" alt="profile background" />
                 <div class="absolute bottom-0 flex items-center gap-2 dark:bg-gray-800/50 backdrop-blur-sm py-1.5 px-4 rounded-2xl m-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">

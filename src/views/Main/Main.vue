@@ -1,9 +1,9 @@
 <template>
-  <div class="dark:bg-slate-900 h-screen w-screen bg-gray-100 dark:text-white">
+  <div class="dark:bg-slate-900/80 h-screen w-screen bg-gray-100 dark:text-white">
     <CreatePost v-if="createPost" />
     <Navbar />
     <div class="absolute p-0 h-screen w-screen top-0">
-      <div class="justify-center w-screen h-screen overflow-y-scroll flex overflow-x-hidden">
+      <div class="justify-center w-screen h-screen overflow-y-auto flex overflow-x-hidden">
         <router-view name="mainContent" v-slot="{ Component }">
           <keep-alive include="Search">
             <component :is="Component" />

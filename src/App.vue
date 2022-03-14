@@ -20,9 +20,14 @@ export default {
     const user = getAuth().currentUser;
     const router = useRouter();
     if (user) {
-      await this.getUser(user);
-      await this.getUserDetails(user, store);
-      router.push(document.location.pathname);
+      if (user.emailVerified) {
+        await this.getUser(user);
+        await this.getUserDetails(user, store);
+        router.push(document.location.pathname);
+      } else {
+        router.push("/login");
+        alert("Aby korzystać z serwisu, musisz zweryfikować adres e-mail");
+      }
     } else {
       this.setGotUserInfo(true);
       console.log("Not logged in");
@@ -67,9 +72,7 @@ export default {
       }
     },
     async getUserDetails(user, store) {
-      this.listenToPeopleChanges(user);
-      this.listenToGroupsChanges(user);
-      this.listenToPagesChanges(user);
+      this.listenToDataChanges(user);
       this.listenToPostsRatedChanges(user);
       this.listenToCommentsRatedChanges(user);
       this.listenToNotifications(user);
@@ -117,32 +120,36 @@ export default {
         }
       );
     },
-    listenToPeopleChanges(user) {
-      const peopleDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "people"), (doc) => {
+    listenToDataChanges(user) {
+      const userDataUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "data"), (doc) => {
         this.setPeopleInfo({
-          blocked: doc.data().blocked,
-          friends: doc.data().friends,
-          observed: doc.data().observed,
-          friendsRequests: doc.data().friends_requests,
-          userFriendsRequests: doc.data().user_friends_requests,
-          blockedBy: doc.data().blocked_by,
+          blocked: doc.data().people_blocked,
+          friends: doc.data().people_friends,
+          observed: doc.data().people_observed,
+          friendsRequests: doc.data().people_friends_requests,
+          userFriendsRequests: doc.data().people_user_friends_requests,
+          blockedBy: doc.data().people_blocked_by,
+        });
+        this.setPagesInfo({
+          blocked: doc.data().pages_blocked,
+          liked: doc.data().pages_liked,
+          observed: doc.data().pages_observed,
+          administered: doc.data().pages_administered,
+          moderated: doc.data().pages_moderated,
+          requestAdmin: doc.data().pages_request_admin,
+          requestMod: doc.data().pages_request_mod,
+        });
+        this.setGroupsInfo({
+          blockedBy: doc.data().groups_blocked_by,
+          joined: doc.data().groups_joined,
+          observed: doc.data().groups_observed,
+          administered: doc.data().groups_administered,
+          moderated: doc.data().groups_moderated,
+          requestAdmin: doc.data().groups_request_admin,
+          requestMod: doc.data().groups_request_mod,
+          requestMember: doc.data().groups_request_member,
         });
         console.log("done getting people");
-      });
-    },
-
-    listenToGroupsChanges(user) {
-      const groupsDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "groups"), (doc) => {
-        this.setGroupsInfo(doc.data());
-        console.log("done getting groups");
-      });
-    },
-
-    listenToPagesChanges(user) {
-      const pagesDetailsUnsub = onSnapshot(doc(getFirestore(), "users", user.uid, "details", "pages"), (doc) => {
-        this.setPagesInfo(doc.data());
-        console.log("done getting pages");
-        console.log("pages info: ", doc.data())
       });
     },
 

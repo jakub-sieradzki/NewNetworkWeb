@@ -1,7 +1,7 @@
 <template>
   <!-- Post -->
   <CreatePost v-if="createPost" :shareId="postData.id" :shareUid="postData.uid" :shareUsername="postData.username" :sharePagename="postData.pagename" :shareContent="postData.content" />
-  <div class="post flex-grow" style="max-width: 600px">
+  <div class="post" style="max-width: 600px">
     <!-- Header -->
     <div class="post__header">
       <div @click="showProfile()" class="mr-5 w-auto min-w-0 max-w-full flex cursor-pointer lg:hover:underline overflow-hidden">
@@ -60,6 +60,11 @@
       <div class="post__content select-ghost">
         <p v-html="linkifyPostContent"></p>
       </div>
+      <!-- Link preview -->
+      <div>
+
+      </div>
+      <!-- End link preview -->
       <div v-if="imagesUrls.length != 0" class="flex flex-shrink-0 overflow-x-auto custom-scrollbar rounded-lg mb-4">
         <img class="w-full" v-for="url in imagesUrls" :key="url" :src="url" alt="img" />
       </div>
@@ -432,6 +437,8 @@ export default {
 
     //get linkify post content
     this.linkifyPostContent = getLinkifyText(this.postData.content);
+
+    
 
     // Get post images
     if (this.postData.files) {

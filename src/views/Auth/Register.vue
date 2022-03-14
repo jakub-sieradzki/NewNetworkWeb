@@ -8,10 +8,10 @@
         </header>
         <main class="flex-col lg:flex-row lg:flex lg:flex-schrink lg:overflow-hidden">
           <div class="m-auto mt-3 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-xl lg:hidden shadow-lg">
-                <div class="flex items-center justify-center">
-                    <p class="text-lg p-5 font-semibold">Zapoznaj się z zasadami moderacji</p>
-                </div>
-              </div>
+            <div class="flex items-center justify-center">
+              <p class="text-lg p-5 font-semibold">Zapoznaj się z zasadami moderacji</p>
+            </div>
+          </div>
           <div class="hidden xl:flex flex-col xl:ml-10 2xl:ml-20 ml-20 my-5 w-4/12 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900">
             <div>
               <p class="text-5xl text-center">ZASADY MODERACJI</p>
@@ -162,7 +162,7 @@
                       </div>
                     </span>
                   </label>
-                  <input type="text" v-model="formData.username" placeholder="@jankowalski" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800" />
+                  <input type="text" v-model="formData.username" placeholder="jankowalski" class="input input-bordered w-full md:max-w-sm dark:bg-gray-800" />
                   <label class="label">
                     <span class="label-text">Płeć</span>
                   </label>
@@ -247,26 +247,25 @@
           <p class="xl:mr-8 text-base">&copy; New Network 2021</p>
         </footer> -->
         <footer class="p-4 text-white shadow md:flex md:items-center md:justify-between md:py-4 md:px-6 shadow-inner dark:bg-gray-800/50 bg-gray-800/40">
-          <span class="text-sm sm:text-center">&copy; 2022 <a href="#" class="hover:underline" target="_blank">New Network</a>. All Rights Reserved.
-          </span>
+          <span class="text-sm sm:text-center">&copy; 2022 <a href="#" class="hover:underline" target="_blank">New Network</a>. All Rights Reserved. </span>
           <ul class="flex flex-wrap items-center mt-3 md:mt-0">
-              <li>
-                  <a href="#" class="mr-4 text-sm  hover:underline md:mr-6">Warunki użytkowania</a>
-              </li>
-              <li>
-                  <a href="#" class="mr-4 text-sm  hover:underline md:mr-6">Polityka prywatności</a>
-              </li>
-              <li>
-                  <a href="#" class="text-sm  hover:underline md:mr-6">O nas</a>
-              </li>
+            <li>
+              <a href="#" class="mr-4 text-sm hover:underline md:mr-6">Warunki użytkowania</a>
+            </li>
+            <li>
+              <a href="#" class="mr-4 text-sm hover:underline md:mr-6">Polityka prywatności</a>
+            </li>
+            <li>
+              <a href="#" class="text-sm hover:underline md:mr-6">O nas</a>
+            </li>
           </ul>
-      </footer>
+        </footer>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { userSignupSaveData } from "@/firebase-functions/functions";
 
 export default {
@@ -305,8 +304,12 @@ export default {
             username: this.formData.username,
             gender: this.formData.gender,
             birthyear: this.formData.birthyear,
+            email: this.formData.email,
           }).then(() => {
-            window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
+            sendEmailVerification(auth.currentUser).then(() => {
+              alert("Potwierdź adres e-mail aby zacząć korzystać z serwisu");
+            });
+            // window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
           });
         })
         .catch((error) => {

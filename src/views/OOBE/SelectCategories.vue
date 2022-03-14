@@ -3,7 +3,7 @@
     <p class="text-4xl font-semibold flex-shrink-0">Wybierz kategorie</p>
     <div class="flex flex-shrink-0 mt-8 gap-3 flex-wrap">
       <div v-for="(item, key) in categories" :key="key">
-        <category :img="item.img" :txt="item.txt" />
+        <category :id="key" :img="item.img" :txt="item.txt" />
       </div>
     </div>
   </div>
@@ -16,6 +16,7 @@ export default {
   },
   data() {
     return {
+      selectedCategories: [],
       categories: {
         0: {
           img: "category_moto",
