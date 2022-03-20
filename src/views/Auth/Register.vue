@@ -7,12 +7,12 @@
           <p class="self-end mr-5 lg:mr-14 text-2xl dark:text-white">Rejestracja</p>
         </header>
         <main class="flex-col lg:flex-row lg:flex lg:flex-schrink lg:overflow-hidden">
-          <div class="m-auto mt-3 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-xl lg:hidden shadow-lg">
+          <!-- <div class="m-auto mt-3 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-30 rounded-xl lg:hidden shadow-lg">
             <div class="flex items-center justify-center">
               <p class="text-lg p-5 font-semibold">Zapoznaj się z zasadami moderacji</p>
             </div>
-          </div>
-          <div class="hidden xl:flex flex-col xl:ml-10 2xl:ml-20 ml-20 my-5 w-4/12 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900">
+          </div> -->
+          <!-- <div class="hidden xl:flex flex-col xl:ml-10 2xl:ml-20 ml-20 my-5 w-4/12 p-6 shadow-xl rounded-xl bg-gray-100 bg-opacity-60 dark:bg-gray-900">
             <div>
               <p class="text-5xl text-center">ZASADY MODERACJI</p>
               <p class="text-2xl text-center mt-2">New Network</p>
@@ -64,7 +64,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="relative h-auto m-auto xl:mr-10 2xl:mr-20 my-5 w-11/12 xl:w-3/6 max-w-lg md:max-w-3xl bg-gray-100 bg-opacity-95 dark:bg-gray-900 shadow-lg rounded-xl border dark:border-gray-800 lg:overflow-y-scroll custom-scrollbar overflow-x-hidden">
             <div class="mx-5">
               <p class="text-2xl p-5 pl-0 border-b dark:border-gray-700">Dane logowania</p>
