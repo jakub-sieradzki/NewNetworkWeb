@@ -93,7 +93,7 @@
                       </div>
                     </div>
                   </div>
-                  <p class="helpTextCreatePage">Pubiczna: Każdy może czytać posty z grupy, dołączenie do grupy nie wymaga akceptacji administratorów/moderatorów<br><br>Prywatna: Posty widoczne są tylko dla osób, które dołączyły do grupy. Aby dołączyć do grupy wymagana jest zgoda administratora/moderatora</p>
+                  <p class="helpTextCreatePage">Pubiczna: Każdy może czytać posty z grupy, dołączenie do grupy nie wymaga akceptacji administratorów/moderatorów<br /><br />Prywatna: Posty widoczne są tylko dla osób, które dołączyły do grupy. Aby dołączyć do grupy wymagana jest zgoda administratora/moderatora</p>
                 </div>
               </div>
               <div @click="createNewPage" class="w-full mt-7 bg-sky-600 lg:hover:bg-sky-700 text-white p-2 rounded-md cursor-pointer transition" :class="{ 'cursor-not-allowed bg-sky-900 lg:hover:bg-sky-900': isSaving }">
@@ -110,7 +110,7 @@
 <script>
 import ChangeProfileImage from "@/components/ChangeProfileImage.vue";
 import CategoriesList from "@/views/Categories/CategoriesList.vue";
-import { createGroup } from "@/firebase-functions/functions";
+import { checkIfGroupnameExists, createGroup } from "@/firebase-functions/functions";
 import { getBlobFromURL, getBlobFullName } from "@/helpers/blobFunctions";
 import { uploadProfileBackground, uploadProfileImage } from "@/firebase-storage/modifyFiles";
 export default {
@@ -158,7 +158,7 @@ export default {
       this.pCategories = value;
     },
     changeGroupType(type) {
-        this.groupType = type;
+      this.groupType = type;
     },
     async createNewPage() {
       if (this.pName == "" || this.pUniqueName == "" || this.pDescription == "" || this.pCategories.length <= 0) {
@@ -172,6 +172,16 @@ export default {
       }
 
       this.isSaving = true;
+
+      let groupnameExists = await checkIfGroupnameExists(this.pUniqueName);
+      if (groupnameExists) {
+        if (groupnameExists.data.exists) {
+          alert("Podana unikalna nazwa grupy została już wykorzystana");
+          this.isSaving = false;
+          return;
+        }
+      }
+
       let groupData = await createGroup({
         name: this.pName,
         groupname: this.pUniqueName,

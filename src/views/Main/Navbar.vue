@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="w-6/12 flex items-center justify-center">
-        <p><span class="inline-block sm:hidden">NN </span><span class="hidden sm:inline-block">New Network </span> <span class="text-xs">v.0.15.0</span></p>
+        <p><span class="inline-block sm:hidden">NN </span><span class="hidden sm:inline-block">New Network </span> <span class="text-xs">v.0.16.0</span></p>
       </div>
       <div class="w-3/12 flex items-center justify-end gap-3">
         <div class="flex h-full">
@@ -155,7 +155,7 @@
               </div>
             </div>
           </div>
-          <div v-if="showMenu == 'notifications'" class="navbarDropdownStyle w-72" style="height: 450px">
+          <div @click="notificationPanelClick" v-if="showMenu == 'notifications'" class="navbarDropdownStyle w-72" style="height: 450px">
             <notifications-list />
           </div>
         </div>
@@ -178,6 +178,7 @@ export default {
       searchQuery: "",
       searchResult: [],
       showMenu: null,
+      canMenuBeClosed: false,
     };
   },
   computed: {
@@ -204,9 +205,14 @@ export default {
     changeShowMenu(value) {
       if (this.showMenu == value) {
         this.showMenu = null;
+        this.canMenuBeClosed = true;
       } else {
         this.showMenu = value;
+        this.canMenuBeClosed = false;
       }
+    },
+    notificationPanelClick() {
+      this.canMenuBeClosed = false;
     },
     async resultQuery(s) {
       if (s.length > 2) {
@@ -223,7 +229,6 @@ export default {
     },
   },
   async mounted() {
-    console.log("unread notifi navbar: ", this.unreadNotificationsList);
     // const img = this.$refs.profileImg;
     // const imgDetails = this.$refs.profileImgDetails;
     // if (this.profileImage) {
@@ -234,6 +239,15 @@ export default {
     //   img.setAttribute("src", "/img/avatar.png");
     //   imgDetails.setAttribute("src", "/img/avatar.png");
     // }
+
+    document.addEventListener("click", () => {
+      if(this.showMenu != null) {
+        if(this.canMenuBeClosed) {
+          this.showMenu = null;
+        }
+        this.canMenuBeClosed = true;
+      }
+    });
   },
 };
 </script>

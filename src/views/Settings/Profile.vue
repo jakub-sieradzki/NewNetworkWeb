@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-3">
-    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-lg py-2 px-7 flex items-center justify-between">
-      <div class="flex items-center gap-5">
-        <div class="rounded-full h-16 w-16 bg-cover bg-center" :style="{ backgroundImage: `url(${this.profileImage})` }"></div>
+    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-lg py-2 px-4 md:px-7 flex flex-shrink-0 items-center justify-between">
+      <div class="flex items-center gap-5 flex-shrink-0">
+        <div class="hidden sm:flex rounded-full h-16 w-16 bg-cover bg-center" :style="{ backgroundImage: `url(${this.profileImage})` }"></div>
         <div class="flex flex-col">
           <p class="text-lg font-semibold">{{ name }} {{ surname }}</p>
           <p class="text-sm">@{{ username }}</p>
@@ -14,7 +14,7 @@
           <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
           <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
         </svg>
-        <p>Edytuj profil</p>
+        <p class="hidden md:flex">Edytuj profil</p>
       </div>
     </div>
     <div class="w-full h-96 border dark:border-gray-800 rounded-lg flex flex-col gap-5 py-5 px-6">
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="flex text-sm gap-2 justify-end">
-      <div class="py-2 px-3 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 transition">
+      <div class="py-2 px-3 bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 rounded-md cursor-pointer hover:bg-gray-300 transition">
         <p>Anuluj</p>
       </div>
       <div @click="updateDetailsClick" class="py-2 px-3 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-sky-600 transition">

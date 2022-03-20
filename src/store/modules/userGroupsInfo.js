@@ -35,7 +35,7 @@ const mutations = {
         state.requestMember = value
     },
     setGroupsInfo(state, values) {
-        state.blockedBy = values.blocked_by
+        state.blockedBy = values.blockedBy
         state.joined = values.joined
         state.observed = values.observed
         state.administered = values.administered

@@ -20,14 +20,9 @@ export default {
     const user = getAuth().currentUser;
     const router = useRouter();
     if (user) {
-      if (user.emailVerified) {
-        await this.getUser(user);
-        await this.getUserDetails(user, store);
-        router.push(document.location.pathname);
-      } else {
-        router.push("/login");
-        alert("Aby korzystać z serwisu, musisz zweryfikować adres e-mail");
-      }
+      await this.getUser(user);
+      await this.getUserDetails(user, store);
+      router.push(document.location.pathname);
     } else {
       this.setGotUserInfo(true);
       console.log("Not logged in");

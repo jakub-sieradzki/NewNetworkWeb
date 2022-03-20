@@ -407,4 +407,46 @@ async function saveNewEmail() {
   return result;
 }
 
-export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers, observeGroup, removeObservedGroup, kickUsersFromGroup, saveNewEmail };
+async function checkIfUsernameExists(username) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const checkIfUsernameExists = httpsCallable(functions, "checkIfUsernameExists");
+  await checkIfUsernameExists({
+    username: username,
+  }).then((r) => {
+    console.log("check username successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function checkIfPagenameExists(pagename) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const checkIfPagenameExists = httpsCallable(functions, "checkIfPagenameExists");
+  await checkIfPagenameExists({
+    pagename: pagename,
+  }).then((r) => {
+    console.log("check pagename successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+async function checkIfGroupnameExists(groupname) {
+  let result = false;
+  const functions = getFunctions(getApp(), "europe-west1");
+  const checkIfGroupnameExists = httpsCallable(functions, "checkIfGroupnameExists");
+  await checkIfGroupnameExists({
+    groupname: groupname,
+  }).then((r) => {
+    console.log("check groupname successfully");
+    result = r;
+  });
+
+  return result;
+}
+
+export { userSignupSaveData, acceptFriend, requestFriend, removeFriend, observePerson, removeObservedPerson, blockPerson, unblockPerson, updateNameAndSurname, createPage, observePage, removeObservedPage, changePageName, updatePagePermissions, acceptPageAdminInvitation, acceptPageModInvitation, deletePage, createGroup, updateGroupPermissions, joinGroup, leaveGroup, acceptGroupAdminInvitation, acceptGroupModInvitation, changeGroupName, updateGroupMembers, observeGroup, removeObservedGroup, kickUsersFromGroup, saveNewEmail, checkIfUsernameExists, checkIfPagenameExists, checkIfGroupnameExists };

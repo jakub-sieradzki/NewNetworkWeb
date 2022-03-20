@@ -11,7 +11,7 @@
       </div>
       <div class="flex justify-between items-center mt-4 flex-wrap gap-2">
         <div class="flex gap-1 flex-wrap">
-          <div v-if="!fromPage && !fromGroup" class="dropdown">
+          <!-- <div v-if="!fromPage && !fromGroup" class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
               <p>Moja tablica</p>
             </div>
@@ -21,7 +21,7 @@
               <p class="text-sm p-2 lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 transition rounded-md mt-1 cursor-pointer">Grupa0</p>
               <p class="text-sm p-2 lg:hover:bg-gray-200 dark:lg:hover:bg-gray-700 transition rounded-md mt-1 cursor-pointer">Grupa1</p>
             </div>
-          </div>
+          </div> -->
           <div v-if="!fromPage && !fromGroup" class="dropdown">
             <div tabindex="0" class="px-3 py-1 border dark:border-gray-600 rounded-lg cursor-pointer text-sm">
               <p v-if="postVisibility == 'public'">Publiczne</p>

@@ -215,7 +215,10 @@
                     </div>
                   </div>
                   <div class="h-5"></div>
-                  <button @click="register" class="h-10 bg-green-500 lg:hover:bg-green-600 transition-all rounded-lg text-white shadow-lg w-full">Zarejestruj się</button>
+                  <button @click="register" class="h-10 bg-green-500 lg:hover:bg-green-600 transition-all rounded-lg text-white shadow-lg w-full" :class="{'cursor-not-allowed bg-green-900 lg:hover:bg-green-900' : registering}">
+                    <p v-if="!registering">Zarejestruj się</p>
+                    <p v-else>Trwa rejestracja...</p>
+                  </button>
                 </div>
                 <div class="flex flex-col hidden md:inline ml-5">
                   <div class="w-80 text-xs p-5 bg-gray-300 dark:bg-gray-800 mt-9 rounded-lg">
@@ -266,7 +269,7 @@
 </template>
 <script>
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { userSignupSaveData } from "@/firebase-functions/functions";
+import { checkIfUsernameExists, userSignupSaveData } from "@/firebase-functions/functions";
 
 export default {
   data() {
@@ -291,8 +294,19 @@ export default {
         alert("Uzupełnij wszystkie pola");
         return;
       }
-      const auth = getAuth();
+
       this.registering = true;
+
+      let checkUsername = await checkIfUsernameExists(this.formData.username);
+      if (checkUsername) {
+        if (checkUsername.data.exists) {
+          alert("Podana nazwa użytkownika została już wykorzystana");
+          this.registering = false;
+          return;
+        }
+      }
+
+      const auth = getAuth();
 
       await createUserWithEmailAndPassword(auth, this.formData.email, this.formData.password)
         .then(async (userCredential) => {
@@ -306,10 +320,10 @@ export default {
             birthyear: this.formData.birthyear,
             email: this.formData.email,
           }).then(() => {
-            sendEmailVerification(auth.currentUser).then(() => {
-              alert("Potwierdź adres e-mail aby zacząć korzystać z serwisu");
-            });
-            // window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
+            // sendEmailVerification(auth.currentUser).then(() => {
+            //   alert("Potwierdź adres e-mail aby zacząć korzystać z serwisu");
+            // });
+            window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "home";
           });
         })
         .catch((error) => {

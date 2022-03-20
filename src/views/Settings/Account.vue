@@ -12,7 +12,7 @@
       <p class="text-sm mt-4">Hasło</p>
       <div class="flex gap-3 items-center">
         <input v-model="password" type="password" placeholder="Podaj nowe hasło" class="input focus:shadow-none w-64 dark:bg-gray-800 bg-gray-100" />
-        <div class="py-2 px-3 h-9 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-sky-600 transition text-sm text-center items-center justify-center">
+        <div @click="updatePassword" class="py-2 px-3 h-9 bg-sky-500 text-white rounded-md cursor-pointer hover:bg-sky-600 transition text-sm text-center items-center justify-center">
           <p class="text-center items-center justify-center">Zmień hasło</p>
         </div>
       </div>
@@ -20,8 +20,8 @@
   </div>
 </template>
 <script>
-import { getAuth, sendEmailVerification, updateEmail } from "@firebase/auth";
-import { saveNewEmail } from '@/firebase-functions/functions';
+import { getAuth, sendEmailVerification, updateEmail, updatePassword } from "@firebase/auth";
+import { saveNewEmail } from "@/firebase-functions/functions";
 export default {
   data() {
     return {
@@ -31,15 +31,23 @@ export default {
   },
   methods: {
     async updateEmail() {
-      await updateEmail(getAuth().currentUser, this.email).then(async () => {
-        await sendEmailVerification(getAuth().currentUser).then(() => {
+      await updateEmail(getAuth().currentUser, this.email)
+        .then(async () => {
           saveNewEmail();
-          alert("Pomyślnie zaktualizowano adres email. Aby dalej korzystać z platformy, potwierdź nowy adres email klikając na link zawarty w wiadomości");
+          alert("Pomyślnie zaktualizowano adres email");
+        })
+        .catch((err) => {
+          alert("Wystąpił błąd. Wylogowanie i ponowne zalogowanie się do platformy może pomóc");
         });
-      }).catch((err) => {
-        alert(err);
-        alert("Wystąpił błąd. Wylogowanie i ponowne zalogowanie się do platformy może pomóc");
-      });
+    },
+    async updatePassword() {
+      updatePassword(getAuth().currentUser, this.password)
+        .then(() => {
+          alert("Pomyślnie zaktualizowano hasło");
+        })
+        .catch((error) => {
+          alert("Wystąpił błąd przy zmianie hasła. Wylogowanie i ponowne zalogowanie się może pomóc");
+        });
     },
   },
   mounted() {

@@ -46,6 +46,7 @@ import EditProfile from "./EditProfile.vue";
 import { getUserDataOnUsername } from "@/database/getData";
 import { getProfileImageUrl, getProfileBackgroundUrl } from "@/firebase-storage/getFiles";
 import { getBlobFromURL } from "@/helpers/blobFunctions";
+import { checkIfUsernameExists } from '@/firebase-functions/functions';
 export default {
   components: {
     ProfileActions,
@@ -71,8 +72,9 @@ export default {
     changeViewMode(value) {
       this.viewMode = value;
     },
-    toggleEditProfileMode() {
-      this.editProfileMode = !this.editProfileMode;
+    async toggleEditProfileMode() {
+      console.log("username check: ", await checkIfUsernameExists("erghht"));
+      // this.editProfileMode = !this.editProfileMode;
     },
     async loadProfilePhoto() {
       const img = this.$refs.profileImg;

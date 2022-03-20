@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer">
     <div class="flex">
-      <div v-if="friends.includes(uid)" @click="removeFriendClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
+      <div v-if="currentState == 'friends'" @click="removeFriendClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -10,7 +10,7 @@
         </svg>
         <p class="text-sm">Usuń ze znajomych</p>
       </div>
-      <div v-else-if="userFriendsRequests.includes(uid)" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
+      <div v-else-if="currentState == 'friends_request'" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="7" r="4" />
@@ -18,7 +18,7 @@
         </svg>
         <p class="text-sm">Wysłano zaproszenie</p>
       </div>
-      <div v-else-if="friendsRequests.includes(uid)" @click="acceptFriendClick()" class="flex p-3 gap-2 bg-sky-500 text-white lg:hover:bg-sky-600 transition">
+      <div v-else-if="currentState == 'accept_friend'" @click="acceptFriendClick()" class="flex p-3 gap-2 bg-sky-500 text-white lg:hover:bg-sky-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -27,7 +27,7 @@
         </svg>
         <p class="text-sm">Zaakceptuj zaproszenie</p>
       </div>
-      <div v-else-if="blocked.includes(uid)" @click="unblock()" class="flex p-3 gap-2 bg-red-500 text-white lg:hover:bg-red-600 transition">
+      <div v-else-if="currentState == 'blocked'" @click="unblock()" class="flex p-3 gap-2 bg-red-500 text-white lg:hover:bg-red-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="7" r="4" />
@@ -35,7 +35,7 @@
         </svg>
         <p class="text-sm">Odblokuj użytkownika</p>
       </div>
-      <div v-else @click="addFriendClick()" class="flex p-3 gap-2 bg-emerald-500 text-white lg:hover:bg-emerald-600 transition">
+      <div v-else-if="currentState == 'add_to_friends'" @click="addFriendClick()" class="flex p-3 gap-2 bg-emerald-500 text-white lg:hover:bg-emerald-600 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="9" cy="7" r="4" />
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div v-if="showProfileOptions && !blocked.includes(uid)" class="flex flex-col">
-      <div v-if="observed.includes(uid)" @click="removeObserve()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
+      <div v-if="observed.includes(uid) || currentState == 'observed'" @click="removeObserve()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <line x1="3" y1="3" x2="21" y2="21" />
@@ -61,7 +61,7 @@
         </svg>
         <p class="text-sm">Przestań obserwować</p>
       </div>
-      <div v-else @click="observe()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
+      <div v-else-if="!observed.includes(uid) || currentState == 'not_observed'" @click="observe()" class="flex p-3 gap-2 lg:hover:bg-gray-200/70 lg:hover:dark:bg-gray-800/90 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <circle cx="12" cy="12" r="2" />
@@ -89,6 +89,7 @@ export default {
   data() {
     return {
       showProfileOptions: false,
+      currentState: "",
     };
   },
   methods: {
@@ -96,29 +97,49 @@ export default {
       this.showProfileOptions = !this.showProfileOptions;
     },
     async addFriendClick() {
+      this.currentState = "friends_request";
       await requestFriend(this.uid);
     },
     async acceptFriendClick() {
+      this.currentState = "friends";
       await acceptFriend(this.uid);
     },
     async removeFriendClick() {
+      this.currentState = "add_to_friends";
       await removeFriend(this.uid);
     },
     async observe() {
+      this.currentState = "observed";
       await observePerson(this.uid);
     },
     async removeObserve() {
+      this.currentState = "not_observed";
       await removeObservedPerson(this.uid);
     },
     async block() {
+      this.currentState = "blocked";
       await blockPerson(this.uid);
     },
     async unblock() {
+      this.currentState = "unblocked";
       await unblockPerson(this.uid);
     },
   },
   computed: {
     ...mapState("userPeopleInfo", ["blocked", "friends", "observed", "friendsRequests", "userFriendsRequests", "blockedBy"]),
+  },
+  mounted() {
+    if (this.friends.includes(this.uid)) {
+      this.currentState = 'friends';
+    } else if (this.userFriendsRequests.includes(this.uid)) {
+      this.currentState = 'friends_request';
+    } else if (this.friendsRequests.includes(this.uid)) {
+      this.currentState = 'accept_friend';
+    } else if (this.blocked.includes(this.uid)) {
+      this.currentState = 'blocked';
+    } else {
+      this.currentState = 'add_to_friends';
+    }
   },
 };
 </script>

@@ -76,6 +76,7 @@ export default {
           const errorMessage = error.message;
           console.log(errorCode);
           console.log(errorMessage);
+          alert("Nieprawidłowy login lub hasło");
         });
     },
   },

@@ -92,7 +92,7 @@
 <script>
 import ChangeProfileImage from "@/components/ChangeProfileImage.vue";
 import CategoriesList from "@/views/Categories/CategoriesList.vue";
-import { createPage } from "@/firebase-functions/functions";
+import { checkIfPagenameExists, createPage } from "@/firebase-functions/functions";
 import { getBlobFromURL, getBlobFullName } from "@/helpers/blobFunctions";
 import { uploadPageBackground, uploadPageProfileImage, uploadProfileBackground, uploadProfileImage } from "@/firebase-storage/modifyFiles";
 export default {
@@ -149,6 +149,14 @@ export default {
         return;
       }
 
+      let pagenameExists = await checkIfPagenameExists(this.pUniqueName);
+      if (pagenameExists) {
+        if (pagenameExists.data.exists) {
+          alert("Podana unikalna nazwa strony została już wykorzystana");
+          return;
+        }
+      }
+
       this.isSaving = true;
       let pageData = await createPage({
         name: this.pName,
@@ -160,7 +168,7 @@ export default {
 
       if (pageData) {
         const pageId = pageData.data.pageId;
-        
+
         let blobProfileImage = await getBlobFromURL(this.readyProfileImageUrl);
         let profileImageName = await getBlobFullName(this.readyProfileImageUrl);
         await uploadProfileImage(pageId, blobProfileImage, profileImageName);

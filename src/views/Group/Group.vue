@@ -45,7 +45,7 @@
                 </svg>
                 <p class="text-sm">Zostałeś zablokowany przez tę grupę</p>
               </div>
-              <div v-else-if="joined.includes(gid)" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
+              <div v-else-if="currentState == 'leave_group'" @click="leaveGroupClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="9" cy="7" r="4" />
@@ -54,7 +54,7 @@
                 </svg>
                 <p class="text-sm">Opuść grupę</p>
               </div>
-              <div v-else-if="requestMember.includes(gid)" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
+              <div v-else-if="currentState == 'requested_member'" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 cursor-default">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="12" cy="7" r="4" />
@@ -160,6 +160,7 @@ export default {
       modMode: false,
       membersCount: null,
       created: null,
+      currentState: '',
     };
   },
   computed: {
@@ -222,9 +223,16 @@ export default {
       }
     },
     async joinGroupClick() {
+      if(this.groupType == 'public') {
+        this.currentState = 'leave_group';
+      } else {
+        this.currentState = 'requested_member';
+      }
+
       await joinGroup(this.gid);
     },
     async leaveGroupClick() {
+      this.currentState = 'join_group';
       await leaveGroup(this.gid);
     },
     async acceptAdminClick() {
@@ -254,6 +262,12 @@ export default {
 
     if (this.moderated.includes(this.gid)) {
       this.modMode = true;
+    }
+
+    if(this.joined.includes(this.gid)) {
+      this.currentState = 'leave_group';
+    } else if(this.requestMember.includes(this.gid)) {
+      this.currentState = 'requested_member';
     }
 
     await this.getGroupImages();

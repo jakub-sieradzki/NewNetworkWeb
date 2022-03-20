@@ -1,14 +1,14 @@
 <template>
   <div class="w-full h-full pt-28 pb-10 px-5">
-    <div class="w-full h-full flex justify-center items-center">
+    <div class="w-full sm:h-full h-fit flex justify-center items-center">
       <div class="bg-white dark:bg-gray-900 max-w-7xl w-full h-full rounded-xl border dark:border-gray-800 flex flex-col p-8 gap-8">
         <div class="flex justify-between items-center">
           <p class="text-4xl font-semibold">Ustawienia</p>
-          <p v-if="currentPage == 'profile'" class="text-2xl font-semibold">Profil</p>
-          <p v-else-if="currentPage == 'account'" class="text-2xl font-semibold">Konto i zabezpieczenia</p>
+          <p v-if="currentPage == 'profile'" class="hidden md:flex text-2xl font-semibold">Profil</p>
+          <p v-else-if="currentPage == 'account'" class=" hidden md:flex text-2xl font-semibold">Konto i zabezpieczenia</p>
         </div>
-        <div class="flex justify-between gap-10">
-          <div class="flex flex-col w-3/12 gap-1.5">
+        <div class="flex flex-col sm:flex-row justify-between gap-10">
+          <div class="flex flex-col w-full sm:w-3/12 gap-1.5">
             <div @click="this.$router.push('/settings/profile')" class="flex text-sm items-center gap-3 p-3 w-full rounded-lg cursor-pointer" :class="[this.currentPage == 'profile' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-800/50' ]">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -26,7 +26,7 @@
               </svg>
               <p>Konto i zabezpieczenia</p>
             </div>
-            <div class="flex text-sm items-center gap-3 p-3 w-full bg-gray-100 dark:bg-gray-800/40 rounded-lg cursor-pointer">
+            <!-- <div class="flex text-sm items-center gap-3 p-3 w-full bg-gray-100 dark:bg-gray-800/40 rounded-lg cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <ellipse cx="12" cy="6" rx="8" ry="3"></ellipse>
@@ -44,9 +44,9 @@
                 <circle cx="16.5" cy="10.5" r=".5" fill="currentColor" />
               </svg>
               <p>Personalizacja</p>
-            </div>
+            </div> -->
           </div>
-          <div class="w-9/12 h-full">
+          <div class="w-full sm:w-9/12 h-full">
             <router-view name="settingsContent"></router-view>
           </div>
         </div>

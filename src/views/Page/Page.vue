@@ -19,7 +19,7 @@
           </div>
           <div class="flex flex-col rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800/40 shadow-xl cursor-pointer self-center">
             <div class="flex">
-              <div v-if="observed.includes(pid)" @click="removePageObservedClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
+              <div v-if="currentState == 'stop_observing'" @click="removePageObservedClick()" class="flex p-3 gap-2 bg-gray-100/20 dark:bg-gray-800/50 lg:hover:bg-gray-200/50 dark:lg:hover:bg-gray-700/40 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current w-5 h-5" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <line x1="3" y1="3" x2="21" y2="21" />
@@ -114,6 +114,7 @@ export default {
       modMode: false,
       observedCount: null,
       created: null,
+      currentState: "",
     };
   },
   computed: {
@@ -175,9 +176,11 @@ export default {
       }
     },
     async observePageClick() {
+      this.currentState = "stop_observing";
       await observePage(this.pid);
     },
     async removePageObservedClick() {
+      this.currentState = "observe";
       await removeObservedPage(this.pid);
     },
     async acceptAdminClick() {
@@ -200,6 +203,12 @@ export default {
 
     if (this.moderated.includes(this.pid)) {
       this.modMode = true;
+    }
+
+    if (this.observed.includes(this.pid)) {
+      this.currentState = "stop_observing";
+    } else {
+      this.currentState = "observe";
     }
 
     await this.getPageImages();

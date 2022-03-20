@@ -1,5 +1,5 @@
 <template>
-  <div v-if="postsLoaded && showPosts" class="m-auto flex flex-col gap-6 w-full" style="">
+  <div v-if="postsLoaded && showPosts" class="m-auto flex flex-col gap-6 w-full items-center" style="">
     <PostsList :postsData="posts" :groupView="true" />
   </div>
   <div v-else-if="!showPosts" class="flex w-full h-full items-center justify-center">
