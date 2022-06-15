@@ -73,8 +73,7 @@ export default {
       this.viewMode = value;
     },
     async toggleEditProfileMode() {
-      console.log("username check: ", await checkIfUsernameExists("erghht"));
-      // this.editProfileMode = !this.editProfileMode;
+      this.editProfileMode = !this.editProfileMode;
     },
     async loadProfilePhoto() {
       const img = this.$refs.profileImg;
